@@ -425,3 +425,36 @@ Actual final response (verbatim):
 > One thing to decide: the other session keeps the previous car export as `faumax_tau.prev.glb` (35 MB). If it stays in git, every update adds about 35 MB to the repo. I can add `*.prev.*` to `.gitignore` if you agree.
 
 Work record for the correction: STATUS.md fixed (pushed state, "commit only your own files", livery update in progress). Committed only `CHAT_HISTORY.md` and `STATUS.md` and pushed.
+
+## 2026-11-07 — owner: share it with people
+
+### User message (verbatim)
+
+> i also want to share it with people.
+
+### Contributor messages (verbatim)
+
+> There are two ways to share it, depending on what people should do with it. You have to change who can see it yourself, because I can't do that from here.
+>
+> **To play the game:** send the game link, https://claude.ai/artifact/38hveqdzZbP5zHJUSUfVmb
+> 1. Open it and click **Share**.
+> 2. Choose your team, or anyone with the link.
+> 3. The same URL then works for them, on a laptop with the keyboard or on a phone with touch.
+>
+> Right now the online game still has the **old livery**. The other session hasn't updated `game\` yet. If you want people to see the new livery, share after that's done and I've republished.
+>
+> **To work on the code:** invite them to the GitHub repo, https://github.com/ArcFAU/HOT-LAP
+> 1. Go to **Settings → Collaborators → Add people** and enter their GitHub username or email.
+> 2. They accept the invite and can then clone it: `git clone https://github.com/ArcFAU/HOT-LAP.git`
+>
+> Keep the repo private. It holds the real τ model, the livery and the LTS and CFD numbers, and making it public would put all of that on the internet. Invited people can see everything in it.
+>
+> A message you could send with the game link:
+>
+> > Try Hot Lap: our FAUmax τ on the FSG endurance track, with real LTS and CFD numbers. Beat the gold LTS ghost (75.06 s). Arrow keys or WASD to drive, C to change camera, R to get back on track. Works on phones too.
+
+### Work record
+
+- No game files changed. `game\` still has the 23:08 files with the old livery; the other session's livery work hasn't reached it yet.
+- The artifact and GitHub visibility can't be changed from this session, so the owner shares them himself.
+- Committed only `CHAT_HISTORY.md` and pushed.
