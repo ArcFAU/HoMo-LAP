@@ -359,3 +359,51 @@ Intermediate progress messages are not reproduced. Final response (verbatim):
   - Git stores text files with LF line endings; the working copy is unchanged.
 - **Not done:** the push. `git ls-remote origin` reported "Repository not found". Creating the repo through the GitHub API with the stored Git Credential Manager login was blocked by the session's permission check, so the owner creates the empty private repo and then pushes.
 - No game files changed, so no game build or play checks were needed.
+
+## 2026-11-07 — owner: which GitHub, push done
+
+### User messages (verbatim)
+
+> okay, so livery has been changed.
+
+(The contributor started on the livery update; the owner interrupted it.)
+
+> which git hub you uploaded?
+
+> done
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced. Reply to "which git hub you uploaded?" (verbatim):
+
+> I haven't uploaded anything to GitHub yet.
+>
+> The plan is to push to **https://github.com/ArcFAU/HOT-LAP** (private), under the same ArcFAU account as your HoMo-CFD repo. I just checked again, and that repo still doesn't exist on GitHub, so nothing could be pushed. Both commits are only on your laptop in `E:\HOT LAP`.
+>
+> To upload it:
+> 1. Create the repo at https://github.com/new: name it **HOT-LAP**, make it **Private**, and leave it empty (no README).
+> 2. Tell me when it's there and I'll push it. Or push it yourself: `git -C "E:\HOT LAP" push -u origin main`
+>
+> **About the livery:** I stopped partway and haven't changed any files. The new images are `E:\UE\livery\livery_art\LIVERY_*.png`, saved in livery.blend at 11:09 PM. The projection box is the same as before, so only the five images need replacing. The next steps are:
+> - copy them into `blender\`
+> - scale them down to `game\livery\` (at most 2048 px wide)
+> - rebuild, check the car in 3D
+> - republish the online game
+>
+> Should I go ahead with the livery update now?
+
+Final response (verbatim):
+
+> Done: Hot Lap is on GitHub at **https://github.com/ArcFAU/HOT-LAP** (private), branch `main`. That's the whole project folder, the 34 MB car export included, plus the log entry for this task. I checked that GitHub has the same latest commit as your laptop.
+>
+> From now on, `git push` in `E:\HOT LAP` uploads new commits there.
+>
+> The livery update is still on hold, and no files have changed for it yet. Should I go ahead?
+
+### Work record
+
+- **Livery (started, interrupted, nothing changed):**
+  - `livery.blend` saved 23:09; its five `LIVERY_*` images point to `E:\UE\livery\livery_art\LIVERY_*.png` (written 23:08, contents differ from `blender\` and `game\livery\`, same pixel sizes).
+  - Read-only background Blender query (`blender -b … --python <scratchpad>\query_livery.py`, never saves): `is_dirty = False`; `LIVERY_Projector` still centre (2.725, 0, 0.55), half-size (1.525, 0.8, 0.55), matching `LIV` in `template.html`.
+- **Git:** the owner created the empty private repo `ArcFAU/HOT-LAP`. `git push -u origin main` succeeded; `git ls-remote origin main` matched local `HEAD`. This log entry was committed and pushed afterwards.
+- No game files changed, so no game checks were needed.
