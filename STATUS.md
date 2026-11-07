@@ -20,8 +20,11 @@ Last updated: 2026-11-07
   - Private to the owner until he shares it with the Share button.
   - `game\` in this folder matches that version.
 - **Project folder:** `E:\HOT LAP` since 2026-11-07, with README, launcher, sources, model tools and the Blender export.
+- **Git:** local repo on branch `main` since 2026-11-07, remote `origin` = https://github.com/ArcFAU/HOT-LAP.git (private).
 
 ## Open items
+
+- **First push:** the GitHub repo `ArcFAU/HOT-LAP` has to be created (empty, private) before `git push -u origin main` works.
 
 - **Touch controls:** temporary. Remove them later when the owner asks: `TOUCH_CONTROLS = false` or delete the marked blocks.
 - **Old export folder:** `E:\UE\livery\hotlap_export` still exists. Everything from it is in `blender\`. The owner deletes it; the bridge cannot.

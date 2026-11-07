@@ -322,3 +322,40 @@ Intermediate messages are not available verbatim (see source note). Final respon
   - `AGENTS.md`, `CHAT_HISTORY.md`, `STATUS.md`, `DECISIONS.md`, `CHANGELOG.md`
   - a "Project notes" section in `README.md`
 - No game files changed, so no game checks were needed.
+
+## 2026-11-07 — owner: put the project on git
+
+### User messages (verbatim)
+
+> read the repo and push it on the git.
+
+Clarification (answer to the contributor's question about the remote): "Private ArcFAU/HOT-LAP (Recommended)".
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced. Final response (verbatim):
+
+> I read through the project, and the local git repo is ready, but nothing has been pushed yet: the private repo doesn't exist on GitHub.
+>
+> - **Local repo:** `E:\HOT LAP` is now a git repo on branch `main` with two commits: all 35 project files, then this task's log entry. Your name and FAU email from your git settings are on them as author.
+> - **Checks:** no passwords or keys in the folder, and every file is under GitHub's 100 MB limit. The biggest is the 34 MB car export, so it doesn't need Git LFS.
+> - **`.gitignore`:** keeps out `node_modules` and the intermediate `car.glb` files from the model tools.
+> - **Remote:** `origin` points to https://github.com/ArcFAU/HOT-LAP.git. I tried to create that private repo with your saved GitHub login, but that was blocked.
+>
+> To finish:
+> 1. Open https://github.com/new, name it **HOT-LAP**, choose **Private**, and don't add a README, .gitignore or license.
+> 2. Tell me when it's there and I'll push `main`. Or run it yourself: `git -C "E:\HOT LAP" push -u origin main`
+>
+> The task is logged in CHAT_HISTORY.md and STATUS.md.
+
+### Work record
+
+- Read `AGENTS.md`, `README.md`, `STATUS.md`, `DECISIONS.md` and `CHAT_HISTORY.md`.
+- **Checks before committing:**
+  - Searched for keys, tokens and passwords: none found.
+  - File sizes: largest `blender\faumax_tau.glb` 34.1 MB, then `game\car_q.json` 11.0 MB and `game\car.json` 6.0 MB. All under GitHub's 100 MB limit, so no LFS.
+- **Added:** `.gitignore` (`node_modules/`, `source/model/car.glb`, `source/model/car_q.glb`, `__pycache__/`, `*.pyc`, OS/editor files).
+- **Git:** `git init -b main`, initial commit `12ce586` (35 files), remote `origin` = `https://github.com/ArcFAU/HOT-LAP.git`.
+  - Git stores text files with LF line endings; the working copy is unchanged.
+- **Not done:** the push. `git ls-remote origin` reported "Repository not found". Creating the repo through the GitHub API with the stored Git Credential Manager login was blocked by the session's permission check, so the owner creates the empty private repo and then pushes.
+- No game files changed, so no game build or play checks were needed.
