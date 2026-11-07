@@ -458,3 +458,45 @@ Work record for the correction: STATUS.md fixed (pushed state, "commit only your
 - No game files changed. `game\` still has the 23:08 files with the old livery; the other session's livery work hasn't reached it yet.
 - The artifact and GitHub visibility can't be changed from this session, so the owner shares them himself.
 - Committed only `CHAT_HISTORY.md` and pushed.
+
+## 2026-11-07 — owner: livery T_TauOriginal into the game, push
+
+### User messages (verbatim)
+
+> can you first check the livery, it should be TauOriginal
+
+Clarification (answer to the contributor's question whether to put T_TauOriginal into the game and republish, or leave it to the other session): "Yes, you do it (Recommended)".
+
+> push on git as well.
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced. Final response (verbatim):
+
+> The game now has the **T_TauOriginal** livery, online and on GitHub.
+>
+> - **Checked:** livery.blend, the new export in `blender\` and the game all use the T_TauOriginal images now, pixel for pixel. Before this, the game still had D_VoltageSlash.
+> - **Updated:**
+>   - the web car model, rebuilt from the new export (206,128 triangles). It includes the other session's fix that keeps the livery on the nosecone, monocoque and wings.
+>   - the five livery images in `game\livery\`
+>   - The old files are kept in `backup\2026-11-07_D_VoltageSlash\`.
+> - **Tested in Chrome:** the car loads without errors and the AI drives clean laps of 77.4 s. From the sides, rear, front and top it shows the red stepped stripe, E49 and τ.
+> - **Online:** https://claude.ai/artifact/38hveqdzZbP5zHJUSUfVmb is updated. It's already shared as "Anyone with the link", so you can send it now.
+> - **GitHub:** pushed to https://github.com/ArcFAU/HOT-LAP.
+>
+> Worth knowing:
+> - Node.js isn't installed, so I used the copy that comes with Codex. Its package manager left a 36 MB cache at `E:\.pnpm-store` that you can delete.
+> - `source\logo_small.png` picked up a small provenance tag when the folder was moved. A rebuild would put it into the page, so I kept the published page as it was. It's noted in STATUS.md.
+> - The `faumax_tau.prev.glb` question is still open: should git ignore it?
+
+### Work record
+
+- **Check (read-only):** a pixel comparison against all concepts in `E:\UE\livery\livery_art\concepts` matched `livery_art\LIVERY_*.png` (what livery.blend uses) and `blender\LIVERY_*.png` to T_TauOriginal on all five sides (mean difference 0.00); `game\livery\` matched D_VoltageSlash.
+- **Backup:** old `game\car.json`, `car_q.json`, `index.html` and `livery\*.png` copied to `backup\2026-11-07_D_VoltageSlash\` (ignored by git; also in git history).
+- **Model:** node from the Codex runtime, `pnpm install --no-lockfile` in `source\model` (versions from `package.json`), then `slim.mjs` and `slim_q.mjs` (0.25, 0.005) on `blender\faumax_tau.glb` (23:30 export by the other session) → 206,128 triangles, 205 meshes; `pack_json.py` → `car.json` 5,974,961 bytes, `car_q.json` 11,266,701 bytes.
+- **Livery:** `blender\LIVERY_*.png` resized to at most 2048 px wide (Lanczos) into `game\livery\`.
+- **index.html:** `build_game.py` ran, but its output differed because `source\logo_small.png` has a 7.5 KB `caBX` chunk. The template is unchanged, so the committed `index.html` was kept. A `git checkout` had given it CRLF endings; restored the LF bytes (sha256 matches the live page and the git blob). Added `.gitattributes` (LF, `.bat` CRLF).
+- **Checks (headless Chrome via Playwright, local server):** `realCar = true`, 532 cones; AI laps 77.42 s and 77.42 s, valid, no penalties (assists on). Screenshots with ghosts off from left, right, rear, front, 3/4 and top: T_TauOriginal stripe, E49 and τ visible. Two console 404s from a request Playwright doesn't expose (most likely `favicon.ico`); all game files loaded. Livery side images checked: E49 is model geometry, not in the images.
+- **Republished** the artifact: version `1794091836-958f` (index.html unchanged, new `car.json`, `car_q.json`, five livery PNGs). It is shared as "Anyone with the link".
+- **Notes:** CHANGELOG (livery), STATUS (online version, car, open items: logo chunk, Node.js, `*.prev.glb`), DECISIONS (git, LF, explicit paths).
+- **Git:** committed with explicit paths and pushed.

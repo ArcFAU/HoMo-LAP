@@ -4,6 +4,9 @@ User-visible changes, newest first. Detailed reasoning is in `CHAT_HISTORY.md`, 
 
 ## 2026-11-07
 
+### Changed
+- **Livery is now T_TauOriginal** (was D_VoltageSlash), matching livery.blend. The car model was re-exported, so the livery now also covers the nosecone, monocoque, wings and undertray panels whose livery material had been lost in the export.
+
 ### Added
 - **Project folder `E:\HOT LAP`:**
   - `Play Hot Lap.bat` to play locally

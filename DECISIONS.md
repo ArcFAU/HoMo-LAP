@@ -69,6 +69,12 @@ The owner wants phone support "just for now", so the touch controls live in clea
 
 **Why:** they can be removed cleanly later.
 
+## 2026-11-07 — Git with LF line endings; commit only your own files
+
+The folder is a git repo, pushed to the private GitHub repo `ArcFAU/HOT-LAP`. `.gitattributes` keeps LF line endings in the working copy (`.bat` keeps CRLF). Commit with explicit paths, not `git add -A`.
+
+**Why:** Windows git otherwise checks files out with CRLF, so a checkout changed `game\index.html` away from the bytes that the build writes and the artifact serves. More than one session can be working in the folder at once, and `git add -A` once committed another session's unfinished files.
+
 ## 2026-11-07 — E:\HOT LAP is the project folder
 
 The owner decided to work in `E:\HOT LAP` from now on. It holds the game, sources, tools, the Blender export and the project notes. It follows the same conventions as HoMo CFD and CFD_TOPO (`AGENTS.md`, `CHAT_HISTORY.md` and the other notes).

@@ -11,3 +11,6 @@ __pycache__/
 Thumbs.db
 desktop.ini
 .vscode/
+
+# Local backups of replaced files (originals are also in git history)
+backup/

@@ -1,0 +1,4 @@
+# Keep LF line endings in the working copy, so a checkout gives the same bytes the build writes
+# and the online artifact serves. Windows batch files keep CRLF.
+* text=auto eol=lf
+*.bat text eol=crlf
