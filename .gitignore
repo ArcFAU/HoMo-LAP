@@ -1,0 +1,13 @@
+# Node tooling for the model slimmer (source\model)
+node_modules/
+source/model/car.glb
+source/model/car_q.glb
+
+# Python
+__pycache__/
+*.pyc
+
+# OS / editor
+Thumbs.db
+desktop.ini
+.vscode/
