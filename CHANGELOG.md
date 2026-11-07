@@ -2,6 +2,11 @@
 
 User-visible changes, newest first. Detailed reasoning is in `CHAT_HISTORY.md`, decisions in `DECISIONS.md`.
 
+## 2026-11-08
+
+### Added
+- **Shared leaderboard (online version):** in the menu under the aero packages, one board per aero package and assist setting. Each player's best valid lap is posted automatically, ranked by time including penalties, with FS points from the FS Rules 2027 endurance formula (D 9.2: fastest = 250, 1.5× or slower = 25). Players can set a driver name. During a race the game shows the new place ("P2 on the leaderboard"). Hidden when playing locally.
+
 ## 2026-11-07
 
 ### Changed

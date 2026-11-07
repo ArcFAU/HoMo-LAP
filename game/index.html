@@ -146,6 +146,23 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 .pause-card{display:grid;gap:12px;justify-items:start;padding:28px 34px 30px;background:var(--ink);border-left:4px solid var(--signal);min-width:330px}
 .pause-card h2{font-family:var(--display);font-weight:800;font-size:56px;line-height:.9;margin:0 0 8px;transform:skewX(-10deg);transform-origin:left bottom}
 .pause-card .btn{width:100%;text-align:left}
+/* shared leaderboard (online only; hidden when the page has no db) */
+.board{display:grid;gap:8px;padding:12px 14px 12px;background:rgba(34,38,43,.7);border-left:3px solid var(--best)}
+.board[hidden]{display:none}
+.board-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.board-sub{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.lb{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums}
+.lb th{font-family:var(--display);font-weight:600;letter-spacing:.1em;text-transform:uppercase;font-size:11.5px;color:var(--muted);text-align:right;padding:2px 6px 4px;border-bottom:1px solid #3a4047}
+.lb td{text-align:right;padding:3px 6px;border-bottom:1px solid #2b3036;white-space:nowrap}
+.lb th:nth-child(2),.lb td:nth-child(2){text-align:left;width:100%;max-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb td:first-child,.lb th:first-child{text-align:left;color:var(--muted)}
+.lb tr.me td{color:var(--best)}
+.lb tr.gap td{color:var(--muted);text-align:center;border-bottom:0}
+.lb td.pts{color:var(--gold)}
+.lb-name{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.lb-name[hidden]{display:none}
+.lb-name input{font-family:var(--mono);font-size:13px;color:var(--paper);background:var(--ink);border:1px solid #3a4047;padding:4px 8px;min-width:0;flex:1 1 140px}
+.lb-name input:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
 /* ==== TOUCH CONTROLS (temporary) — remove this block, the marked HTML and the marked JS to take them out ==== */
 .touch{position:fixed;inset:0;pointer-events:none}
 .touch[hidden]{display:none}
@@ -253,6 +270,12 @@ body.touch-ui .lights{top:60px}
     <h1>Hot <span class="o">Lap</span></h1>
     <p class="lede">Drive the FAUmax on the FSG endurance layout from the lap-time simulation. The car runs on the team's vehicle data, and the LTS reference lap drives alongside you as a gold ghost.</p>
     <fieldset id="presets"><legend class="k">Aero package</legend></fieldset>
+    <section class="board" id="board" hidden aria-live="polite">
+      <div class="board-head"><span class="k">Leaderboard</span><span class="board-sub" id="boardSub"></span></div>
+      <table class="lb"><thead><tr><th>#</th><th>Driver</th><th>Time</th><th>Pen.</th><th>FS pts</th></tr></thead><tbody id="lbBody"></tbody></table>
+      <p class="note" id="lbNote"></p>
+      <div class="lb-name" id="lbNameRow" hidden><label class="k" for="lbName">Driver name</label><input id="lbName" maxlength="24" autocomplete="off" spellcheck="false"><button class="mini-btn" id="lbNameSave" type="button">Save</button></div>
+    </section>
     <div class="legend">
       <span class="kb"><kbd>↑</kbd></span><span>Throttle</span>
       <span class="kb"><kbd>↓</kbd></span><span>Brake</span>
@@ -769,6 +792,7 @@ function finishLap(tc) {
       showMsg(prev == null ? 'Lap set' : 'New best lap', 'best', 2.6, fmt(t) + penTxt + '   ' + fmtD(t - LTS.lapTime, 2) + ' to LTS');
     } else showMsg(fmt(t), 'warn', 2.4, fmtD(t - prev, 3) + ' to your best' + penTxt);
     save();
+    if (!autodrive) lbSubmit(bestKey(), { t: +t.toFixed(3), raw: +raw.toFixed(3), pen: lap.pen, cones: lap.doo, oc: lap.oc, at: Date.now() });
   } else showMsg('Lap invalid', 'bad', 2.4, fmt(t) + ' · cut the track, not counted');
   last = { t, valid, pen: lap.pen };
   session.unshift({ n: lap.n, t, valid, pb, pen: lap.pen });
@@ -926,6 +950,7 @@ function renderPresets() {
     if (b) { const pb = document.createElement('span'); pb.className = 'pbv'; pb.textContent = '  Your best ' + fmt(b.t); src.append(pb); }
     lab.append(inp, nm, num, src); fs.append(lab);
   }
+  renderBoard();
 }
 function renderLaps() {
   const ol = $('laps'); ol.innerHTML = '';
@@ -1613,6 +1638,111 @@ function frame(now) {
   requestAnimationFrame(frame);
 }
 
+/* ---------------- Shared leaderboard (online only: the artifact's db + user capabilities) ----------------
+   One document per player, boards/<player id> = { tag, laps: { <bestKey>: { t, raw, pen, cones, oc, at } } }.
+   Everyone reads all of them; each player writes only their own; only the owner can remove other entries.
+   t is the corrected lap time (raw + penalties); only valid laps are posted, only when they beat the player's entry.
+   Points: FS Rules 2027 D 9.2.2 and Table 9 (Endurance):
+     SCORE = (Pmax - Pmin) * ((Tmax - Tteam) / (Tmax - Tmin))^2 + Pmin, Pmax 250, Pmin 0.1 Pmax, Tmax 1.5 Tmin,
+     Tteam capped at Tmax, Tmin = fastest corrected time on this board (aero package + assist mode).
+   Played locally (no window.claude) or signed out, use('db') is unavailable and the board stays hidden. */
+const LB = { db: null, user: null, uid: null, rows: [], mine: null, canWrite: null, loading: true, err: '', timer: 0, queue: Promise.resolve(), tok: 0 };
+const FS_PMAX = 250, FS_PMIN = 0.1 * FS_PMAX;
+function fsPoints(t, tmin) { const tmax = 1.5 * tmin, tt = Math.min(t, tmax); return (FS_PMAX - FS_PMIN) * ((tmax - tt) / (tmax - tmin)) ** 2 + FS_PMIN; }
+const lbEntry = e => e && typeof e === 'object' && Number.isFinite(e.t) && e.t > 30 && e.t < 900 ? e : null;
+async function lbInit() {
+  if (!window.claude || typeof window.claude.use !== 'function') return;
+  let db = null, user = null;
+  try { [db, user] = await Promise.all([window.claude.use('db'), window.claude.use('user')]); } catch (e) { return; }
+  if (!db) return;
+  LB.db = db; LB.user = user;
+  if (user) { try { LB.uid = await user.id(); LB.canWrite = await user.can('data.write'); } catch (e) {} }
+  $('board').hidden = false;
+  LB.timer = setTimeout(() => { if (LB.loading) { LB.err = 'The leaderboard can’t be reached yet.'; renderBoard(); } }, 10000);
+  db.collection('boards').onSnapshot(snap => {
+    if (!snap.metadata.fromCache) { LB.loading = false; LB.err = ''; clearTimeout(LB.timer); }
+    LB.rows = snap.docs.map(d => ({ id: d.id, body: d.data() || {} }));
+    const m = LB.rows.find(r => r.id === LB.uid); if (m) LB.mine = m.body;
+    renderBoard();
+  }, e => { LB.loading = false; clearTimeout(LB.timer); LB.err = e && e.code === 'revoked' ? '' : 'The leaderboard is unavailable right now.'; renderBoard(); });
+  renderBoard();
+}
+// One write at a time to the player's document. Each write reads the stored document first and merges into it,
+// so a slow or missing snapshot can never wipe the player's other laps or name. change(body) returns the new body or null.
+function lbWrite(change) {
+  LB.queue = LB.queue.then(async () => {
+    const ref = LB.db.doc('boards/' + LB.uid);
+    try {
+      let cur = LB.mine;
+      try { const s = await ref.get(); cur = s.exists ? s.data() : null; } catch (e) { if (!cur) return false; }
+      const body = change({ tag: lbTag(cur), laps: Object.assign({}, (cur && cur.laps) || {}) });
+      if (!body) return false;
+      await ref.set(body); LB.mine = body; return true;
+    } catch (e) { if (e && (e.code === 'invalid_argument' || e.code === 'not_granted')) LB.canWrite = false; else if (e && e.code === 'quota_exceeded') LB.err = 'The leaderboard is full.'; renderBoard(); return false; }
+  });
+  return LB.queue;
+}
+function lbSubmit(key, rec) {
+  if (!LB.db || !LB.uid || LB.canWrite === false) return;
+  const known = lbEntry(LB.mine && LB.mine.laps && LB.mine.laps[key]);
+  if (known && known.t <= rec.t) return;
+  lbWrite(b => { const c = lbEntry(b.laps[key]); if (c && c.t <= rec.t) return null; b.laps[key] = rec; return b; }).then(ok => {
+    if (!ok) return;
+    const list = lbList(key), i = list.findIndex(x => x.id === LB.uid);
+    if (i >= 0 && state === 'race') setTimeout(() => { if (state === 'race') showMsg('P' + (i + 1) + ' on the leaderboard', 'go', 2.2, fsPoints(rec.t, list[0].e.t).toFixed(1) + ' FS points', true); }, 2700);
+    renderBoard();
+  });
+}
+const lbTag = b => b && typeof b.tag === 'string' ? b.tag.replace(/\s+/g, ' ').trim().slice(0, 24) : '';
+function lbList(key) {
+  const list = [];
+  for (const r of LB.rows) { const b = r.id === LB.uid && LB.mine ? LB.mine : r.body, e = lbEntry(b.laps && b.laps[key]); if (e) list.push({ id: r.id, tag: lbTag(b), e }); }
+  if (LB.uid && LB.mine && !list.some(x => x.id === LB.uid)) { const e = lbEntry(LB.mine.laps && LB.mine.laps[key]); if (e) list.push({ id: LB.uid, tag: lbTag(LB.mine), e }); }
+  return list.sort((a, b) => a.e.t - b.e.t || (a.e.at || 0) - (b.e.at || 0));
+}
+async function renderBoard() {
+  if (!LB.db) return;
+  const tok = ++LB.tok, key = bestKey(), list = lbList(key);
+  const top = list.slice(0, 15), meI = list.findIndex(x => x.id === LB.uid);
+  const shown = meI >= 15 ? top.concat([null, list[meI]]) : top;
+  const ids = shown.filter(Boolean).map(x => x.id);
+  let ps = {};
+  if (LB.user && ids.length) { try { ps = await LB.user.profiles(ids); } catch (e) {} }
+  if (tok !== LB.tok) return;   // a newer render started meanwhile
+  $('boardSub').textContent = aero.car + ' · ' + aero.name + ' · assists ' + (assist ? 'on' : 'off');
+  const tb = $('lbBody'); tb.textContent = '';
+  const tmin = list.length ? list[0].e.t : 0;
+  for (const x of shown) {
+    const tr = document.createElement('tr');
+    if (!x) { tr.className = 'gap'; const td = document.createElement('td'); td.colSpan = 5; td.textContent = '⋯'; tr.append(td); tb.append(tr); continue; }
+    if (x.id === LB.uid) tr.className = 'me';
+    const p = ps[x.id], who = x.tag || (p && p.name) || 'Driver', pen = Math.max(0, Math.round(Number(x.e.pen) || 0));
+    const cells = [String(list.indexOf(x) + 1), who + (x.id === LB.uid ? ' (you)' : ''), fmt(x.e.t), pen ? '+' + pen + ' s' : '–', fsPoints(x.e.t, tmin).toFixed(1)];
+    cells.forEach((c, i) => { const td = document.createElement('td'); td.textContent = c; if (i === 4) td.className = 'pts'; if (i === 2 && pen) td.title = 'Lap ' + fmt(Number(x.e.raw)) + ' + ' + pen + ' s penalties'; tr.append(td); });
+    tb.append(tr);
+  }
+  let note;
+  if (LB.err) note = LB.err;
+  else if (LB.loading && !list.length) note = 'Loading the leaderboard…';
+  else if (!list.length) note = 'No laps yet for this package and assist setting. Set the first valid lap.';
+  else note = 'Time includes penalties. Points follow the FS Rules 2027 endurance formula (D 9.2): the fastest time here scores 250, times at 1.5× or slower score 25. LTS reference ' + fmt(LTS.lapTime) + '.';
+  if (!LB.err && LB.canWrite === false) note += ' You can view the leaderboard, but your laps aren’t posted from this account.';
+  else if (!LB.err && LB.uid) note += ' Your valid laps are posted automatically.';
+  $('lbNote').textContent = note;
+  const row = $('lbNameRow'), canName = !!LB.uid && LB.canWrite !== false;
+  row.hidden = !canName;
+  const inp = $('lbName');
+  if (canName && document.activeElement !== inp) { inp.value = lbTag(LB.mine); if (!inp.placeholder && LB.user) { try { const me = await LB.user.me(); if (tok === LB.tok) inp.placeholder = me.name || 'Name shown on the board'; } catch (e) {} } }
+}
+$('lbName').addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Enter') { e.preventDefault(); $('lbNameSave').click(); } });
+$('lbName').addEventListener('keyup', e => e.stopPropagation());
+$('lbNameSave').addEventListener('click', () => {
+  if (!LB.db || !LB.uid) return;
+  const tag = $('lbName').value.replace(/\s+/g, ' ').trim().slice(0, 24);
+  if (tag === lbTag(LB.mine)) return;
+  lbWrite(b => b.tag === tag ? null : (b.tag = tag, b)).then(ok => { if (ok) { $('lbName').blur(); renderBoard(); } });
+});
+
 function boot(data) {
   applyData(load() || (data && data.save) || null);
   setMuted(muted); setGhost(ghostOn); setAssistUi();
@@ -1624,6 +1754,7 @@ function boot(data) {
   camUpdate(0, true);
   renderPresets(); renderLaps();
   requestAnimationFrame(t => { last_t = t; frame(t); });
+  lbInit();
 }
 try { window.claude?.hot?.snapshot?.(() => ({ save: saveData() })); } catch (e) {}
 window.claude?.hot?.ready ? window.claude.hot.ready(boot) : boot(window.claude?.hot?.data ?? {});
@@ -1651,7 +1782,8 @@ window.__hotlap = {
     keys.clear(); autodrive = false; noBrake = false;
     return { state, session: session.slice(), best: bestNow() && bestNow().t, maxAyG: maxAy / G0, maxKmh: maxV * 3.6, lap: { n: lap.n, active: lap.active, valid: lap.valid, pen: lap.pen } };
   },
-  info() { return { LEN, N, cones: cones.length, lts: LTS.lapTime, view3d: V3.ok, realCar: !!V3.real }; }
+  info() { return { LEN, N, cones: cones.length, lts: LTS.lapTime, view3d: V3.ok, realCar: !!V3.real }; },
+  postLap(raw, pen = 0) { lbSubmit(bestKey(), { t: raw + pen, raw, pen, cones: 0, oc: 0, at: Date.now() }); return { board: !!LB.db, loading: LB.loading }; }   // leaderboard test
 };
 })();
 </script>

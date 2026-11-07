@@ -19,6 +19,8 @@ Controls:
 
 Phones get on-screen touch controls.
 
+**Leaderboard (online only):** the menu shows a shared leaderboard under the aero packages, one per package and assist setting. Each player's best valid lap is posted automatically, ranked by time including penalties, with FS points from the FS Rules 2027 endurance formula (D 9.2). Only the owner and members of his claude.ai organization can post; everyone else with the link can view it. Played from this folder, the leaderboard is hidden.
+
 ## Folder layout
 
 ```

@@ -14,3 +14,6 @@ desktop.ini
 
 # Local backups of replaced files (originals are also in git history)
 backup/
+
+# Kept originals of replaced files
+*.bak

@@ -69,6 +69,12 @@ The owner wants phone support "just for now", so the touch controls live in clea
 
 **Why:** they can be removed cleanly later.
 
+## 2026-11-08 — Shared leaderboard in the artifact's db, scored by time and FS points
+
+The online page keeps one document per player, `boards/<player id>`, in the artifact's `db`. Everyone reads all of them, each player writes only their own (`boards/{self}`: `interact`), and only the owner can change or delete others (`boards`: `read: view`, `write: owner`). A document holds the player's best valid corrected lap per board (aero package + assist mode) and an optional typed driver name. Every write reads the stored document first and merges into it. Points use FS Rules 2027 D 9.2.2 / Table 9 for Endurance, with Tmin = fastest corrected time on that board.
+
+**Why:** the owner asked for a shared leaderboard and for both scorings ("use both if possible"). By platform rule, visitors from outside the owner's organization hold `view` and cannot write, so only the owner and organization members can post; the owner chose this over a per-device log. Names are typed by the player rather than copying claude.ai profile names into the store, because profile names may not be shown to every viewer and go stale. Merging on write means a slow snapshot can't wipe a player's other laps.
+
 ## 2026-11-07 — Git with LF line endings; commit only your own files
 
 The folder is a git repo, pushed to the private GitHub repo `ArcFAU/HOT-LAP`. `.gitattributes` keeps LF line endings in the working copy (`.bat` keeps CRLF). Commit with explicit paths, not `git add -A`.

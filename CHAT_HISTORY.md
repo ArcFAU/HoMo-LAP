@@ -500,3 +500,48 @@ Intermediate progress messages are not reproduced. Final response (verbatim):
 - **Republished** the artifact: version `1794091836-958f` (index.html unchanged, new `car.json`, `car_q.json`, five livery PNGs). It is shared as "Anyone with the link".
 - **Notes:** CHANGELOG (livery), STATUS (online version, car, open items: logo chunk, Node.js, `*.prev.glb`), DECISIONS (git, LF, explicit paths).
 - **Git:** committed with explicit paths and pushed.
+
+## 2026-11-08 — owner: score keeping (shared leaderboard)
+
+### User messages (verbatim)
+
+> now add score keeping part.
+
+Clarifications (answers to the contributor's two questions): what kind of score keeping: "Shared leaderboard"; how a lap is scored (lap time + penalties, or FS endurance points): "use both if possible otherwise 1st."
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced. Final response (verbatim):
+
+> The game now has a shared leaderboard: https://claude.ai/artifact/38hveqdzZbP5zHJUSUfVmb
+>
+> - **Where:** in the menu, under the aero packages. There's one board per aero package, with assists on and off kept apart, and it switches when you change either.
+> - **What counts:** your best valid lap. The time includes penalties (+2 s per cone, +10 s per off-course); invalid laps (cuts, resets) aren't posted. A lap goes up automatically when it beats your entry, and during the race you see your place, e.g. "P2 on the leaderboard".
+> - **Scoring, both ways:** ranked by time with penalties, plus FS points from the FS Rules 2027 endurance formula (D 9.2): the fastest time on the board gets 250, and 1.5× that time or slower gets 25. The LTS lap (1:15.058) is shown for reference.
+> - **Names:** each driver can type a name under the board. Without one, the board shows their claude.ai name where the viewer can see it.
+> - **Who can post:** you, and members of your claude.ai organization if you have one. People outside it who open the link see the board, but their laps aren't posted, and the board tells them so. Only you can remove someone else's entry.
+> - **Played locally** (`Play Hot Lap.bat`), the board is hidden and the game works as before.
+>
+> **Checked** in Chrome, with a stand-in for the online data store: ranking, points, saving a name, posting only faster laps, merging with an entry that's already stored, the assist switch, AI laps not posted, no console errors. Local play without the board: no errors either. The live board is published and still empty. I didn't post a test lap to it, so your first valid lap there is its first real test.
+>
+> Also: I removed the provenance tag from the logo (the original is kept as `logo_small.png.bak`), so builds embed the same logo as before. Everything is pushed to GitHub.
+
+### Work record
+
+- **Constraint found (db docs):** visitors from outside the owner's organization hold `view` and can never write; told the owner before building.
+- **Rules (FS Rules 2027, `D:\CFD_TOPO\Doc FS\FS_Rules_2027_v1.0.pdf`, read-only via pdftotext):** D 9.2.2 SCORE = (Pmax − Pmin)·((Tmax − Tteam)/(Tmax − Tmin))² + Pmin; Table 9 Endurance: Tmax 1.5 Tmin, Pmin 0.1 Pmax; Table 1: Endurance 250 points.
+- **`source\template.html`:**
+  - leaderboard section in the menu (table, note, driver-name field) and its CSS
+  - code block "Shared leaderboard": `lbInit` (use `db` + `user`, one `onSnapshot` on `boards`, 10 s loading timer), `lbWrite` (one write at a time, reads the stored doc and merges), `lbSubmit` (only if faster), `lbList`, `renderBoard` (profiles resolved per render, textContent only, malformed entries ignored), `fsPoints`
+  - hooks: `finishLap` posts valid laps unless `autodrive`; `renderPresets` redraws the board; `boot` calls `lbInit`; name field stops key propagation (Enter doesn't start the race)
+  - test hook `__hotlap.postLap(raw, pen)`
+- **Logo:** stripped the `caBX` chunk from `source\logo_small.png` (20,614 → 14,844 bytes; original kept as `logo_small.png.bak`, `*.bak` ignored by git). The rebuilt page embeds a logo identical to the published one.
+- **Checks (headless Chrome, Playwright, local server; scratchpad `check_board.mjs` with an in-memory `db`/`user` stand-in):**
+  - board ranks Alice 1:16.200 = 250.0, Bob 1:28.500 (+10 s) = 128.2; malformed entry ignored, its HTML in the name not rendered (no dialog)
+  - posting merges into an existing doc (kept the other package's lap and the name); a slower lap is not written (1 write); a faster lap updates and shows "P1 on the leaderboard / 250.0 FS points"
+  - AI laps (77.43 s) not posted; Enter in the name field stays in the menu; name saved; assists off shows that board
+  - local mode (no `window.claude`): board hidden; no console errors in either mode
+  - layout at 1280 px and 390 px; fixed the wrapping penalty cell
+- **Published** version `1794092839-d6fc` with capabilities `db` (rules `boards` read view / write owner, `boards/{self}` read view / write interact) and `user` (scope profile). `ArtifactData list boards`: empty, also at `as_level: view`. No test data written to the live board.
+- **Notes:** README (leaderboard), CHANGELOG, DECISIONS, STATUS updated.
+- **Git:** committed with explicit paths and pushed.

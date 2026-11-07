@@ -16,7 +16,8 @@ Last updated: 2026-11-07
   - Back plate `SOLID003` included since 2026-11-07.
   - Served as `car.json` (meshopt) with `car_q.json` (quantized) as fallback.
 - **Online:**
-  - Claude artifact "Hot Lap", https://claude.ai/artifact/38hveqdzZbP5zHJUSUfVmb, version `1794091836-958f` (2026-11-07, livery T_TauOriginal).
+  - Claude artifact "Hot Lap", https://claude.ai/artifact/38hveqdzZbP5zHJUSUfVmb, version `1794092839-d6fc` (2026-11-08, shared leaderboard; capabilities `db` with rules `boards` read view / write owner and `boards/{self}` read view / write interact, `user` with scope profile).
+  - Leaderboard data lives in the artifact's db, not in this folder. Read it with Claude's ArtifactData tool (collection `boards`).
   - Shared as "Anyone with the link" (set by the owner with the Share button).
   - `game\` in this folder matches that version.
 - **Project folder:** `E:\HOT LAP` since 2026-11-07, with README, launcher, sources, model tools and the Blender export.
@@ -24,7 +25,7 @@ Last updated: 2026-11-07
 
 ## Open items
 
-- **Logo provenance chunk:** `source\logo_small.png` carries a 7.5 KB `caBX` (C2PA) chunk from the file store; the pixels are unchanged. `build_game.py` would embed it and change `index.html`, so the published `index.html` was kept as is. Strip the chunk before the next template change.
+- **Leaderboard:** checked in headless Chrome against an in-memory stand-in for `db`/`user`, not yet with a real lap on the live board. Only the owner and members of his claude.ai organization can post; outside visitors only see it. The game's AI test driver doesn't post (`autodrive`); `__hotlap.postLap(raw, pen)` is a test hook that posts like a finished lap. The "naive" test driver (`sim(sec, 'naive')`) leaves the track and circles off it, so it can't produce test laps.
 - **Node.js:** not installed on the laptop. The 2026-11-07 model rebuild used the node and pnpm bundled with Codex (`C:\Users\Archit\.cache\codex-runtimes\codex-primary-runtime\dependencies\node`); pnpm's cache is `E:\.pnpm-store` (36 MB, can be deleted). Installing Node.js would make `npm install` in the README work.
 - **`faumax_tau.prev.glb`:** the export keeps the previous export (35 MB) and it is tracked in git, so every export adds about 35 MB to the repo. Owner to decide whether to ignore `*.prev.*`.
 - **Touch controls:** temporary. Remove them later when the owner asks: `TOUCH_CONTROLS = false` or delete the marked blocks.
