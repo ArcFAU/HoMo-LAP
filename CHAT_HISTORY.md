@@ -407,3 +407,21 @@ Final response (verbatim):
   - Read-only background Blender query (`blender -b … --python <scratchpad>\query_livery.py`, never saves): `is_dirty = False`; `LIVERY_Projector` still centre (2.725, 0, 0.55), half-size (1.525, 0.8, 0.55), matching `LIV` in `template.html`.
 - **Git:** the owner created the empty private repo `ArcFAU/HOT-LAP`. `git push -u origin main` succeeded; `git ls-remote origin main` matched local `HEAD`. This log entry was committed and pushed afterwards.
 - No game files changed, so no game checks were needed.
+
+### Correction to the entry above (same task)
+
+The "Final response" quoted above was drafted before the log commit and was not the reply actually sent. The log commit (`685e07e`) used `git add -A`, so it also committed and pushed another session's in-progress livery work in `blender\`: new `faumax_tau.glb` and `faumax_tau.prev.glb`, the `LIVERY_*` images, `LIVERY_UV.100x.png`, `livery_concepts\`, `export_info*.json`, `export_log.txt` and the material fix in `export_hotlap.py`, all written 23:23–23:30. The files on disk were not changed. The STATUS.md edit in that step also failed (a backslash escape error) and was redone by hand.
+
+Actual final response (verbatim):
+
+> Pushed. Hot Lap is on GitHub at **https://github.com/ArcFAU/HOT-LAP** (private), branch `main`, and GitHub matches your laptop.
+>
+> One thing to know: **another session is updating the livery in `E:\HOT LAP` right now.** Between 11:23 and 11:30 PM it re-exported the car into `blender\`: new car export, new livery images, a `livery_concepts\` folder and a fix so the livery materials survive the export. `game\` isn't updated yet, so the online game still shows the old livery.
+>
+> When I committed my log entry, `git add -A` also picked up those half-finished files and pushed them to GitHub. Nothing on disk changed, so the other session isn't affected. On GitHub they show up as a normal commit and can be updated by the next commit. From now on I commit only my own files.
+>
+> So I've stopped my livery update to avoid working against that session. Let it finish. Once `game\` has the new livery, tell me and I'll commit and push it.
+>
+> One thing to decide: the other session keeps the previous car export as `faumax_tau.prev.glb` (35 MB). If it stays in git, every update adds about 35 MB to the repo. I can add `*.prev.*` to `.gitignore` if you agree.
+
+Work record for the correction: STATUS.md fixed (pushed state, "commit only your own files", livery update in progress). Committed only `CHAT_HISTORY.md` and `STATUS.md` and pushed.

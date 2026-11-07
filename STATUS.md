@@ -20,12 +20,11 @@ Last updated: 2026-11-07
   - Private to the owner until he shares it with the Share button.
   - `game\` in this folder matches that version.
 - **Project folder:** `E:\HOT LAP` since 2026-11-07, with README, launcher, sources, model tools and the Blender export.
-- **Git:** local repo on branch `main` since 2026-11-07, remote `origin` = https://github.com/ArcFAU/HOT-LAP.git (private).
+- **Git:** local repo on branch `main` since 2026-11-07, remote `origin` = https://github.com/ArcFAU/HOT-LAP.git (private), pushed 2026-11-07. Commit only your own files (`git add <paths>`, not `git add -A`), because more than one session can be working in this folder.
 
 ## Open items
 
-- **First push:** the GitHub repo `ArcFAU/HOT-LAP` has to be created (empty, private) before `git push -u origin main` works.
-
+- **Livery update in progress (2026-11-07):** the livery in `livery.blend` changed (new `E:\UE\livery\livery_art\LIVERY_*.png`). Another session re-exported the car into `blender\` (new `faumax_tau.glb`, `faumax_tau.prev.glb`, `livery_concepts\`, livery-material fix in `export_hotlap.py`). `game\` and the online version still have the old livery.
 - **Touch controls:** temporary. Remove them later when the owner asks: `TOUCH_CONTROLS = false` or delete the marked blocks.
 - **Old export folder:** `E:\UE\livery\hotlap_export` still exists. Everything from it is in `blender\`. The owner deletes it; the bridge cannot.
 - **Hidden parts:** only `SOLID003` from the hidden collection `07_Hardware` is exported. If other small parts look missing, add them to the list in `blender\export_hotlap.py`.
