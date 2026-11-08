@@ -891,3 +891,208 @@ Final response (verbatim):
   - `Play Hot Lap.bat`, `game/index.html`, `source/template.html`, `source/build_game.py`, `source/serve.py`
   - `MATALB/` (ignored: `slprj/`, `*.slxc`, `dist/`, `saves/`)
 - **Commit** on `main`, following the project's practice so far; push to `origin`.
+
+## 2026-11-08 — owner: plan for the high-end version
+
+### User messages (verbatim)
+
+> okay, back to the high end version. can you tell me what we need and how will be the pipeline for that? keep everything in new folder "high-end"
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced. Final response (verbatim):
+
+> Written for: you and whoever on the team would build it.
+>
+> The plan is in `high-end\README.md`. In short:
+>
+> **What we need**
+> - **Engine:** Unreal Engine 5. It was installed here before (registry entry for `D:\UE_5.7`), but the folder is gone, so it needs reinstalling, plus Visual Studio 2022 for C++.
+> - **Disk:** about 120 GB free on one drive. That's the real blocker: the most free space on any drive is 77 GB, on D. An external 1 TB SSD solves it.
+> - **GPU:** the GTX 1650 with 4 GB is enough to build it at medium settings. It can't do ray-traced reflections, so show the final look on an RTX PC.
+> - **People:** an artist for materials, the venue and lighting, and sound recordings of the τ (motor and inverter). The code, tools and data pipeline I can do.
+> - **Data:** most of it already exists:
+>   - the car in livery.blend, including UV livery sheets
+>   - the LTS track and lap, plus a dual-track LTS result
+>   - the vehicle and aero data, and two HDRI skies in `E:\UE`
+>
+> **Pipeline:** each source goes through a script into the Unreal project, so new exports flow through without hand work.
+> - **Car:** livery.blend → background Blender export → body and wheels into Unreal. The livery is baked onto the existing UV sheets.
+> - **Track:** `fsg_track.json` → spline track and cones.
+> - **Setups:** the same JSON as the web game and MATLAB.
+> - **Physics:** our model ported to C++. It must reproduce the 77.4 s AI lap, like the web game, MATLAB and Simulink.
+> - **Art and sound:** venue, sky and recorded sound added by hand in the editor.
+>
+> **Stages**
+>
+> | Stage | Content | Time |
+> |---|---|---|
+> | 0 | setup | about a week |
+> | 1 | a drivable slice with the real car, livery, track and gamepad | 2–3 weeks |
+> | 2 | the full game: timing, penalties, ghosts, modes, HUD, venue v1 | 3–4 weeks |
+> | 3 | high-end: four-wheel physics, cockpit, wheel with force feedback, replays, post-processing, recorded sound | 4–8 weeks |
+>
+> **Your decisions** (section 6 of the plan):
+> 1. **Engine version:** the latest Unreal 5.x.
+> 2. **Disk:** SSD or free up space.
+> 3. **Version control:** Git LFS or Perforce.
+> 4. **Physics:** our model in C++ (recommended) or Simulink driving Unreal.
+> 5. **Venue:** a generic paddock first, or the real FSG site.
+> 6. **People:** who does the art and the sound.
+>
+> Nothing is installed or committed yet. Once you've decided on disk and engine, I can start stage 0 and the export scripts.
+
+### Work record
+
+- **Checked (read-only):**
+  - GTX 1650 Max-Q 4 GB (driver 617.42), i5-9300H 4C/8T, 31.8 GB RAM
+  - free disk: C 28 GB, D 77 GB, E 27 GB, F 36 GB
+  - registry `HKLM\SOFTWARE\EpicGames\Unreal Engine\5.7` → `D:\UE_5.7` (folder missing); no Epic launcher install data
+  - Blender 5.1 at `C:\Program Files\Blender Foundation\Blender 5.1`
+  - HDRIs and other files in `E:\UE`
+- **New:** `high-end\README.md`. It covers requirements (hardware, software, skills, data we have and need), the pipeline, stages with done-when checks, the two MATLAB routes, risks, the owner's decisions and the folder layout.
+- **Notes:** README (folder layout), STATUS (open item).
+- **Unverified in the plan, marked there:** the Unreal version the MathWorks support package needs for R2024b.
+- **Not done:** no installs, no commit.
+
+## 2026-11-08 — owner: where Assetto Corsa sits next to NFS and Forza Horizon
+
+### User messages (verbatim)
+
+> if you have to put Assetto Corsa with NFS and FH. where would it be?
+
+### Contributor messages
+
+Final response (verbatim):
+
+> At the simulation end, well past both of them:
+>
+> ```
+> arcade ◀──────────────────────────────────────────────────────▶ simulation
+>   NFS          Forza Horizon      Forza Motorsport / GT      Assetto Corsa      iRacing / rFactor 2
+> ```
+>
+> - **Need for Speed:** pure arcade. Grip and speed are tuned for fun, there are drift and boost mechanics, and you play with a gamepad.
+> - **Forza Horizon:** "sim-cade". It uses a real tyre and suspension model underneath, but with heavy assists and forgiving grip, and it's made for gamepads in an open world.
+> - **Assetto Corsa:** a real simulator.
+>   - **Physics:** per-wheel suspension and a detailed tyre model (load, slip, temperature).
+>   - **Tracks:** real ones, laser-scanned.
+>   - **Controls:** built around a steering wheel with force feedback. With a gamepad it's hard to drive.
+>   - **Graphics:** behind the other two out of the box (it's from 2014); mods close much of the gap.
+>
+> **Where Hot Lap sits:**
+> - **Hot lap mode:** between Forza Horizon and Assetto Corsa. The data is real (the LTS envelope, our aero and power), but it's a single-track model without suspension or tyre temperature, and the assists help keyboard drivers.
+> - **Arcade mode:** between NFS and Forza Horizon.
+> - **The high-end plan:** stage 3 (four-wheel model, wheel with force feedback) moves the handling toward Assetto Corsa, with Unreal visuals closer to Forza Horizon.
+>
+> **Worth knowing:** many Formula Student teams put their own car into Assetto Corsa as a mod for driver training. It supports custom cars, with physics files for tyres, aero, engine and suspension. Tracks are custom too, so the FSG layout could come from our LTS centreline. That route gets you sim-grade handling and force feedback much faster than building it in Unreal. The cost is that you work inside someone else's game, every driver needs a copy, and the look is older. If you like, I can put it into the high-end plan as an option.
+
+### Work record
+
+- Question only; no files changed apart from this log.
+
+## 2026-11-08 — owner: rename the current versions to HoMo-LAP, keep "Hot Lap" for the high-end game
+
+### User messages (verbatim)
+
+> okay, so here is what i was thinking. we rename hot lap (all the varients) to "HoMo-LAP" and develop that as simulator. we create another high end version and call it hot lap. what do you think?
+
+### Contributor messages
+
+Final response (verbatim):
+
+> I think it's a good split. Each product gets one clear job, and the name tells you which job it is.
+>
+> - **HoMo-LAP, the simulator:** fits next to HoMo-LTS and HoMo-CFD, so the team reads it as one of its engineering tools. Its goal is fidelity:
+>   - the four-wheel model and the LTS check
+>   - a wheel with force feedback
+>   - telemetry and setup comparisons
+>   - FS events as real events: endurance, plus skidpad and acceleration with proper timing
+> - **Hot Lap, the game (Unreal):** its goal is fun and looks. Arcade handling, free roam and the polish go there.
+>
+> Three suggestions:
+> 1. **One physics core for both.** Hot Lap should run HoMo-LAP's model with the arcade layer on top, not its own physics. Then the game stays believable, and every physics improvement lands in both.
+> 2. **Move the arcade mode out of HoMo-LAP.** It's a game feature. Free roam can stay, as the test area for skidpad and acceleration.
+> 3. **Rename what people see, but keep the plumbing for now:**
+>    - **Rename:** the titles, menus, docs and the MATLAB launcher (`HoMoLap`); the GitHub repo too (GitHub redirects the old URL).
+>    - **Keep the link:** the online link stays the same, only the page title changes.
+>    - **Keep the stored data:** saved best laps and the leaderboard data use internal names that I would keep, so nobody loses their laps.
+>    - **Keep the folder for now:** renaming `E:\HOT LAP` itself breaks paths in `AGENTS.md`, the scripts and possibly another session working here. I'd do that later, on purpose, or not at all.
+>    - **Separate repo for the game:** put Hot Lap (Unreal) in its own repo with LFS, because Unreal assets would bloat this one.
+>
+> What I need from you:
+> - Do you want the rename done now?
+> - Should the arcade mode leave HoMo-LAP, or stay for now?
+
+### Work record
+
+- Question only; no files changed apart from this log.
+
+## 2026-11-08 — owner: rename to HoMo-LAP
+
+### User messages (verbatim)
+
+> rename now, arcade stays
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced. Final response (verbatim):
+
+> Done. Everything is now HoMo-LAP, and the arcade mode stays.
+>
+> - **Online:** same link, now with the HoMo-LAP title and heading (https://claude.ai/artifact/38hveqdzZbP5zHJUSUfVmb, version 1794148607-1787).
+> - **Local:** `Play HoMo-LAP.bat` replaces `Play Hot Lap.bat`.
+> - **MATLAB:**
+>   - `HoMoLap` replaces `HotLap`.
+>   - The Simulink model is now `HoMoLapVehicle.slx`, rebuilt; it gives the same laps, 77.47 s.
+>   - The window titles and `HoMoLap.exe` are renamed.
+> - **Notes:** README, AGENTS, STATUS, DECISIONS and CHANGELOG updated. The high-end plan is now titled "Hot Lap — the high-end game".
+> - **Kept on purpose:**
+>   - **Folder and data:** the folder `E:\HOT LAP`, the saved-laps key and the leaderboard data, so nobody loses a lap.
+>   - **Internal names:** the MATLAB package `+hotlap`, which the Simulink blocks call.
+>   - **The mode called "Hot lap":** it's the FS term for a timed lap.
+>
+> Two things for you:
+> 1. **GitHub repo:** I can't rename it from here (no GitHub CLI on this laptop). On GitHub: Settings → General → Repository name → `HoMo-LAP`. The old URL keeps redirecting, and I'll then point the local remote at the new name.
+> 2. **Git:** the rename isn't committed yet. Shall I commit and push?
+
+### Work record
+
+- **Web (`source\template.html`, rebuilt):**
+  - `<title>` HoMo-LAP, heading `HoMo-<span class="o">LAP</span>`, kicker "FS lap simulator · FS Rules 2027"
+  - saved-laps key, leaderboard collection and test hook unchanged
+- **Local launcher:** `git mv "Play Hot Lap.bat" "Play HoMo-LAP.bat"`, texts updated (CRLF kept). `source\serve.py` comment updated, `blender\export_hotlap.py` header comment updated.
+- **MATLAB:**
+  - `git mv`: `HotLap.m` → `HoMoLap.m`, `build_hotlap_model.m` → `build_homolap_model.m`, `hotlapModelParams.m` → `homolapModelParams.m`, `HotLapVehicle.slx` → `HoMoLapVehicle.slx`
+  - names updated in all `.m` files: window titles, exe name, user folder `%LOCALAPPDATA%\HoMoLap` and the MATALB README
+  - Simulink model rebuilt as `HoMoLapVehicle` (the previous file is kept as `.slx.bak`, ignored by git)
+- **Checks:**
+  - `run_simulink_lap`: 77.4739 / 77.4733 s, MATLAB 77.400 s
+  - `HoMoLap` launcher renders with the new heading
+  - Game window title "HoMo-LAP · …"
+  - Web menu: desktop and 390 px phone, no overflow or page errors
+- **Published** to the artifact: version `1794148607-1787`, capabilities carried forward.
+- **Notes:** AGENTS, README, STATUS (online version, repo rename open), DECISIONS (rename entry), CHANGELOG (Changed), high-end\README (Hot Lap = the game on HoMo-LAP's physics core, plugin `HoMoLapPhysics`).
+- **Not done:**
+  - GitHub repo rename: no gh CLI; the owner does it on GitHub.
+  - No commit.
+
+## 2026-11-08 — owner: commit the rename
+
+### User messages (verbatim)
+
+> commit
+
+### Contributor messages
+
+Final response (verbatim):
+
+> Committed locally on `main`: the rename to HoMo-LAP and the high-end plan (`high-end\README.md`). It's not pushed; say "push" and I'll send it to GitHub, ideally after you've renamed the repo there.
+
+### Work record
+
+- **Staged by explicit path:**
+  - `AGENTS.md`, `CHANGELOG.md`, `CHAT_HISTORY.md`, `DECISIONS.md`, `README.md`, `STATUS.md`
+  - `Play HoMo-LAP.bat` (rename), `blender/export_hotlap.py`, `game/index.html`, `source/serve.py`, `source/template.html`
+  - the MATALB renames and edits, `high-end/README.md`
+- **Commit:** on `main`, not pushed (the owner said "commit" only).

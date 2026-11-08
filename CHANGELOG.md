@@ -4,6 +4,9 @@ User-visible changes, newest first. Detailed reasoning is in `CHAT_HISTORY.md`, 
 
 ## 2026-11-08
 
+### Changed
+- **Hot Lap is now HoMo-LAP**: the web version, the online page (same link) and the MATLAB edition (`HoMoLap` in MATLAB, `HoMoLapVehicle.slx` in Simulink). Saved best laps and the leaderboard carry over. The name Hot Lap now belongs to the planned high-end game.
+
 ### Fixed
 - **Livery now sticks to the car.** The livery projection used the car position from the previous frame, so the livery trailed the moving car (about 0.15 m at 30 km/h, 0.5 m at full speed, 0.8 m in arcade) and twisted in bends. It now follows the car exactly.
 - **Livery looks like livery.blend:** the carbon under the transparent parts of the livery was shiny and reflected the sky, so the chequered areas looked grey and white and seemed to move as the car turned. It is now dark, slightly glossy carbon, and the chequer reads as dark blocks on carbon. The livery images no longer shimmer at their edges.

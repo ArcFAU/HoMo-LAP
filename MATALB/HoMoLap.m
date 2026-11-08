@@ -1,12 +1,12 @@
-function fig = HotLap()
-%HOTLAP  Hot Lap, MATLAB edition: launcher for the game, the setup editor and the Simulink model.
-%   Run HotLap from this folder (or add it to the path). Choose a mode and a car setup, then Start.
+function fig = HoMoLap()
+%HOMOLAP  HoMo-LAP, MATLAB edition: launcher for the game, the setup editor and the Simulink model.
+%   Run HoMoLap from this folder (or add it to the path). Choose a mode and a car setup, then Start.
 %     Hot lap    team data (vehicle-params tau, LTS tyre envelope, CFD aero), FS Rules 2027 penalties
 %     Arcade     forgiving, drift-friendly handling with more grip and power; no penalties
 %     Free roam  arcade handling on a large paddock with an FS skidpad and a 75 m acceleration strip
 %   Edit setup changes any physics parameter and saves your own setups (setups\*.json).
 %   AI lap runs the demo driver with the selected setup (no graphics) and compares with the LTS lap.
-%   Simulink lap runs the same car and driver in simulink\HotLapVehicle.slx.
+%   Simulink lap runs the same car and driver in simulink\HoMoLapVehicle.slx.
 %   Best laps are kept in saves\bests.mat, with the same keys as the web game.
 here = fileparts(mfilename('fullpath')); addpath(here, fullfile(here, 'simulink'), fullfile(here, 'tools'), fullfile(here, 'studies'));
 S = hotlap.setups(); T = hotlap.loadTrack();
@@ -16,13 +16,13 @@ modes = {'sim', 'Hot lap', 'Team data and FS Rules penalties (2 s per cone, 10 s
          'free', 'Free roam', 'Arcade handling on a large paddock with an FS skidpad and acceleration strip. 0–100 km/h and 75 m are timed from every standing start.'};
 ink = [0.04 0.05 0.06]; paper = [0.95 0.95 0.92]; red = [0.91 0.13 0.16]; muted = [0.56 0.58 0.62];
 
-fig = uifigure('Name', 'Hot Lap · MATLAB edition', 'Position', [100 80 980 720], 'Color', ink);
+fig = uifigure('Name', 'HoMo-LAP · MATLAB edition', 'Position', [100 80 980 720], 'Color', ink);
 gl = uigridlayout(fig, [1 2], 'ColumnWidth', {520, '1x'}, 'BackgroundColor', ink, 'Padding', [24 18 24 18], 'ColumnSpacing', 26);
 L = uigridlayout(gl, [10 1], 'RowHeight', {44, 70, 46, 18, 96, 18, '1x', 30, 46, 30}, 'BackgroundColor', ink, 'Padding', 0, 'RowSpacing', 6);
 hdr = uigridlayout(L, [1 2], 'ColumnWidth', {140, '1x'}, 'BackgroundColor', ink, 'Padding', 0);
 uiimage(hdr, 'ImageSource', fullfile(hotlap.root(), 'data', 'logo.png'));
-uilabel(hdr, 'Text', 'ENDURANCE HOT LAP · FS RULES 2027 · MATLAB EDITION', 'FontColor', red, 'FontName', 'Consolas', 'FontSize', 11);
-uilabel(L, 'Text', 'Hot Lap', 'FontSize', 56, 'FontWeight', 'bold', 'FontAngle', 'italic', 'FontColor', paper);
+uilabel(hdr, 'Text', 'FS LAP SIMULATOR · FS RULES 2027 · MATLAB EDITION', 'FontColor', red, 'FontName', 'Consolas', 'FontSize', 11);
+uilabel(L, 'Text', 'HoMo-LAP', 'FontSize', 56, 'FontWeight', 'bold', 'FontAngle', 'italic', 'FontColor', paper);
 uilabel(L, 'Text', 'Drive the FAUmax τ on the FSG endurance layout from the lap-time simulation, with the team''s vehicle data. The LTS reference lap drives alongside you as a gold ghost.', ...
     'FontColor', [0.79 0.8 0.82], 'WordWrap', 'on');
 uilabel(L, 'Text', 'MODE', 'FontColor', muted, 'FontWeight', 'bold', 'FontSize', 11);
@@ -56,7 +56,7 @@ logA = uitextarea(R, 'Editable', 'off', 'BackgroundColor', [0.13 0.15 0.17], 'Fo
     'Value', {'Keys in the game: arrows or WASD drive, Space handbrake, R back on track,', 'C camera, G ghosts, Esc pause (then Q quits, Enter restarts).', ...
     sprintf('LTS reference lap: %.3f s on %s (%s).', T.lts.lapTime, 'A_FSGend_3', 'singleTrack_endurance.json')});
 fillList(E(1).id); refresh();
-if isdeployed, waitfor(fig); end   % HotLap.exe: keep running until the launcher closes
+if isdeployed, waitfor(fig); end   % HoMoLap.exe: keep running until the launcher closes
 
     function m = mode(), m = modes{find(rb == mg.SelectedObject, 1), 1}; end
     function e = entry(), e = E(strcmp({E.id}, lb.Value)); end
@@ -125,7 +125,7 @@ if isdeployed, waitfor(fig); end   % HotLap.exe: keep running until the launcher
     end
 
     function simLap()
-        if isdeployed, log('The Simulink lap needs MATLAB; it is not part of HotLap.exe.'); return; end
+        if isdeployed, log('The Simulink lap needs MATLAB; it is not part of HoMoLap.exe.'); return; end
         e = entry(); log(sprintf('Simulink lap with %s %s ...', e.car, e.name)); drawnow;
         try
             r = run_simulink_lap(e.vals, 'quiet', true);
@@ -136,9 +136,9 @@ if isdeployed, waitfor(fig); end   % HotLap.exe: keep running until the launcher
     end
 
     function openModel()
-        if isdeployed, log('The Simulink model needs MATLAB; it is not part of HotLap.exe.'); return; end
-        f = fullfile(hotlap.root(), 'simulink', 'HotLapVehicle.slx');
-        if ~exist(f, 'file'), log('Building simulink\HotLapVehicle.slx ...'); drawnow; build_hotlap_model(); end
+        if isdeployed, log('The Simulink model needs MATLAB; it is not part of HoMoLap.exe.'); return; end
+        f = fullfile(hotlap.root(), 'simulink', 'HoMoLapVehicle.slx');
+        if ~exist(f, 'file'), log('Building simulink\HoMoLapVehicle.slx ...'); drawnow; build_homolap_model(); end
         open_system(f);
     end
 end

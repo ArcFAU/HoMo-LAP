@@ -1,6 +1,6 @@
 # Contributor instructions
 
-Hot Lap is a browser racing game. It puts High Voltage Motorsports' FAUmax τ (the real Blender model and livery) on the FSG endurance track, using the team's LTS, vehicle-params and CFD numbers.
+HoMo-LAP (called Hot Lap until 2026-11-08) is a lap simulator in the browser, with a MATLAB/Simulink edition in `MATALB\`. It puts High Voltage Motorsports' FAUmax τ (the real Blender model and livery) on the FSG endurance track, using the team's LTS, vehicle-params and CFD numbers. "Hot Lap" is now the name of the planned high-end game (Unreal Engine 5), planned in `high-end\README.md`.
 
 **E:\HOT LAP is the project folder (owner, 2026-11-07: "we work in that folder now on").** It is the source of truth. Copies elsewhere are derived from it and may be out of date:
 - the online artifact
@@ -22,12 +22,12 @@ Before changing anything, read:
   - `D:\VD` (laptimesimulation / HoMo-LTS, vehicle-params)
   - the CFD projects (`D:\HoMo-CFD`, `D:\CFD_TOPO`)
   - the livery folder `E:\UE\livery`
-  - Nothing for Hot Lap is written there.
+  - Nothing for HoMo-LAP or Hot Lap is written there.
 - **Don't edit `game\index.html` directly.** Edit `source\template.html` and run `python source\build_game.py`.
 - **Keep the touch controls in their marked blocks.** They are temporary and will be removed later (owner: "Just for now. Later we might need to remove it."). `const TOUCH_CONTROLS = false;` turns them off.
 - **Don't delete files without the owner's approval.** Keep originals (`.bak` or renamed).
 - **Online version:**
-  - It is the Claude artifact "Hot Lap" (https://claude.ai/artifact/38hveqdzZbP5zHJUSUfVmb), private to the owner until he shares it.
+  - It is the Claude artifact "HoMo-LAP" (formerly "Hot Lap", same link: https://claude.ai/artifact/38hveqdzZbP5zHJUSUfVmb). The owner shares it himself; it is shared as "Anyone with the link".
   - Republish only the files in `game\`.
   - The host does not serve `.glb` or `.bin` files, so models go up as base64 JSON (`source\model\pack_json.py`).
 - **No secrets in this folder.**
@@ -48,7 +48,7 @@ Record user-visible changes in `CHANGELOG.md` and decisions in `DECISIONS.md`. U
 There is no automated test suite in this folder yet. After a change:
 
 1. `python source\build_game.py`
-2. Start `Play Hot Lap.bat` and play a lap. Check the browser console (F12) for errors.
+2. Start `Play HoMo-LAP.bat` and play a lap. Check the browser console (F12) for errors.
 3. After a model change, look at the car from the rear and the sides in the 3D view. The `C` key cycles the cameras.
 
 Report what was checked in `CHAT_HISTORY.md`.

@@ -18,14 +18,14 @@ Last updated: 2026-11-08
   - Back plate `SOLID003` included since 2026-11-07.
   - Served as `car.json` (meshopt) with `car_q.json` (quantized) as fallback.
 - **Online:**
-  - Claude artifact "Hot Lap", https://claude.ai/artifact/38hveqdzZbP5zHJUSUfVmb, version `1794144097-5855` (2026-11-08: modes, setup editor, livery fixes, build 2026-11-08 13:59; before that `1794092839-d6fc` with the shared leaderboard; capabilities `db` with rules `boards` read view / write owner and `boards/{self}` read view / write interact, `user` with scope profile).
+  - Claude artifact "HoMo-LAP" (formerly "Hot Lap"), https://claude.ai/artifact/38hveqdzZbP5zHJUSUfVmb, version `1794148607-1787` (2026-11-08: renamed to HoMo-LAP; before that `1794144097-5855` with the modes, setup editor and livery fixes; before that `1794092839-d6fc` with the shared leaderboard; capabilities `db` with rules `boards` read view / write owner and `boards/{self}` read view / write interact, `user` with scope profile).
   - Leaderboard data lives in the artifact's db, not in this folder. Read it with Claude's ArtifactData tool (collection `boards`).
   - Shared as "Anyone with the link" (set by the owner with the Share button).
   - `game\` in this folder matches that version.
 - **MATLAB edition** (`MATALB\`, since 2026-11-08), built with MATLAB R2024b, Simulink, Optimization Toolbox and MATLAB Compiler:
   - the game in a MATLAB figure (all three modes)
   - a launcher and a setup editor (uifigure)
-  - `simulink\HotLapVehicle.slx`
+  - `simulink\HoMoLapVehicle.slx`
   - studies (setup sweep, fmincon setup optimisation)
   - tools: track build from the LTS data, car import from the Blender GLB with the livery baked into vertex colours, standalone build
   - Same physics as the web game: the AI lap is 77.40 s in MATLAB, 77.42 s in the web game and 77.47 s in Simulink.
@@ -34,12 +34,15 @@ Last updated: 2026-11-08
 
 ## Open items
 
+- **GitHub repo name:** still `ArcFAU/HOT-LAP`. The owner renames it to `HoMo-LAP` on GitHub (Settings → General → Repository name); GitHub redirects the old URL, then `git remote set-url origin https://github.com/ArcFAU/HoMo-LAP.git`.
+- **High-end version (the game "Hot Lap"):** plan in `high-end\README.md` (Unreal Engine 5: requirements, pipeline, stages, risks). Waiting for the owner's decisions listed there: engine version, disk, version control, physics route, venue, people. Unreal 5.7 is registered at `D:\UE_5.7`, but that folder no longer exists.
+
 - **Not played by hand yet:**
   - Arcade, free roam and the setup editor were checked in headless Chrome (scripted driving, AI laps, screenshots).
   - The MATLAB game was checked with its headless self-test and screenshots.
   - Nobody has driven either with a keyboard yet; the arcade handling may need tuning by feel (`ARC` in template.html, `S.arc` in `MATALB\+hotlap\setups.m`).
 - **Arcade car:** 0–100 km/h in 1.6 s and a 175 km/h top speed. That is deliberately not the real car; free-roam timings say "arcade car".
-- **`MATALB\dist\HotLap.exe`:** built with MATLAB Compiler (not in git). It was not started in this session, because the session's permission check blocked running it. It needs the MATLAB Runtime R2024b on PCs without MATLAB.
+- **`MATALB\dist\HotLap.exe`:** built with MATLAB Compiler before the rename (not in git); `tools\build_standalone` now writes `HoMoLap.exe`. It was not started in this session, because the session's permission check blocked running it. It needs the MATLAB Runtime R2024b on PCs without MATLAB.
 - **MATLAB edition data:** copies of `source\fsg_track.json`, `game\livery\*.png` and the logo, plus `car_mesh.mat` made from `blender\faumax_tau.glb`. Update them as described in `MATALB\README.md` when the originals change.
 
 - **Leaderboard:** checked in headless Chrome against an in-memory stand-in for `db`/`user`, not yet with a real lap on the live board. Only the owner and members of his claude.ai organization can post; outside visitors only see it. The game's AI test driver doesn't post (`autodrive`); `__hotlap.postLap(raw, pen)` is a test hook that posts like a finished lap. The "naive" test driver (`sim(sec, 'naive')`) leaves the track and circles off it, so it can't produce test laps.
@@ -48,6 +51,6 @@ Last updated: 2026-11-08
 - **Touch controls:** temporary. Remove them later when the owner asks: `TOUCH_CONTROLS = false` or delete the marked blocks.
 - **Old export folder:** `E:\UE\livery\hotlap_export` still exists. Everything from it is in `blender\`. The owner deletes it; the bridge cannot.
 - **Hidden parts:** only `SOLID003` from the hidden collection `07_Hardware` is exported. If other small parts look missing, add them to the list in `blender\export_hotlap.py`.
-- **Offline play:** `Play Hot Lap.bat` needs Python, and three.js loads from a CDN, so local play also needs internet. Vendoring the three.js files would make it fully offline.
+- **Offline play:** `Play HoMo-LAP.bat` needs Python, and three.js loads from a CDN, so local play also needs internet. Vendoring the three.js files would make it fully offline.
 - **Tests:** no automated test suite in this folder yet. The 2026-11-07 checks ran in headless Chrome in Claude's cloud workspace; those scripts were not copied here.
 - **Livery updates:** when the livery in the .blend changes, copy the new images into `game\livery\` (at most 2048 px wide) and republish.

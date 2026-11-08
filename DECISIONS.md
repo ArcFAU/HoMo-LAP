@@ -126,3 +126,24 @@ The owner asked for "a copy of the entire project but with MathWorks products" i
 
 **Why:** the owner reported that the livery fix had not worked. The plain server sends no cache header, so Chrome could keep showing an older `index.html` after a rebuild. The stamp shows at a glance which build a browser is running.
 
+## 2026-11-08 — Renamed to HoMo-LAP; "Hot Lap" is the high-end game
+
+Everything built so far is now called **HoMo-LAP**: the web version, the online artifact and the MATLAB/Simulink edition. It is developed as the team's lap simulator, and the arcade and free-roam modes stay in it. **Hot Lap** is the name of the planned Unreal Engine game (`high-end\`). The game will use HoMo-LAP's physics core with an arcade layer on top.
+
+Renamed:
+- page and window titles, the menu heading
+- the MATLAB launcher (`HoMoLap.m`) and the Simulink model (`HoMoLapVehicle.slx`, built by `build_homolap_model.m` with `homolapModelParams.m`)
+- the standalone exe name, the local launcher (`Play HoMo-LAP.bat`)
+- the docs
+
+Kept, so data and links survive:
+- the folder `E:\HOT LAP`
+- the artifact link
+- the saved-laps key `hotlap.hvm.fsg.v1`, the leaderboard collection `boards` and its lap keys
+- the MATLAB package `+hotlap` (called from the Simulink blocks)
+- `blender\export_hotlap.py`, `window.__hotlap` (test hook)
+
+The GitHub repo is renamed by the owner on GitHub. The mode called "Hot lap" keeps its name: it is the FS term for a timed flying lap.
+
+**Why:** the owner's split: a simulator in the HoMo family (HoMo-LTS, HoMo-CFD) for fidelity, and a separate high-end game for looks and fun.
+

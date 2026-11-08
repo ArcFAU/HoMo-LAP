@@ -1,4 +1,4 @@
-# Hot Lap car export. Run in a BACKGROUND Blender only; it never saves livery.blend:
+# HoMo-LAP car export (file name kept from the Hot Lap days). Run in a BACKGROUND Blender only; it never saves livery.blend:
 #   blender -b "E:\UE\livery\livery.blend" --python "E:\HOT LAP\blender\export_hotlap.py"
 # Everything below changes only this background copy in memory.
 import bpy, os, json, shutil, traceback, time

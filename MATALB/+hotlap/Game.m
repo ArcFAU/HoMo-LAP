@@ -1,7 +1,7 @@
 classdef Game < handle
-%HOTLAP.GAME  Hot Lap in a MATLAB figure: the FAUmax tau on the FSG endurance track.
+%HOTLAP.GAME  HoMo-LAP in a MATLAB figure: the FAUmax tau on the FSG endurance track.
 %   g = hotlap.Game(entry, mode) opens the game window; g.run() plays until the window closes or
-%   you quit from the pause screen. Usually started from HotLap (the launcher).
+%   you quit from the pause screen. Usually started from HoMoLap (the launcher).
 %     entry  setup entry from hotlap.loadSetups (stock aero package or custom setup)
 %     mode   'sim' (hot lap: team data, FS Rules penalties), 'arcade' (forgiving, drift-friendly
 %            handling, no penalties) or 'free' (free roam on the paddock, no lap timing)
@@ -406,7 +406,7 @@ classdef Game < handle
     methods
         function buildFigure(g, visible)
             T = g.T; C = g.COL;
-            g.fig = figure('Name', ['Hot Lap · ' g.entry.car ' ' g.entry.name ' · ' modeName(g.mode)], 'NumberTitle', 'off', ...
+            g.fig = figure('Name', ['HoMo-LAP · ' g.entry.car ' ' g.entry.name ' · ' modeName(g.mode)], 'NumberTitle', 'off', ...
                 'Color', [0.725 0.83 0.92], 'MenuBar', 'none', 'ToolBar', 'none', 'Position', [60 60 1280 720], ...
                 'Visible', onoff(visible), 'Renderer', 'opengl', 'GraphicsSmoothing', 'on', ...
                 'WindowKeyPressFcn', @(~, e) g.onKey(e, true), 'WindowKeyReleaseFcn', @(~, e) g.onKey(e, false), ...

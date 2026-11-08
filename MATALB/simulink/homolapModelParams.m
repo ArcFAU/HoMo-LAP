@@ -1,6 +1,6 @@
-function HL = hotlapModelParams(vals, mode)
-%HOTLAPMODELPARAMS  Parameter struct HL for simulink\HotLapVehicle.slx.
-%   HL = hotlapModelParams(vals, mode): car parameters (hotlap.carParams), track and speed plan
+function HL = homolapModelParams(vals, mode)
+%HOMOLAPMODELPARAMS  Parameter struct HL for simulink\HoMoLapVehicle.slx.
+%   HL = homolapModelParams(vals, mode): car parameters (hotlap.carParams), track and speed plan
 %   (hotlap.physicsData), the track arrays the blocks need, and the start state on the grid.
 %   mode 'sim' (default) or 'arcade'.
 if nargin < 1 || isempty(vals), S = hotlap.setups(); vals = S.presets(1).vals; end

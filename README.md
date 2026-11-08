@@ -1,4 +1,6 @@
-# Hot Lap — FAUmax τ on the FSG endurance track
+# HoMo-LAP — FAUmax τ on the FSG endurance track
+
+HoMo-LAP was called Hot Lap until 2026-11-08. The name Hot Lap now belongs to the planned high-end game in `high-end\`.
 
 Browser racing game built on the team's data: the τ vehicle parameters, the LTS FSG endurance track and reference lap, the CFD aero packages and the FS Rules cone and off-course penalties.
 
@@ -7,7 +9,7 @@ Browser racing game built on the team's data: the τ vehicle parameters, the LTS
 - **MATLAB edition:** the same game, physics and setups in MATLAB and Simulink, in `MATALB\` (see `MATALB\README.md`).
 
 - **Play online:** https://claude.ai/artifact/38hveqdzZbP5zHJUSUfVmb (private until you share it with the Share button on that page)
-- **Play from this folder:** double-click `Play Hot Lap.bat`. It needs Python and an internet connection, because three.js loads from a CDN. Opening `index.html` directly does not work: the browser blocks loading the car model from `file://`.
+- **Play from this folder:** double-click `Play HoMo-LAP.bat`. It needs Python and an internet connection, because three.js loads from a CDN. Opening `index.html` directly does not work: the browser blocks loading the car model from `file://`.
 
 Controls:
 
@@ -40,8 +42,9 @@ Phones get on-screen touch controls.
 
 ```
 HOT LAP\
-├─ Play Hot Lap.bat        local launcher (python -m http.server 8765)
+├─ Play HoMo-LAP.bat      local launcher (source\serve.py, port 8765)
 ├─ MATALB\                 MATLAB/Simulink edition (own README): game, setup editor, Simulink model, studies
+├─ high-end\               Hot Lap, the planned high-end game in Unreal Engine 5 (own README); nothing built yet
 ├─ game\                   exactly what is published online
 │  ├─ index.html           the whole game (built from source\template.html)
 │  ├─ car.json             car model, meshopt-compressed GLB as base64
@@ -76,11 +79,11 @@ E:\HOT LAP is the project folder. Anyone working here (Claude, Codex or a person
 
 1. Edit `source\template.html`.
 2. Run `python source\build_game.py`. This writes `game\index.html` and stamps the build time into the menu ("Build …").
-3. Test it with `Play Hot Lap.bat`.
+3. Test it with `Play HoMo-LAP.bat`.
 
 **Removing the touch controls:** set `const TOUCH_CONTROLS = false;`. To delete them completely, remove the blocks marked `TOUCH CONTROLS (temporary)` in the CSS, the HTML and the JS, plus the lines tagged `// TOUCH CONTROLS (temporary)`.
 
-**Updating the online version:** the online page is a Claude artifact. Ask Claude to republish the files in `game\` to the Hot Lap artifact.
+**Updating the online version:** the online page is a Claude artifact. Ask Claude to republish the files in `game\` to the HoMo-LAP artifact.
 
 ## Updating the car model
 

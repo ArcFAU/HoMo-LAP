@@ -21,7 +21,7 @@ for k = 1:numel(values)
 end
 R = table(values(:), ai, valid, est, 'VariableNames', {field, 'aiLap', 'valid', 'pointMass'});
 f = S.fields(strcmp(S.fields(:, 1), field), :);
-figure('Name', ['Hot Lap · sweep ' field], 'Color', 'w');
+figure('Name', ['HoMo-LAP · sweep ' field], 'Color', 'w');
 yyaxis left; plot(values * f{8}, ai, 'o-', 'LineWidth', 1.4); ylabel('AI lap (s)');
 yyaxis right; plot(values * f{8}, est, 's--', 'LineWidth', 1.2); ylabel('Point-mass estimate (s)');
 grid on; xlabel(sprintf('%s (%s)', f{3}, f{4})); title(sprintf('FSG endurance: lap time against %s', lower(f{3})));

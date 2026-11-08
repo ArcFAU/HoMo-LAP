@@ -12,7 +12,7 @@ if nargin < 2, onSave = @(e) []; end
 draft = entry.vals; loaded = entry.vals;
 ref = hotlap.deriveSetup(S.presets(1).vals, T).est;
 
-fig = uifigure('Name', 'Hot Lap · Car setup', 'Position', [120 80 1060 760], 'Color', [0.04 0.05 0.06]);
+fig = uifigure('Name', 'HoMo-LAP · Car setup', 'Position', [120 80 1060 760], 'Color', [0.04 0.05 0.06]);
 gl = uigridlayout(fig, [5 1], 'RowHeight', {60, '1x', 140, 30, 44}, 'BackgroundColor', [0.04 0.05 0.06], 'Padding', [18 14 18 14]);
 top = uigridlayout(gl, [2 3], 'ColumnWidth', {320, 320, '1x'}, 'RowHeight', {18, 28}, 'BackgroundColor', [0.04 0.05 0.06], 'Padding', 0);
 lab(top, 'SETUP NAME'); lab(top, 'LOAD VALUES FROM'); lab(top, '');

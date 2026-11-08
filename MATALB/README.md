@@ -1,20 +1,20 @@
-# Hot Lap — MATLAB edition
+# HoMo-LAP — MATLAB edition
 
-Hot Lap built with MathWorks products: the same FAUmax τ, FSG endurance track, team data, modes and car setups as the browser game, in MATLAB and Simulink.
+HoMo-LAP (formerly Hot Lap) built with MathWorks products: the same FAUmax τ, FSG endurance track, team data, modes and car setups as the browser version, in MATLAB and Simulink.
 
-- **Play:** in MATLAB R2024b, `cd 'E:\HOT LAP\MATALB'`, then `HotLap`.
+- **Play:** in MATLAB R2024b, `cd 'E:\HOT LAP\MATALB'`, then `HoMoLap`.
 - **Source of truth:** the data comes from the main project (`E:\HOT LAP`). This folder holds copies, plus the tools that rebuild them from the same sources.
 
 | Product | Used for |
 |---|---|
 | MATLAB | game, launcher, setup editor, headless AI laps, track and car tools |
-| Simulink | `simulink\HotLapVehicle.slx`, the car and AI driver as a model |
+| Simulink | `simulink\HoMoLapVehicle.slx`, the car and AI driver as a model |
 | Optimization Toolbox | `studies\optimize_setup.m` (fmincon) |
-| MATLAB Compiler | `tools\build_standalone.m` → `dist\HotLap.exe` (optional) |
+| MATLAB Compiler | `tools\build_standalone.m` → `dist\HoMoLap.exe` (optional) |
 
 ## Playing
 
-`HotLap` opens the launcher:
+`HoMoLap` opens the launcher:
 
 1. **Choose a mode:**
    - **Hot lap:** team data and FS Rules 2027 penalties: 2 s per cone, 10 s off course, a cut invalidates the lap.
@@ -43,7 +43,7 @@ Best laps are saved in `saves\bests.mat`, using the same keys as the web game.
 **Other launcher buttons:**
 - **AI lap:** the demo driver drives the selected setup without graphics.
 - **Simulink lap:** runs the same car in the Simulink model.
-- **Open Simulink model:** opens `HotLapVehicle.slx`.
+- **Open Simulink model:** opens `HoMoLapVehicle.slx`.
 
 ## Car setups
 
@@ -75,7 +75,7 @@ How setups are stored:
 
 ```
 MATALB\
-├─ HotLap.m              launcher (uifigure): modes, setups, AI lap, Simulink lap
+├─ HoMoLap.m             launcher (uifigure): modes, setups, AI lap, Simulink lap
 ├─ SetupEditor.m         setup editor
 ├─ +hotlap\              the game and its model, shared by everything else
 │  ├─ Game.m             the game window: 3D scene, HUD, keys, laps, penalties, ghosts, modes
@@ -88,9 +88,9 @@ MATALB\
 │  ├─ loadTrack.m        track, cones, paddock, skidpad, acceleration strip, LTS lap
 │  └─ ...                nearestPoint, poseAt, planSpeeds, bestKey, loadSetups, saveSetup, ...
 ├─ simulink\
-│  ├─ build_hotlap_model.m   builds HotLapVehicle.slx (the script is the source of the model)
-│  ├─ HotLapVehicle.slx      driver, vehicle dynamics and lap timing blocks
-│  ├─ hotlapModelParams.m    parameter struct HL for the model
+│  ├─ build_homolap_model.m   builds HoMoLapVehicle.slx (the script is the source of the model)
+│  ├─ HoMoLapVehicle.slx      driver, vehicle dynamics and lap timing blocks
+│  ├─ homolapModelParams.m    parameter struct HL for the model
 │  └─ run_simulink_lap.m     runs the model with any setup, compares with MATLAB and the LTS
 ├─ studies\
 │  ├─ setup_sweep.m      lap time against one parameter (AI lap and estimate)
@@ -99,7 +99,7 @@ MATALB\
 │  ├─ build_track.m      data\fsg_track.json from the LTS data (MATLAB version of source\track)
 │  ├─ import_car.m       data\car_mesh.mat from blender\faumax_tau.glb, livery baked in
 │  ├─ preview_car.m      renders the car from four sides (livery check)
-│  └─ build_standalone.m HotLap.exe with MATLAB Compiler
+│  └─ build_standalone.m HoMoLap.exe with MATLAB Compiler
 ├─ data\                 fsg_track.json, car_mesh.mat, livery\LIVERY_*.png, logo.png
 ├─ setups\               your custom setups (JSON)
 └─ saves\                best laps (bests.mat)
@@ -114,7 +114,7 @@ The physics, AI driver, track, cones, rules and setup values are line-by-line po
 | Web game, AI driver | 77.42 s |
 | MATLAB, `hotlap.simulateLap` | 77.405 s, 77.400 s |
 | MATLAB game, AI driver | 77.422 s |
-| Simulink, `HotLapVehicle.slx` | 77.473 s (driver at 150 Hz with a one-step delay) |
+| Simulink, `HoMoLapVehicle.slx` | 77.473 s (driver at 150 Hz with a one-step delay) |
 | Arcade, web / MATLAB | 76.48 s / 76.45 s |
 | LTS reference | 75.058 s |
 
@@ -133,7 +133,7 @@ The physics, AI driver, track, cones, rules and setup values are line-by-line po
   1. Export from Blender as described in the main README. This is a background Blender run that never saves `livery.blend`.
   2. Run `tools\import_car`, then check the result with `tools\preview_car`.
 - **Livery:** copy `game\livery\LIVERY_*.png` into `data\livery\`, then run `tools\import_car` again.
-- **Simulink model:** run `simulink\build_hotlap_model` again after changing its blocks. The previous model is kept as `.slx.bak`.
+- **Simulink model:** run `simulink\build_homolap_model` again after changing its blocks. The previous model is kept as `.slx.bak`.
 
 ## Checks
 

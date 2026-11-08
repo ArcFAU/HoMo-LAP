@@ -1,5 +1,5 @@
 function R = run_simulink_lap(vals, varargin)
-%RUN_SIMULINK_LAP  Run HotLapVehicle.slx with a setup and compare with the MATLAB physics and the LTS.
+%RUN_SIMULINK_LAP  Run HoMoLapVehicle.slx with a setup and compare with the MATLAB physics and the LTS.
 %   R = run_simulink_lap() runs two laps with the stock tau (LTS aero package).
 %   R = run_simulink_lap(vals, 'mode', 'arcade', 'time', 165, 'quiet', false)
 %   Returns R.lapSimulink (second lap, the first flying lap), R.lapMatlab (hotlap.simulateLap with
@@ -8,10 +8,10 @@ function R = run_simulink_lap(vals, varargin)
 o = struct('mode', 'sim', 'time', 165, 'quiet', false);
 for k = 1:2:numel(varargin), o.(varargin{k}) = varargin{k + 1}; end
 if nargin < 1 || isempty(vals), S = hotlap.setups(); vals = S.presets(1).vals; end
-here = fileparts(mfilename('fullpath')); mdl = 'HotLapVehicle';
-if ~exist(fullfile(here, [mdl '.slx']), 'file'), build_hotlap_model(); end
+here = fileparts(mfilename('fullpath')); mdl = 'HoMoLapVehicle';
+if ~exist(fullfile(here, [mdl '.slx']), 'file'), build_homolap_model(); end
 load_system(fullfile(here, [mdl '.slx']));
-HL = hotlapModelParams(vals, o.mode);
+HL = homolapModelParams(vals, o.mode);
 assignin(get_param(mdl, 'ModelWorkspace'), 'HL', HL);
 simOut = sim(mdl, 'StopTime', num2str(o.time));
 lp = squeeze(simOut.laps.Data)'; n = lp(:, 1); last = lp(:, 2);   % logged as 2 x 1 x samples
@@ -25,7 +25,7 @@ if ~o.quiet
     st = squeeze(simOut.state.Data)'; s = st(:, 7); v = hypot(st(:, 4), st(:, 5)) * 3.6;
     % the last full lap in the log
     w = find(diff(s) < -HL.T.LEN / 2);
-    figure('Name', 'Hot Lap · Simulink lap', 'Color', 'w');
+    figure('Name', 'HoMo-LAP · Simulink lap', 'Color', 'w');
     if numel(w) >= 2, k = w(end - 1) + 1:w(end); plot(s(k), v(k), 'LineWidth', 1.4); hold on; end
     plot(HL.lts.s, HL.lts.v * 3.6, 'Color', [0.85 0.6 0.1], 'LineWidth', 1.2);
     grid on; xlabel('Lap distance (m)'); ylabel('Speed (km/h)');
