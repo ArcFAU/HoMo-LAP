@@ -1,6 +1,6 @@
 # HoMo-LAP — FAUmax τ on the FSG endurance track
 
-HoMo-LAP was called Hot Lap until 2026-11-08. The name Hot Lap now belongs to the planned high-end game in `high-end\`.
+HoMo-LAP was called Hot Lap until 2026-11-08. The planned high-end game in `high-end\` has the placeholder name FS Lap.
 
 Browser racing game built on the team's data: the τ vehicle parameters, the LTS FSG endurance track and reference lap, the CFD aero packages and the FS Rules cone and off-course penalties.
 
@@ -44,7 +44,7 @@ Phones get on-screen touch controls.
 HOT LAP\
 ├─ Play HoMo-LAP.bat      local launcher (source\serve.py, port 8765)
 ├─ MATALB\                 MATLAB/Simulink edition (own README): game, setup editor, Simulink model, studies
-├─ high-end\               Hot Lap, the planned Unreal Engine 5 game (its own git repo, ArcFAU/FS_LAP; ignored here)
+├─ high-end\               FS Lap (placeholder name), the planned Unreal Engine 5 game (its own git repo, ArcFAU/FS_LAP; ignored here)
 ├─ game\                   exactly what is published online
 │  ├─ index.html           the whole game (built from source\template.html)
 │  ├─ car.json             car model, meshopt-compressed GLB as base64

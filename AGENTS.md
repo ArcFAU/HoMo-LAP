@@ -1,6 +1,6 @@
 # Contributor instructions
 
-HoMo-LAP (called Hot Lap until 2026-11-08) is a lap simulator in the browser, with a MATLAB/Simulink edition in `MATALB\`. It puts High Voltage Motorsports' FAUmax τ (the real Blender model and livery) on the FSG endurance track, using the team's LTS, vehicle-params and CFD numbers. "Hot Lap" is now the name of the planned high-end game (Unreal Engine 5), planned in `high-end\README.md`.
+HoMo-LAP (called Hot Lap until 2026-11-08) is a lap simulator in the browser, with a MATLAB/Simulink edition in `MATALB\`. It puts High Voltage Motorsports' FAUmax τ (the real Blender model and livery) on the FSG endurance track, using the team's LTS, vehicle-params and CFD numbers. The planned high-end game (Unreal Engine 5, placeholder name "FS Lap") is its own repository in `high-end\`, planned in `high-end\README.md`.
 
 **E:\HOT LAP is the project folder (owner, 2026-11-07: "we work in that folder now on").** It is the source of truth. Copies elsewhere are derived from it and may be out of date:
 - the online artifact
@@ -22,7 +22,7 @@ Before changing anything, read:
   - `D:\VD` (laptimesimulation / HoMo-LTS, vehicle-params)
   - the CFD projects (`D:\HoMo-CFD`, `D:\CFD_TOPO`)
   - the livery folder `E:\UE\livery`
-  - Nothing for HoMo-LAP or Hot Lap is written there.
+  - Nothing for HoMo-LAP or FS Lap is written there.
 - **Don't edit `game\index.html` directly.** Edit `source\template.html` and run `python source\build_game.py`.
 - **Keep the touch controls in their marked blocks.** They are temporary and will be removed later (owner: "Just for now. Later we might need to remove it."). `const TOUCH_CONTROLS = false;` turns them off.
 - **Don't delete files without the owner's approval.** Keep originals (`.bak` or renamed).

@@ -161,3 +161,11 @@ The owner created the game's repository under the name `FS_LAP`. The game is sti
 
 **Why:** the owner's choice of name.
 
+## 2026-11-08 — The game is called FS Lap for now; art comes later
+
+The high-end game's working title is FS Lap, a placeholder chosen by the owner. It replaces "Hot Lap" for the game in the entries above. The Unreal project folder will be `FSLapUE`; if the final name differs, only the title players see changes, because renaming an Unreal project is awkward.
+
+Art (materials, paddock, lighting) waits until the game needs it. The owner and Claude then do it together.
+
+**Why:** the owner's decision. Nothing about art blocks the first driving slice.
+

@@ -35,7 +35,7 @@ Last updated: 2026-11-08
 ## Open items
 
 - **Old GitHub address:** `ArcFAU/HOT-LAP` now redirects to `ArcFAU/FS_LAP` (the game), not to `HoMo-LAP`. Any other clone of the simulator must use `https://github.com/ArcFAU/HoMo-LAP.git`.
-- **High-end game "Hot Lap":** its own git repo in `high-end\`, `ArcFAU/FS_LAP`, pushed. State and stage 0 checklist in `high-end\README.md`: Unreal 5.8.4 at `D:\UE\UE_5.8`, MSVC 14.50 installed, cache set to `D:\UE\DDC` (applies from the next editor start, not yet checked at runtime). Next: create the C++ project and test Nanite, Lumen and plain lighting on the GTX 1650.
+- **High-end game "FS Lap" (placeholder name):** its own git repo in `high-end\`, `ArcFAU/FS_LAP`, pushed. State and stage 0 checklist in `high-end\README.md`: Unreal 5.8.4 at `D:\UE\UE_5.8`, MSVC 14.50 installed, cache set to `D:\UE\DDC` (confirmed at runtime). Project `FSLapUE` compiles and opens (not committed yet). GPU test done: Lumen Medium with virtual shadow maps reaches 56 fps in a simple scene.
 
 - **Not played by hand yet:**
   - Arcade, free roam and the setup editor were checked in headless Chrome (scripted driving, AI laps, screenshots).

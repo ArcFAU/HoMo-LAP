@@ -1206,3 +1206,30 @@ Intermediate progress messages are not reproduced. Final response (verbatim):
   - `high-end\AGENTS.md`, `high-end\CHAT_HISTORY.md`.
   - HoMo-LAP: `.gitignore` comment, README, STATUS, DECISIONS.
 - **Commits:** both repos, explicit paths, pushed.
+
+## 2026-11-08 — owner: art later, game name FS Lap for now
+
+### User messages (verbatim)
+
+> the art can be done later if not needed right now. or else we both can do it. game will be called fs lap for now as a placeholder.
+
+### Contributor messages
+
+Final response (verbatim):
+
+> The game is now **FS Lap** as a placeholder. Art is set to later, and when it's needed the two of us do it together. The plan and the notes in both folders say so, and no decisions are left open.
+>
+> - **Project name:** the Unreal project will be `FSLapUE`. Renaming an Unreal project later is awkward, so if the final name changes, I'd change only the title players see and keep that folder name.
+> - **Cache confirmed:** you restarted the editor, and its cache server now writes to `D:\UE\DDC\Zen`, so the shader cache no longer lands on C:.
+>
+> These note changes aren't committed yet. Say "commit" if you want them on GitHub now; otherwise they go with the next commit.
+>
+> **Next:** the editor is open on its project browser. Close it and say go, and I'll create `FSLapUE` in `high-end\`, compile it, and test Nanite, Lumen and plain lighting on your GPU.
+
+### Work record
+
+- **Name:** "FS Lap" (placeholder) replaces "Hot Lap" for the game in `high-end\README.md`, `high-end\AGENTS.md`, and in HoMo-LAP's `AGENTS.md`, `README.md`, `STATUS.md`, `.gitignore`. Project folder in the plan: `FSLapUE`; build name `FSLap.exe`. Earlier log and DECISIONS entries are unchanged.
+- **Art:** recorded as later, by the owner and Claude together when the game needs it (`high-end\README.md`, sections 1, 3 and 6). No decisions are open.
+- **Cache check at runtime:** after the owner restarted the editor (19:09), `zenserver` runs with `--data-dir D:\UE\DDC\Zen`, and `D:\UE\DDC` is receiving data. The checklist is updated. C: free 13 GB. The old 0.25 GB of Zen data on C was left alone.
+- **DECISIONS:** new entry on the placeholder name and art.
+- **Not done:** no commit, not asked for. The project isn't created: the editor is open.
