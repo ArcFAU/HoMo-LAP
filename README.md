@@ -2,6 +2,10 @@
 
 Browser racing game built on the team's data: the τ vehicle parameters, the LTS FSG endurance track and reference lap, the CFD aero packages and the FS Rules cone and off-course penalties.
 
+- **Modes:** Hot lap (team data, FS Rules penalties, leaderboard), Arcade (forgiving, drift-friendly handling on the FSG track) and Free roam (a large paddock with an FS skidpad and acceleration strip).
+- **Car setup:** *Edit setup* in the menu changes every physics parameter (aero, masses, CoG, power, gearing, tyres, brakes, roll balance, torque vectoring, steering lock) and saves your own setups.
+- **MATLAB edition:** the same game, physics and setups in MATLAB and Simulink, in `MATALB\` (see `MATALB\README.md`).
+
 - **Play online:** https://claude.ai/artifact/38hveqdzZbP5zHJUSUfVmb (private until you share it with the Share button on that page)
 - **Play from this folder:** double-click `Play Hot Lap.bat`. It needs Python and an internet connection, because three.js loads from a CDN. Opening `index.html` directly does not work: the browser blocks loading the car model from `file://`.
 
@@ -10,14 +14,25 @@ Controls:
 | Key | Action |
 |---|---|
 | Arrow keys or WASD | Drive |
-| Space | Handbrake |
-| R | Back on track |
+| Space | Handbrake (in Arcade and Free roam it starts a slide) |
+| R | Back on track (Free roam: back to the start) |
 | C | Change camera |
 | G | Ghost on/off |
 | M | Mute |
 | Esc or P | Pause |
 
 Phones get on-screen touch controls.
+
+**Modes:**
+- **Hot lap:** the car as the team's data describes it. Assists, FS Rules penalties and the leaderboard apply.
+- **Arcade:** the selected setup with 18 % more grip, 1.75× power and 1.45× top speed. The car counter-steers by itself, the handbrake starts a slide, and the body slip is held below 38°. No penalties; a cut still invalidates the lap. Laps are kept separately and not posted.
+- **Free roam:** arcade handling on a paved paddock about 700 m × 450 m, with an FS skidpad (D 4) and a 75 m acceleration strip (D 5). No lap timing. 0–100 km/h and 75 m are timed from every standing start.
+
+**Car setups:** *Edit setup* opens the setup editor.
+- **Editing:** sliders and number fields for 18 parameters, with derived numbers: total mass, power to weight, top speed and what limits it, downforce and drag at 100 km/h, grip at 60 and 100 km/h, and a point-mass lap estimate compared with the stock car.
+- **Stock packages** are never changed: saving one makes your own setup. A browser stores up to 24 setups.
+- **Best laps:** a custom setup keeps its own best laps, and changing its values starts a new best.
+- **Leaderboard:** custom setups are not posted. The leaderboard compares the team's stock packages.
 
 **Leaderboard (online only):** the menu shows a shared leaderboard under the aero packages, one per package and assist setting. Each player's best valid lap is posted automatically, ranked by time including penalties, with FS points from the FS Rules 2027 endurance formula (D 9.2). Only the owner and members of his claude.ai organization can post; everyone else with the link can view it. Played from this folder, the leaderboard is hidden.
 
@@ -26,6 +41,7 @@ Phones get on-screen touch controls.
 ```
 HOT LAP\
 ├─ Play Hot Lap.bat        local launcher (python -m http.server 8765)
+├─ MATALB\                 MATLAB/Simulink edition (own README): game, setup editor, Simulink model, studies
 ├─ game\                   exactly what is published online
 │  ├─ index.html           the whole game (built from source\template.html)
 │  ├─ car.json             car model, meshopt-compressed GLB as base64
@@ -59,7 +75,7 @@ E:\HOT LAP is the project folder. Anyone working here (Claude, Codex or a person
 ## Changing the game
 
 1. Edit `source\template.html`.
-2. Run `python source\build_game.py`. This writes `game\index.html`.
+2. Run `python source\build_game.py`. This writes `game\index.html` and stamps the build time into the menu ("Build …").
 3. Test it with `Play Hot Lap.bat`.
 
 **Removing the touch controls:** set `const TOUCH_CONTROLS = false;`. To delete them completely, remove the blocks marked `TOUCH CONTROLS (temporary)` in the CSS, the HTML and the JS, plus the lines tagged `// TOUCH CONTROLS (temporary)`.

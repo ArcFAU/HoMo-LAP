@@ -86,3 +86,43 @@ The folder is a git repo, pushed to the private GitHub repo `ArcFAU/HOT-LAP`. `.
 The owner decided to work in `E:\HOT LAP` from now on. It holds the game, sources, tools, the Blender export and the project notes. It follows the same conventions as HoMo CFD and CFD_TOPO (`AGENTS.md`, `CHAT_HISTORY.md` and the other notes).
 
 **Why:** one place for everything, with a history any session (cloud or VS Code) can pick up.
+
+## 2026-11-08 — Arcade and free roam are a handling layer on the same model
+
+Arcade handling is a branch inside the same single-track physics, not a second car model:
+- more grip, power and top speed (`ARC`: grip 1.18, power 1.75, drive force 1.2, top speed 1.45, brakes 1.35)
+- automatic counter-steer
+- a handbrake slide that the throttle can hold
+- a stability limit on body slip (14°, or 38° while drifting) and on yaw rate
+
+Free roam uses the same handling on a paved paddock around the event area, with an FS skidpad and acceleration strip made of cones that exist only in that mode. Arcade laps get their own best-lap keys (`arc|…`) and are never posted.
+
+**Why:** the owner asked for a "Need for Speed / Forza Horizon" style second mode and chose arcade handling on FSG plus a free-roam area (not boost or drift scoring). Sharing the model keeps the aero, setup and data readouts meaningful in every mode, and keeps the hot-lap physics untouched (the AI lap is unchanged at 77.42 s).
+
+## 2026-11-08 — Setup editor; custom setups stay off the leaderboard
+
+Every value the physics uses can be edited. The fixed geometry (wheelbase, track, model) stays as built.
+- **Storage:** custom setups are stored with the player's data (`setups`, up to 24) as `{ id, name, base, vals }`, the same fields as the MATLAB edition's `setups\*.json`.
+- **Best laps:** the best-lap key includes a hash of the values, so a changed setup starts a new best.
+- **Stock packages** are read-only; editing one saves a copy.
+- **Leaderboard:** custom setups and arcade laps are not posted. The board compares the team's stock packages in Hot lap mode.
+
+**Why:** the owner wanted a built-in setup configuration "so it does not only rely on the data from laptime sim and aero package". Posting custom setups would make board entries incomparable, because anyone could set μ 2.0 and 120 kW.
+
+## 2026-11-08 — MATLAB edition in MATALB\, sharing one physics source with Simulink
+
+The owner asked for "a copy of the entire project but with MathWorks products" in `E:\HOT LAP\MATALB` (the folder name is the owner's) and chose a full MATLAB/Simulink port. What it contains:
+- **Ports of the web game:** `+hotlap\physicsStep.m`, `aiDriver.m` and `loadTrack.m` port the web game line by line.
+- **One source for the game and the model:** the game and the Simulink model call these same functions. The MATLAB Function blocks compile them with the bundled LCC compiler.
+- **Generated model:** the model is built by `build_hotlap_model.m`, so the script is its source.
+- **Livery in vertex colours:** the livery is baked into the mesh, because MATLAB patches have no image textures. The mesh is refined only where the livery changes, which keeps it at about 175,000 triangles.
+- **Not in the MATLAB edition:** the leaderboard (it lives in the claude.ai artifact), sound and touch controls.
+
+**Why:** one physics source keeps the MATLAB game, the headless AI lap and Simulink in step with each other and with the web game. The AI laps agree to 0.07 s.
+
+## 2026-11-08 — Local launcher sends no-cache; builds carry a time stamp
+
+`Play Hot Lap.bat` runs `source\serve.py` instead of `python -m http.server`. It is the same simple server, but it sends `Cache-Control: no-cache`, so the browser revalidates every file. `build_game.py` puts the build time in the menu.
+
+**Why:** the owner reported that the livery fix had not worked. The plain server sends no cache header, so Chrome could keep showing an older `index.html` after a rebuild. The stamp shows at a glance which build a browser is running.
+

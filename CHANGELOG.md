@@ -4,7 +4,16 @@ User-visible changes, newest first. Detailed reasoning is in `CHAT_HISTORY.md`, 
 
 ## 2026-11-08
 
+### Fixed
+- **Livery now sticks to the car.** The livery projection used the car position from the previous frame, so the livery trailed the moving car (about 0.15 m at 30 km/h, 0.5 m at full speed, 0.8 m in arcade) and twisted in bends. It now follows the car exactly.
+- **Livery looks like livery.blend:** the carbon under the transparent parts of the livery was shiny and reflected the sky, so the chequered areas looked grey and white and seemed to move as the car turned. It is now dark, slightly glossy carbon, and the chequer reads as dark blocks on carbon. The livery images no longer shimmer at their edges.
+- **`Play Hot Lap.bat` always loads the newest version:** the browser no longer keeps an old cached page after an update. The menu shows the build time.
+
 ### Added
+- **Arcade mode:** forgiving, drift-friendly handling on the FSG track, with more grip, power (1.75×) and top speed (about 175 km/h). The car counter-steers by itself and the handbrake (Space) starts a slide. No penalties; laps are timed and kept separately, with their own ghost. The chase camera widens with speed.
+- **Free roam:** arcade handling on a large paved paddock around the event area, with an FS skidpad and a 75 m acceleration strip marked with cones. No lap timing; the timing tower shows top speed, 0–100 km/h, 75 m from standstill and distance. R takes you back to the start of the strip.
+- **Car setup editor** (*Edit setup* in the menu): 18 parameters (aero, masses, weight distribution, CoG height, power limit, motor torque, gear ratio, tyre μ and load sensitivity, peak slip angle, brake balance and force, roll stiffness balance, torque-vectoring authority, steering lock) with derived numbers and a lap estimate. Your setups appear under the stock packages and keep their own best laps; they are not posted to the leaderboard.
+- **MATLAB edition** in `MATALB\`: the game in MATLAB with all three modes, a launcher and setup editor, a Simulink model of the car and AI driver, setup studies (sweep and fmincon optimisation), and MATLAB tools for the track and the car model.
 - **Shared leaderboard (online version):** in the menu under the aero packages, one board per aero package and assist setting. Each player's best valid lap is posted automatically, ranked by time including penalties, with FS points from the FS Rules 2027 endurance formula (D 9.2: fastest = 250, 1.5× or slower = 25). Players can set a driver name. During a race the game shows the new place ("P2 on the leaderboard"). Hidden when playing locally.
 
 ## 2026-11-07

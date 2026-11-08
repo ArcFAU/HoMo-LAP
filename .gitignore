@@ -17,3 +17,10 @@ backup/
 
 # Kept originals of replaced files
 *.bak
+
+# MATLAB edition (MATALB): Simulink build caches, compiled app, personal best laps
+MATALB/slprj/
+*.slxc
+*.asv
+MATALB/dist/
+MATALB/saves/

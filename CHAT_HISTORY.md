@@ -545,3 +545,349 @@ Intermediate progress messages are not reproduced. Final response (verbatim):
 - **Published** version `1794092839-d6fc` with capabilities `db` (rules `boards` read view / write owner, `boards/{self}` read view / write interact) and `user` (scope profile). `ArtifactData list boards`: empty, also at `as_level: view`. No test data written to the live board.
 - **Notes:** README (leaderboard), CHANGELOG, DECISIONS, STATUS updated.
 - **Git:** committed with explicit paths and pushed.
+
+## 2026-11-08 — owner: arcade mode, setup configuration, MATLAB edition
+
+### User messages (verbatim)
+
+> can you add second mode where we can drive the car like those games (need for speed, forza horizon, etc). then we need to prepare an inbuild setup configuration so it does not only rely on the data from laptime sim and aero package that were feed already. after wards  i need a copy of the entire project but with matlhwork products in E:\HOT LAP\MATALB.
+
+Clarifications (answers to the contributor's two questions):
+- What the MathWorks copy should be: "Full MATLAB/Simulink port (Recommended)".
+- What the arcade mode should include (multiple choice): "Arcade handling on FSG, Free-roam area". Not chosen: "Boost and drift score".
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced. Final response (verbatim):
+
+> All three parts are done, in `E:\HOT LAP`.
+>
+> **1. Arcade mode (web game).** The menu now has a Mode choice:
+> - **Hot lap:** unchanged (team data, penalties, leaderboard). The AI lap is still 77.42 s.
+> - **Arcade:** the FSG track with 18 % more grip, 1.75× power and a top speed of about 175 km/h. The car counter-steers by itself, and Space starts a drift (body slip held below 38°). No penalties; arcade laps have their own best laps and ghost, and the chase camera widens with speed.
+> - **Free roam:** a paddock of about 700 m × 450 m with an FS skidpad and a 75 m acceleration strip. 0–100 km/h and 75 m are timed from every standing start, and R takes you back to the start.
+>
+> **2. Setup configuration.** *Edit setup* in the menu covers 18 parameters:
+> - aero, masses, weight distribution, CoG height
+> - power, motor torque, gear ratio
+> - tyre μ, load sensitivity, slip angle
+> - brake balance and force, roll stiffness balance, torque vectoring, steering lock
+>
+> It also shows derived numbers: top speed and what limits it, downforce and drag at 100 km/h, grip at 60 and 100 km/h, and a lap estimate against the stock car. The stock packages stay read-only, so editing one saves a copy. Your own setups keep their own best laps and are not posted to the leaderboard, because then it would no longer compare like with like.
+>
+> **3. MATLAB edition in `E:\HOT LAP\MATALB`.** Run `HotLap` in MATLAB R2024b. It contains:
+> - **The game in a MATLAB window:** all three modes, with the real FAUmax and its livery baked in (175k triangles), the HUD, ghosts and penalties.
+> - **A launcher and a setup editor:** same setup fields, saved as JSON.
+> - **A Simulink model**, `simulink\HotLapVehicle.slx`: AI driver, vehicle and lap timing, calling the same physics code as the game.
+> - **Studies:** a setup sweep, and an fmincon optimisation with the Optimization Toolbox. With the drag fit from the team's packages, more downforce pays off up to the 9 m² bound on this track.
+> - **Tools:**
+>   - the track built from the LTS data (identical to the Python output)
+>   - the car imported from the Blender GLB
+>   - `HotLap.exe` via MATLAB Compiler
+> - **Same physics:** the AI lap is 77.40 s in MATLAB, 77.42 s in the web game and 77.47 s in Simulink.
+>
+> **Checked:**
+> - **Web game in headless Chrome:** AI laps in every mode, a scripted drift and launch, and the editor, including phone width. No console errors besides the known two 404s.
+> - **MATLAB:** the self-test with screenshots, and Simulink runs.
+>
+> **Not checked:**
+> - Nobody has driven it with a keyboard yet, so the arcade feel may need tuning.
+> - `HotLap.exe` is built, but the permission check blocked me from starting it.
+>
+> **Your call:**
+> - **Online version:** not updated yet. Should I republish the artifact? It's shared by link, so others would see the change.
+> - **Git:** nothing is committed or pushed yet.
+> - **Arcade 0–100 km/h** is 1.6 s. That's deliberately arcade; tell me if you want it closer to the real car.
+>
+> The notes are updated: CHAT_HISTORY, STATUS, DECISIONS, CHANGELOG and README.
+
+### Work record
+
+- **Read first:** README, STATUS, DECISIONS, the latest CHAT_HISTORY entries, `source\template.html`. Installed MathWorks products: MATLAB R2024b, Simulink, MATLAB Compiler, Optimization Toolbox, Symbolic Math. Vehicle Dynamics Blockset and Simulink 3D Animation are licensed but not installed. `E:\HOT LAP\MATALB` already existed, empty.
+- **`source\template.html` (then `build_game.py` → `game\index.html`):**
+  - `CAR` is now filled by `applySetup()` from a setup; `BASE_SETUP`, `SETUP_FIELDS` (18 fields with ranges), `ARC` arcade factors, `MODES`. Stock values unchanged.
+  - `physics()`: arcade branch (`inp.arcade`):
+    - grip, power, force, top-speed and brake factors
+    - drift timer: handbrake, or power while sliding
+    - automatic counter-steer, stronger torque vectoring
+    - body-slip and yaw-rate stability limits
+    - The hot-lap path is unchanged; setup values are used instead of constants (`CAR.Fb`, `CAR.tv`, `CAR.ClA`, ...).
+  - **Modes:**
+    - `setMode()` and a mode selector in the menu
+    - free-roam paddock (`FREE`, `WORLD_F`), skidpad and acceleration-strip cones (`free: true`, inactive in other modes), trees around the paddock
+    - 0–100 km/h and 75 m timer (`freeUpdate`), free-roam tower rows, mode chip
+    - arcade chase camera; rpm display scaled in arcade
+  - **Setups:**
+    - setup editor overlay (sliders + number fields, derived numbers, point-mass `estLap`, save / save as new / reset / delete)
+    - custom setups stored in the save data (max 24)
+    - `bestKey(entry)` with mode prefix and value hash
+    - `lbEligible()`: only Hot lap with stock packages posts to the leaderboard; the board notes this otherwise
+  - Keyboard ignores keys typed in form fields; the setup dialog stops propagation, Esc closes it.
+  - Test hooks: `race(id, mode)`, `mode()`, `setup()`, `derive()`, `drive()`.
+- **Web checks (headless Chrome via Playwright from the Codex node runtime, local server on port 8766; scratchpad scripts `check_modes.cjs`, `drift.cjs`, `free_shots.cjs`):**
+
+  | Check | Result |
+  |---|---|
+  | Hot lap AI laps | 77.42 s / 77.42 s (unchanged); 77.43 / 77.44 s in the last run with the page's own frame loop running alongside |
+  | Arcade AI laps | 76.34–76.49 s |
+  | Arcade drift with the handbrake at 110–130 km/h | body slip peaks at 33–45°, then 2–3° after release |
+  | Full lock without the handbrake | 3° |
+  | Free-roam launch | 0–100 km/h 1.59 s, 75 m 3.08 s, 175 km/h top speed |
+  | Custom setup (ClA 0, 120 kW, 160 kg) | valid lap 85.57 s |
+  | Enter in the editor | does not start a race |
+  | Phone width (390 px) | no horizontal overflow |
+  | Esc | closes the editor |
+  | Leaderboard | hidden locally |
+  | Console | only the two known 404s |
+
+  Screenshots checked: menu, editor (desktop and phone), arcade, free roam (chase and top-down).
+- **Tuning during the checks:**
+  - stability gains raised: peak drift slip was about 50°
+  - free-roam paddock enlarged to about 700 m × 450 m: the car reached the edge within seconds
+  - `ARC.force` 1.4 → 1.2
+  - derived-numbers panel layout
+- **`MATALB\` (new):**
+  - **`+hotlap` package:** `setups`, `carParams`, `loadTrack`, `nearestPoint`, `poseAt`, `planSpeeds`, `physicsStep` (code-generation compatible), `aiDriver`, `simulateLap`, `deriveSetup`, `Game` (classdef: figure, 3D scene, HUD, minimap, keys, laps, penalties, ghosts, cones, skids, free-roam timers, `selfTest`), `drawCarMesh`, `bestKey`, `setupSig`, `loadSetups`, `customSetup`, `saveSetup`, `userDir`, ...
+  - **Apps:** `HotLap.m` (launcher) and `SetupEditor.m`.
+  - **`simulink\`:** `build_hotlap_model.m` generates `HotLapVehicle.slx` (MATLAB Function blocks Driver / Vehicle dynamics / Lap timing, rate transitions, scopes, To Workspace); `hotlapModelParams.m`; `run_simulink_lap.m`.
+  - **`studies\`:** `setup_sweep.m`, `optimize_setup.m` (fmincon).
+  - **`tools\`:** `build_track.m`, `import_car.m`, `preview_car.m`, `build_standalone.m`.
+  - **`data\`:** copies of `fsg_track.json`, the livery PNGs and the logo, plus `car_mesh.mat`.
+  - **`README.md`.**
+- **MATLAB checks (`matlab -batch`):**
+
+  | Check | Result |
+  |---|---|
+  | `simulateLap`, stock τ LTS | 77.405 / 77.400 s; arcade 76.45 s; 620 cones (88 free roam only) |
+  | Game self-test | Hot lap 77.422 s, arcade 76.482 s, free 0–100 km/h 1.59 s / 75 m 3.085 s; screenshots checked |
+  | Simulink | 77.474 / 77.473 s with the bundled LCC compiler; speed trace vs LTS plotted; diagram checked |
+  | `build_track.m` vs the Python `fsg_track.json` | identical (0.000 m, same lap time and splits) |
+  | `import_car` | 249,982 → 174,574 triangles; preview from four sides shows the red stepped stripe |
+  | `optimize_setup` | ClA 9.0 (bound), G 12.39; AI lap 77.40 → 72.53 s |
+  | Launcher and editor | open and render (exportapp screenshots checked) |
+  | `HotLap.exe` | built (3.8 MB, `MATALB\dist`, ignored by git); not started, because the permission check blocked running it |
+
+- **Housekeeping:** test laps the first self-test wrote to `MATALB\saves\bests.mat` were moved to the scratchpad; the self-test now writes to its output folder.
+- **`.gitignore`:** `MATALB/slprj/`, `*.slxc`, `*.asv`, `MATALB/dist/`, `MATALB/saves/`.
+- **Notes:** README (modes, setups, MATLAB edition), STATUS, DECISIONS (three entries), CHANGELOG.
+- **Not done:** no artifact republish and no git commit (not asked; left to the owner). Nobody has played either version by hand with a keyboard.
+
+## 2026-11-08 — owner: how close to high-end racing games?
+
+### User messages (verbatim)
+
+> how close can we get to thoose high end games?
+
+### Contributor messages
+
+Final response (verbatim):
+
+> **Short answer:** close on handling, and that's where the team's data gives us an edge. On looks, a browser page can reach a good indie game but not Forza or Need for Speed. Getting near their visuals means moving the graphics to Unreal Engine.
+>
+> **Where Hot Lap is now**
+> - **Physics:** a single-track model checked against the LTS. That's already closer to a simulator than Need for Speed, but simpler than Forza, which models each wheel, the suspension and the drivetrain.
+> - **Looks:** three.js r128 with basic materials, one shadow, flat ground and low-poly trees. It reads as a tech demo.
+> - **Input and sound:** keyboard steering is on or off, and the motor sound is synthesised. These two hurt the "feel" more than the graphics do.
+>
+> **What each step would take**
+>
+> | Step | Work | Effort | Result |
+> |---|---|---|---|
+> | 1 | Gamepad and steering-wheel support (analog steering and throttle); a newer three.js with HDR environment lighting, tone mapping, bloom and anti-aliasing; tyre smoke, camera shake, better sound | a few days | a good browser racing game; the biggest jump per hour |
+> | 2 | Four-wheel model with per-wheel tyres, suspension and per-motor torque vectoring (the LTS already has a dual-track model); a modelled FSG paddock with barriers and grandstands; replays | a few weeks | handling at simulator level, a believable venue |
+> | 3 | Unreal Engine 5, driven by our physics or by Simulink through Vehicle Dynamics Blockset | months, mostly art | the only route to Forza-like visuals |
+>
+> **Hard limits**
+> - **Browser page:** WebGL, files up to 16 MB, libraries from a few CDNs, no force feedback to wheels. Those games are made by hundreds of artists and ship 100+ GB of assets; one page can't match that.
+> - **MATLAB edition:** MATLAB graphics aren't a game engine (no shadows, no post-processing). Its strength is engineering. For looks it would hand the picture to Unreal. Vehicle Dynamics Blockset, which connects Simulink to Unreal scenes, is licensed on this PC but not installed.
+> - **Content:** open worlds, traffic and opponents are mostly art and design work, not code.
+>
+> **Where we can match them:** handling realism. Few games have data like the team's tyre envelope, CFD aero packages and the LTS models for a car like this.
+>
+> My suggestion is step 1 now, mainly gamepad or wheel input plus the lighting, then the four-wheel physics. Shall I start? Do you have a gamepad or a wheel to test with?
+
+### Work record
+
+- Question only; no files changed apart from this log.
+- Basis: the current code (three.js r128, single-track model, keyboard input, synthesised audio), the artifact limits (16 MB per file, scripts only from the allowed CDNs), the dual-track results in `D:\VD\laptimesimulation\results\viewerSamples\` (seen while building the MATLAB track tool), and the MathWorks products installed on the laptop.
+
+## 2026-11-08 — owner: livery not sticking to the car
+
+### User messages (verbatim)
+
+> no, i do not have wheel right now. also the livery is not sticking to the car, there is soemthing weird
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced. Final response (verbatim):
+
+> Found it: the livery trailed the car by one frame. It's fixed in the folder.
+>
+> - **Cause:** the livery is projected onto the car in a shader, using the car body's position. The code updated the body from the car group before the group itself had moved, so the projection always used the previous frame.
+>   - Measured while driving: 0.15 m behind at 8.7 m/s and 0.32 m at 19 m/s, plus up to 1.3° in corners.
+>   - At full speed that's about 0.5 m, and 0.8 m in arcade, so the stripe slid along the nose and wings and twisted in bends.
+>   - The bug was there from the start; the faster arcade car made it obvious.
+> - **Fix:** one line in `source\template.html`, then a rebuild. Measured again it is 0.000 m and 0.00° at every speed, and side and rear screenshots of the moving car show the stripe on the nose, sidepods and rear wing.
+> - **Not a bug:** the chequered pattern on the front wing, floor and lower sidepods. It's part of the T_TauOriginal images (a fading chequer) and comes from the same files livery.blend uses.
+> - **MATLAB edition:** not affected, because its livery is baked into the mesh.
+>
+> No wheel is fine. If you ever want analog steering, an ordinary Xbox or PlayStation controller works too; the keyboard stays.
+>
+> The fix isn't online yet. Republishing the artifact would also put the new modes and the setup editor online. Shall I do it?
+
+### Work record
+
+- **Reproduced** in headless Chrome (local server, port 8766), with the menu demo car driving in real time:
+  - Screenshots from the side and rear (`__hotlap.view`).
+  - New test hook `__hotlap.liveryLag()` compares the livery inverse matrix `uCarInv` with the body's current world matrix after a frame.
+  - Before the fix: offset 0.144–0.323 m (= speed × 1/60 s) and 0.3–1.35°.
+- **Cause:** in `updateRealCar()`, `R.body.updateMatrixWorld(true)` builds the body's world matrix from the parent group's `matrixWorld`, which three.js only updates at render time. So `uCarInv` always used the previous frame's car pose.
+- **Fix:** `source\template.html` now calls `R.group.updateMatrixWorld(true)`. `build_game.py` rebuilt `game\index.html`.
+- **After the fix:** offset 0.000 m, 0.00° at 8.7–19.4 m/s. Screenshots of the moving car from the side and rear checked.
+- **Checkerboard:** `game\livery\LIVERY_*.png` and `blender\LIVERY_*.png` contain a semi-transparent, fading chequered pattern (checked by compositing on magenta). It's part of the design, not changed.
+- **Notes:** CHANGELOG (Fixed).
+- **Not done:** no republish and no commit.
+
+## 2026-11-08 — owner: livery still not sticking
+
+### User messages (verbatim)
+
+> still not fixed
+
+Clarifications (answers to the contributor's questions): where: "Play Hot Lap.bat"; what is wrong: "Slides while driving, Chequered pattern".
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced. Final response (verbatim):
+
+> You were most likely still seeing the old page. Your `Play Hot Lap.bat` started at 13:59:25, a few seconds before my rebuild finished, and the plain Python server lets the browser keep old copies. While checking I found two more things that made the livery look wrong, and fixed those as well.
+>
+> **Fixed in `E:\HOT LAP\game`:**
+> - **Sliding:** the one-frame lag fix from before. Measured again while driving: 0.000 m.
+> - **Chequer:** the carbon under the transparent parts of the livery was shiny and reflected the sky. That made the chequer look grey and white, and it seemed to move when the car turned. The carbon is now dark and only slightly glossy, like in livery.blend, and the chequer reads as dark blocks on carbon, as in the T_TauOriginal preview render.
+> - **Shimmer:** the shader now reads the livery images in a way that doesn't flicker at their edges.
+> - **Launcher:** `Play Hot Lap.bat` now uses `source\serve.py`, which makes the browser fetch the newest files every time. The bottom of the menu shows the build, currently "Build 2026-11-08 13:59".
+>
+> **Checked:** I compared the moving car (side and rear three-quarter) with the old version and with the livery.blend preview. The stripe sits on the nose, the sidepods and the rear wing, and the chequer is dark on the front wing, floor and endplates. The old version had the stripe in the middle of the car and the chequer on the wheels.
+>
+> **To see it:** press Ctrl+F5 in the game tab. You can also close the game and the black `Play Hot Lap.bat` window, then start the bat again. The menu should say "Build 2026-11-08 13:59" or later.
+>
+> **Still to tidy up:**
+> - **Stray test server:** one of my test servers is also listening on port 8765 (python running `serve.py`, pid 27028), and I wasn't allowed to stop it. It serves the same folder, so it does no harm. You can end it in Task Manager, or let me stop it.
+> - **Online version:** the online page still has the old version until I republish it.
+
+### Work record
+
+- **Your launcher session:** found `python -m http.server 8765` (pid 10400, started 13:59:25), the owner's `Play Hot Lap.bat` session; not touched. `game\index.html` was rebuilt at 13:59:32.
+- **Livery look:**
+  - The `livery.blend` concept render `E:\UE\livery\livery_art\concepts\T_TauOriginal\preview_side.png` (read-only) shows the chequer dark on black carbon.
+  - In the game the transparent pixels showed `[LIVERY]` carbon with metalness 0.35 and envMapIntensity 1.5, which reflected the sky.
+- **`source\template.html`:**
+  - livery base carbon 0x111315, metalness 0.1, roughness 0.5, envMapIntensity 0.6 (black 0.6, aluminium 1.2); `liveryMaterial` takes `env`
+  - `livSample` always samples and then masks, instead of returning early before `texture2D`
+  - build stamp `__BUILD__` in the menu
+- **`source\build_game.py`:** replaces `__BUILD__` with the build time.
+- **Launcher:**
+  - New `source\serve.py`: SimpleHTTPRequestHandler with `Cache-Control: no-cache`, quiet log.
+  - `Play Hot Lap.bat` calls it, with the same three fallbacks and CRLF endings; the original copy is in the scratchpad.
+- **Checks:**
+  - **Headless Chrome, new build:** realCar, `liveryLag` 0.000 m while driving; no page errors, only the known 404.
+  - **Comparison:** side and rear three-quarter screenshots of the moving car against the pre-session version (`git show HEAD:game/index.html`, served from the scratchpad on port 8767) and against the concept render.
+  - **`serve.py`**, tested in-process on port 8769 and shut down: 200 with `Cache-Control: no-cache`, 304 on revalidation.
+- **Left running:**
+  - My test `serve.py` on port 8765 (pid 27028). Stopping it was blocked by the session's permission check.
+  - Port 8767 (old-build comparison server) is also still running.
+- **Notes:** CHANGELOG, README (build stamp), DECISIONS (no-cache launcher).
+- **Not done:** no republish and no commit.
+
+## 2026-11-08 — owner: online version has the same problem
+
+### User messages (verbatim)
+
+> i think in Online link (claude.ai) it's same problem puls i see some feature that are not in bat version
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced. Final response (verbatim):
+
+> That's expected: the online page is still the old version. None of today's fixes are on it yet.
+>
+> - **What's online:** I compared the live page with the folder. It's exactly the version from before today, without the livery fixes, modes or setup editor, and nobody else has changed it.
+> - **The feature you see only online:** the shared leaderboard. It's there by design, because it needs the claude.ai data store; played from `Play Hot Lap.bat`, the game hides it. It stays in the new version too.
+> - **The new version is ready to publish:** I checked its leaderboard with a stand-in data store. In Hot lap mode laps are posted and ranked with FS points, while arcade laps and custom setups are kept off the board, and there are no errors.
+>
+> **Your decision:** I tried to publish it, but the permission check stopped me because you hadn't asked for it explicitly. The link is shared, so everyone who has it will see the new version straight away. Reply "publish it" and I'll update the page. Only `index.html` changes; the car model and livery images there stay the same.
+
+### Work record
+
+- **Live page checked:** `Artifact read` of https://claude.ai/artifact/38hveqdzZbP5zHJUSUfVmb, version `1794092839-d6fc`, all 1794 lines read.
+  - Its HTML equals `git show HEAD:game/index.html` byte for byte inside the host wrapper.
+  - So it has no content that the folder lacks.
+- **Online-only feature:** the leaderboard (`board` section, shown only when `window.claude.use('db')` exists).
+- **Check of the new `game\index.html`** (headless Chrome, `window.claude` stand-in with an in-memory `db`/`user`, scratchpad `lb_check.cjs`, temporary server on port 8770 that stops itself):
+
+  | Case | Result |
+  |---|---|
+  | Hot lap board | shows the stored entry (Bob 1:20.500 +2 s, 250.0) |
+  | `postLap(76.0)` | 1 write; you P1 at 250.0, Bob 199.9 |
+  | Arcade | board empty, with the "stock packages in Hot lap mode" note |
+  | Arcade AI run | 165 s, 0 writes |
+  | Page errors | none |
+
+- **Publish:** the attempt (only `index.html`; existing files and capabilities kept) was denied by the session's permission check as not explicitly requested. Waiting for the owner's go-ahead.
+- No files in the folder changed apart from this log.
+
+## 2026-11-08 — owner: publish
+
+### User messages (verbatim)
+
+> publish it
+
+### Contributor messages
+
+Final response (verbatim):
+
+> It's online: https://claude.ai/artifact/38hveqdzZbP5zHJUSUfVmb, now version 1794144097-5855. Everyone with the link sees it straight away.
+>
+> - **New:** the three modes (Hot lap, Arcade, Free roam), the setup editor and the livery fixes. The bottom of the menu shows "Build 2026-11-08 13:59".
+> - **Unchanged:** the car model and livery images are the same, and the leaderboard and its settings are kept. Only Hot lap laps with a stock package are posted.
+> - **If the page still looks old:** reload it (Ctrl+F5) and check that the build stamp is there.
+>
+> Still open: nothing is committed to git yet. Say if I should commit and push.
+
+### Work record
+
+- **Published** `game\index.html` to the artifact as version `1794144097-5855`.
+  - Capabilities `db` (2 rules) and `user` carried forward.
+  - The other 7 files are unchanged: `car.json`, `car_q.json`, five livery PNGs.
+- **File listing after the publish:** `index.html` 192,161 bytes (the build plus the host wrapper).
+- **STATUS:** online version updated; the "online version is behind" open item removed.
+
+## 2026-11-08 — owner: commit and push
+
+### User messages (verbatim)
+
+> yes
+
+(Answer to "Should I commit and push?")
+
+### Contributor messages
+
+Final response (verbatim):
+
+> Committed and pushed to GitHub (`main`, https://github.com/ArcFAU/HOT-LAP).
+>
+> - **What's in it:** today's work:
+>   - the web game with the modes, the setup editor and the livery fixes
+>   - the no-cache launcher
+>   - the MATLAB edition in `MATALB\`
+>   - the updated notes
+> - **Left out:** the Simulink build caches, `HotLap.exe` (`MATALB\dist`) and personal best laps (`MATALB\saves`). Git ignores these.
+
+### Work record
+
+- **Staged by explicit path:**
+  - `.gitignore`, `CHANGELOG.md`, `CHAT_HISTORY.md`, `DECISIONS.md`, `README.md`, `STATUS.md`
+  - `Play Hot Lap.bat`, `game/index.html`, `source/template.html`, `source/build_game.py`, `source/serve.py`
+  - `MATALB/` (ignored: `slprj/`, `*.slxc`, `dist/`, `saves/`)
+- **Commit** on `main`, following the project's practice so far; push to `origin`.

@@ -139,6 +139,7 @@ legend{padding:0;margin-bottom:6px}
 .btn:hover{filter:brightness(1.12)}
 .btn.alt{background:transparent;color:var(--paper);box-shadow:inset 0 0 0 1px #4a5158;font-size:17px;padding:10px 18px}
 .btn.alt:hover{box-shadow:inset 0 0 0 1px var(--paper);filter:none}
+.btn:disabled{opacity:.45;cursor:default;filter:none}
 button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 .note{font-size:12.5px;color:var(--muted);margin:0;line-height:1.5;max-width:60ch}
 
@@ -163,6 +164,37 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 .lb-name[hidden]{display:none}
 .lb-name input{font-family:var(--mono);font-size:13px;color:var(--paper);background:var(--ink);border:1px solid #3a4047;padding:4px 8px;min-width:0;flex:1 1 140px}
 .lb-name input:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+/* game modes and the setup editor */
+.chip.md{background:var(--fast);color:#04210f}
+.free-rows{display:none}
+body.mode-free .tower .deltas,body.mode-free .tower .sectors,body.mode-free .tower .rows:not(.free-rows),body.mode-free .tower .laps{display:none}
+body.mode-free .tower .free-rows{display:grid}
+.legend-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+.legend-row legend{margin:0}
+#setup{background:rgba(8,10,12,.8);justify-content:center;overflow-y:auto;align-items:safe center;padding:20px 16px}
+.setup-card{width:min(980px,100%);display:grid;gap:14px;padding:22px 24px 24px;background:var(--ink);border-left:4px solid var(--signal)}
+.setup-card h2{font-family:var(--display);font-weight:800;font-size:44px;line-height:.9;margin:0;transform:skewX(-10deg);transform-origin:left bottom}
+.setup-top{display:flex;gap:12px 18px;flex-wrap:wrap;align-items:end}
+.setup-top label{display:grid;gap:4px}
+.setup-top input,.setup-top select{font-family:var(--mono);font-size:13px;color:var(--paper);background:var(--ink-2);border:1px solid #3a4047;padding:5px 8px;min-width:0}
+.setup-top input{width:240px;max-width:100%}
+.setup-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px 22px}
+.sg{display:grid;gap:5px;align-content:start}
+.sg h3{margin:0 0 2px;font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:var(--signal)}
+.sf{display:grid;grid-template-columns:1fr 74px 34px;gap:2px 8px;align-items:center;font-size:13px;color:#c9cdd2}
+.sf label{grid-column:1/-1}
+.sf input[type=range]{grid-column:1;width:100%;accent-color:var(--signal);margin:0}
+.sf input[type=number]{font-family:var(--mono);font-size:12.5px;color:var(--paper);background:var(--ink-2);border:1px solid #3a4047;padding:2px 4px;width:74px;text-align:right}
+.sf .u{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.sf.chg label{color:var(--gold)}
+.derived{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:6px 18px;padding:10px 12px;background:rgba(34,38,43,.7);font-family:var(--mono);font-size:12.5px;font-variant-numeric:tabular-nums}
+.derived div{display:flex;justify-content:space-between;gap:8px;white-space:nowrap}
+.derived span{color:var(--muted)}
+.setup-actions{display:flex;gap:10px 14px;flex-wrap:wrap;align-items:center}
+.setup-actions .btn{font-size:18px;padding:9px 20px}
+.setup-actions .btn.alt{font-size:15px;padding:8px 14px}
+.setup-top input:focus-visible,.setup-top select:focus-visible,.sf input:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+@media (max-width:620px){.setup-card{padding:16px}.setup-card h2{font-size:34px}}
 /* ==== TOUCH CONTROLS (temporary) — remove this block, the marked HTML and the marked JS to take them out ==== */
 .touch{position:fixed;inset:0;pointer-events:none}
 .touch[hidden]{display:none}
@@ -205,7 +237,7 @@ body.touch-ui .lights{top:60px}
 
 <div class="hud off" id="hud">
   <div class="panel tower">
-    <div class="head"><span id="lapNo">Out lap</span><span class="chips"><span class="chip pen" id="pen">+0 s</span><span class="chip ast" id="ast">Assist</span><span class="chip" id="inv">Invalid</span></span></div>
+    <div class="head"><span id="lapNo">Out lap</span><span class="chips"><span class="chip md" id="mdChip">Arcade</span><span class="chip pen" id="pen">+0 s</span><span class="chip ast" id="ast">Assist</span><span class="chip" id="inv">Invalid</span></span></div>
     <div class="cur" id="cur">0:00.000</div>
     <div class="deltas">
       <div class="dl" id="dPb"><span class="k">vs your best</span><b id="dPbV">–</b></div>
@@ -216,6 +248,12 @@ body.touch-ui .lights{top:60px}
       <div class="row"><span class="k">Last</span><span id="last">–:––.–––</span></div>
       <div class="row"><span class="k">Best</span><span id="best">–:––.–––</span></div>
       <div class="row lts"><span class="k">LTS lap</span><span id="ltsT">–</span></div>
+    </div>
+    <div class="rows free-rows">
+      <div class="row"><span class="k">Top speed</span><span id="frTop">0 km/h</span></div>
+      <div class="row"><span class="k">0–100 km/h</span><span id="fr100">–</span></div>
+      <div class="row"><span class="k">75 m from standstill</span><span id="fr75">–</span></div>
+      <div class="row"><span class="k">Distance</span><span id="frDist">0 m</span></div>
     </div>
     <ol class="laps" id="laps"></ol>
   </div>
@@ -269,7 +307,8 @@ body.touch-ui .lights{top:60px}
     <div class="brand"><img src="__LOGO__" alt="High Voltage Motorsports"><span class="kicker">Endurance hot lap · FS Rules 2027</span></div>
     <h1>Hot <span class="o">Lap</span></h1>
     <p class="lede">Drive the FAUmax on the FSG endurance layout from the lap-time simulation. The car runs on the team's vehicle data, and the LTS reference lap drives alongside you as a gold ghost.</p>
-    <fieldset id="presets"><legend class="k">Aero package</legend></fieldset>
+    <fieldset id="modes"><legend class="k">Mode</legend></fieldset>
+    <fieldset id="presets"><div class="legend-row"><legend class="k">Car setup</legend><button class="mini-btn" id="setupBtn" type="button">Edit setup</button></div></fieldset>
     <section class="board" id="board" hidden aria-live="polite">
       <div class="board-head"><span class="k">Leaderboard</span><span class="board-sub" id="boardSub"></span></div>
       <table class="lb"><thead><tr><th>#</th><th>Driver</th><th>Time</th><th>Pen.</th><th>FS pts</th></tr></thead><tbody id="lbBody"></tbody></table>
@@ -291,8 +330,9 @@ body.touch-ui .lights{top:60px}
       <button class="btn alt" id="menuSound" type="button"><span>Sound: on</span></button>
     </div>
     <p class="note touch-note"><!-- TOUCH CONTROLS (temporary) -->On a phone: ◀ ▶ steer, Gas and Brake on the right, HB is the handbrake, R puts you back on track, II pauses. Hold the phone sideways.</p>
-    <p class="note">Assists (on by default) brake for you before a bend you enter too fast, and holding a steering key into a bend gives about the right lock. Switch them off for the raw car; best laps are kept separately.</p>
-    <p class="note">Penalties follow FS Rules 2027 D 10.1.7 for Endurance: a cone down or out adds 2 s, all four wheels outside the cones adds 10 s. Track from <code>A_FSGend_3.mat</code> (a project proxy, not exact FSG geometry), widened to 4 m for keyboard driving. Car: vehicle-params τ, 172 kg + 80 kg driver, 50 % front, 4 × AMK at 80 kW system limit, LTS tyre envelope μ 1.40 at 600 N.</p>
+    <p class="note">Assists (on by default, Hot lap only) brake for you before a bend you enter too fast, and holding a steering key into a bend gives about the right lock. Switch them off for the raw car; best laps are kept separately. In Arcade and Free roam the car counter-steers by itself and Space starts a slide.</p>
+    <p class="note">Penalties follow FS Rules 2027 D 10.1.7 for Endurance: a cone down or out adds 2 s, all four wheels outside the cones adds 10 s. Track from <code>A_FSGend_3.mat</code> (a project proxy, not exact FSG geometry), widened to 4 m for keyboard driving. Stock car: vehicle-params τ, 172 kg + 80 kg driver, 50 % front, 4 × AMK at 80 kW system limit, LTS tyre envelope μ 1.40 at 600 N. <em>Edit setup</em> changes any of these and saves your own setups.</p>
+    <p class="note">Build __BUILD__</p>
   </div>
 </div>
 
@@ -303,10 +343,30 @@ body.touch-ui .lights{top:60px}
     <button class="btn alt" id="restartBtn" type="button"><span>Restart from the grid</span></button>
     <button class="btn alt" id="ghostBtn" type="button"><span>Ghost cars: on</span></button>
     <button class="btn alt" id="soundBtn" type="button"><span>Sound: on</span></button>
-    <button class="btn alt" id="clearBtn" type="button"><span>Clear best lap for this package</span></button>
+    <button class="btn alt" id="clearBtn" type="button"><span>Clear best lap for this setup</span></button>
     <button class="btn alt" id="assistBtn" type="button"><span>Driving assists: on</span></button>
     <button class="btn alt" id="camBtn" type="button"><span>Camera: Chase</span></button>
-    <button class="btn alt" id="menuBtn" type="button"><span>Change aero package</span></button>
+    <button class="btn alt" id="menuBtn" type="button"><span>Change mode or setup</span></button>
+  </div>
+</div>
+
+<div class="overlay hidden" id="setup" role="dialog" aria-modal="true" aria-labelledby="setupTitle">
+  <div class="setup-card">
+    <h2 id="setupTitle">Car setup</h2>
+    <div class="setup-top">
+      <label><span class="k">Setup name</span><input id="suName" maxlength="32" autocomplete="off" spellcheck="false"></label>
+      <label><span class="k">Load values from</span><select id="suBase"></select></label>
+    </div>
+    <div class="setup-grid" id="suGrid"></div>
+    <div class="derived" id="suDerived"></div>
+    <p class="note" id="suNote"></p>
+    <div class="setup-actions">
+      <button class="btn" id="suSave" type="button"><span>Save</span></button>
+      <button class="btn alt" id="suSaveNew" type="button"><span>Save as new setup</span></button>
+      <button class="btn alt" id="suReset" type="button"><span>Reset to the loaded values</span></button>
+      <button class="btn alt" id="suDelete" type="button"><span>Delete setup</span></button>
+      <button class="btn alt" id="suClose" type="button"><span>Close <kbd>Esc</kbd></span></button>
+    </div>
   </div>
 </div>
 
@@ -329,16 +389,37 @@ const DEG = Math.PI / 180, G0 = 9.81;
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 
 /* ---------------- Car: vehicle-params tau + LTS FAUmaxTauV2 tyre envelope ---------------- */
-const CAR = {
-  m: 252, a: 0.765, b: 0.765, L: 1.53, h: 0.293, tf: 1.24, tr: 1.20, Iz: 135,
-  mu0: 1.40, Fz0: 600, muExp: -0.10, rollFront: 0.65, rr: 0.015, rho: 1.225,
-  Pmax: 80000, Tm: 21, G: 12.421, eta: 0.97, R: 0.202, nmax: 20000, brakeFront: 0.70,
-  delMax: 25 * DEG, ap: 7 * DEG, C: 1.4
-};
-CAR.vMotor = CAR.nmax * 2 * Math.PI / 60 / CAR.G * CAR.R;   // 34.06 m/s, 122.6 km/h
-CAR.FdMax = 4 * CAR.Tm * CAR.G * CAR.eta / CAR.R;          // 5010 N at the contact patches
-CAR.B = Math.tan(Math.PI / (2 * CAR.C)) / CAR.ap;
+// Fixed geometry and constants; applySetup() fills in everything a setup can change (mass, CoG, tyres, power, brakes, aero ...).
+const CAR = { L: 1.53, tf: 1.24, tr: 1.20, Fz0: 600, rr: 0.015, rho: 1.225, eta: 0.97, R: 0.202, C: 1.4 };
 const YAW_LOSS = 0.0115; // per degree of body slip: V4_K fine mesh, yaw 3°: CzA −6.706 → −6.475
+
+// Stock car: vehicle-params τ, 172 kg + 80 kg driver, 50 % front, CoG 293 mm, 4 × AMK (21 N m, 12.421:1, 20,000 rpm) at the 80 kW
+// system limit, LTS tyre envelope μ 1.40 at 600 N with exponent −0.10, brake split 70/30, roll stiffness 65 % front.
+const BASE_SETUP = { ClA: 5.4, CdA: 1.7, bal: 0.50, mCar: 172, mDrv: 80, wf: 0.50, h: 0.293, Pmax: 80, Tm: 21, G: 12.421, nmax: 20000,
+  mu0: 1.40, muExp: -0.10, ap: 7, brakeFront: 0.70, Fb: 9000, rollFront: 0.65, tv: 1, delMax: 25 };
+// [key, group, label, unit, min, max, step, display factor, decimals]
+const SETUP_FIELDS = [
+  ['ClA', 'Aero', 'Downforce ClA', 'm²', 0, 10, 0.05, 1, 2],
+  ['CdA', 'Aero', 'Drag CdA', 'm²', 0.6, 3, 0.05, 1, 2],
+  ['bal', 'Aero', 'Aero balance, front', '%', 0.3, 0.7, 0.01, 100, 0],
+  ['mCar', 'Mass', 'Car mass', 'kg', 140, 280, 1, 1, 0],
+  ['mDrv', 'Mass', 'Driver mass', 'kg', 50, 110, 1, 1, 0],
+  ['wf', 'Mass', 'Weight on the front axle', '%', 0.4, 0.6, 0.005, 100, 1],
+  ['h', 'Mass', 'CoG height', 'mm', 0.2, 0.4, 0.001, 1000, 0],
+  ['Pmax', 'Powertrain', 'System power limit', 'kW', 20, 120, 1, 1, 0],
+  ['Tm', 'Powertrain', 'Motor torque, each of 4', 'N m', 8, 30, 0.5, 1, 1],
+  ['G', 'Powertrain', 'Gear ratio', ': 1', 8, 18, 0.05, 1, 2],
+  ['mu0', 'Tyres', 'Peak μ at 600 N', '', 1, 2, 0.01, 1, 2],
+  ['muExp', 'Tyres', 'Load sensitivity exponent', '', -0.3, 0, 0.01, 1, 2],
+  ['ap', 'Tyres', 'Peak slip angle', '°', 4, 12, 0.1, 1, 1],
+  ['brakeFront', 'Brakes', 'Brake balance, front', '%', 0.5, 0.85, 0.01, 100, 0],
+  ['Fb', 'Brakes', 'Maximum brake force', 'N', 4000, 14000, 100, 1, 0],
+  ['rollFront', 'Chassis', 'Roll stiffness, front', '%', 0.3, 0.8, 0.01, 100, 0],
+  ['tv', 'Chassis', 'Torque-vectoring authority', '%', 0, 2, 0.05, 100, 0],
+  ['delMax', 'Chassis', 'Steering lock', '°', 15, 35, 0.5, 1, 1]
+];
+// Arcade and free roam: the selected setup with more grip, power and top speed, and drift-friendly handling.
+const ARC = { grip: 1.18, power: 1.75, force: 1.2, vtop: 1.45, grass: 0.85, brake: 1.35 };
 
 const PRESETS = [
   { id: 'tau-lts', car: 'τ 2026', name: 'LTS vehicle file', ClA: 5.4, CdA: 1.7, bal: 0.50, src: 'FAUmaxTauV2.m, the aero behind the 75.06 s LTS lap' },
@@ -347,7 +428,38 @@ const PRESETS = [
   { id: 'ups-v4k', car: 'υ 2027', name: 'CFD best V4_K', ClA: 6.94, CdA: 1.96, bal: 0.45, src: 'CFD_TOPO 1016_V4_K, standard mesh. Balance 45 % from aero-exchange.md' },
   { id: 'no-aero', car: 'τ 2026', name: 'No downforce', ClA: 0, CdA: 1.7, bal: 0.50, src: 'Thought experiment: same car, wings and floor make no downforce' }
 ];
-let aero = PRESETS[0];
+for (const p of PRESETS) p.vals = Object.assign({}, BASE_SETUP, { ClA: p.ClA, CdA: p.CdA, bal: p.bal });
+let setups = [];          // the player's own setups: { id, name, base, vals, custom: true, car: 'Custom' }
+let aero = PRESETS[0];    // the selected setup (stock package or custom)
+let mode = 'sim';         // 'sim' hot lap | 'arcade' circuit | 'free' roam
+const MODES = [
+  { id: 'sim', name: 'Hot lap', src: 'Team data and FS Rules penalties. Valid laps with a stock package go on the leaderboard.' },
+  { id: 'arcade', name: 'Arcade', src: 'Forgiving, drift-friendly handling with more grip and power on the FSG track. Handbrake to slide. No penalties; laps kept separately.' },
+  { id: 'free', name: 'Free roam', src: 'Arcade handling on a large open paddock with an FS skidpad and acceleration strip. No lap timing; 0–100 km/h and 75 m are timed from every standing start (arcade car).' }
+];
+function cleanVals(v) {
+  const o = Object.assign({}, BASE_SETUP);
+  if (v && typeof v === 'object') for (const f of SETUP_FIELDS) { const x = Number(v[f[0]]); if (Number.isFinite(x)) o[f[0]] = clamp(x, f[4], f[5]); }
+  return o;
+}
+function setupSig(v) {   // short hash of the values, so a changed setup starts a new best lap
+  let h = 2166136261; const s = SETUP_FIELDS.map(f => (+v[f[0]]).toFixed(4)).join(',');
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return (h >>> 0).toString(36);
+}
+let WHEELS = [];
+function applySetup(e) {
+  const s = e.vals;
+  CAR.m = s.mCar + s.mDrv; CAR.b = s.wf * CAR.L; CAR.a = CAR.L - CAR.b; CAR.h = s.h; CAR.Iz = 135 * CAR.m / 252;
+  CAR.mu0 = s.mu0; CAR.muExp = s.muExp; CAR.ap = s.ap * DEG; CAR.B = Math.tan(Math.PI / (2 * CAR.C)) / CAR.ap;
+  CAR.Pmax = s.Pmax * 1000; CAR.Tm = s.Tm; CAR.G = s.G; CAR.nmax = s.nmax || 20000;
+  CAR.brakeFront = s.brakeFront; CAR.Fb = s.Fb; CAR.rollFront = s.rollFront; CAR.tv = s.tv; CAR.delMax = s.delMax * DEG;
+  CAR.ClA = s.ClA; CAR.CdA = s.CdA; CAR.bal = s.bal;
+  CAR.vMotor = CAR.nmax * 2 * Math.PI / 60 / CAR.G * CAR.R;   // stock: 34.06 m/s, 122.6 km/h
+  CAR.FdMax = 4 * CAR.Tm * CAR.G * CAR.eta / CAR.R;          // stock: 5010 N at the contact patches
+  WHEELS = [[CAR.a, -CAR.tf / 2], [CAR.a, CAR.tf / 2], [-CAR.b, -CAR.tr / 2], [-CAR.b, CAR.tr / 2]];
+}
+applySetup(aero);
 
 /* ---------------- Track: LTS A_FSGend_3, curvature integrated and closed ---------------- */
 const N = TRACK.x.length;
@@ -370,7 +482,13 @@ const HALF = 2.0;
 let minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9;
 for (let i = 0; i < N; i++) { minX = Math.min(minX, TX[i]); maxX = Math.max(maxX, TX[i]); minY = Math.min(minY, TY[i]); maxY = Math.max(maxY, TY[i]); }
 const APRON = { x0: minX - 14, y0: minY - 14, x1: maxX + 14, y1: maxY + 14 };
-const WORLD = { x0: minX - 45, y0: minY - 45, x1: maxX + 45, y1: maxY + 45 };
+const WORLD_T = { x0: minX - 45, y0: minY - 45, x1: maxX + 45, y1: maxY + 45 };
+// free roam: a large paved paddock around the event area, with an FS skidpad (D 4) and a 75 m acceleration strip (D 5)
+const FREE = { x0: APRON.x0 - 250, y0: APRON.y0 - 200, x1: APRON.x1 + 200, y1: APRON.y1 + 120 };
+const WORLD_F = { x0: FREE.x0 - 30, y0: FREE.y0 - 30, x1: FREE.x1 + 30, y1: FREE.y1 + 30 };
+const SKID = { x: APRON.x0 - 55, y: (APRON.y0 + APRON.y1) / 2, d: 18.25, ri: 15.25 / 2, ro: 21.25 / 2 };
+const ACC = { x: APRON.x0 + 25, y: APRON.y0 - 50, len: 75, w: 5 };
+let WORLD = WORLD_T;
 
 const trackPath = new Path2D();
 trackPath.moveTo(TX[0], TY[0]);
@@ -430,6 +548,19 @@ const cones = [];
     const p = poseAt(s), i = nearest(p.x, p.y).i, off = side * (HALF + 0.45);
     cones.push({ x0: p.x + NX[i] * off, y0: p.y + NY[i] * off, x: 0, y: 0, vx: 0, vy: 0, a: 0, w: 0, col: 'o', down: false, big: true });
   }
+  // free roam only: skidpad (two circles 18.25 m apart, inner 15.25 m, outer 21.25 m) and the acceleration strip
+  const fc = (x, y, col, big) => cones.push({ x0: x, y0: y, x, y, vx: 0, vy: 0, a: 0, w: 0, col, down: false, big: !!big, free: true });
+  for (const side of [-1, 1]) {
+    const cx = SKID.x, cy = SKID.y + side * SKID.d / 2;
+    for (let k = 0; k < 16; k++) { const a = k / 16 * 2 * Math.PI; fc(cx + Math.cos(a) * SKID.ri, cy + Math.sin(a) * SKID.ri, 'b'); }
+    for (let k = 0; k < 13; k++) {
+      const a = k / 13 * 2 * Math.PI, x = cx + Math.cos(a) * SKID.ro, y = cy + Math.sin(a) * SKID.ro;
+      if (Math.hypot(x - cx, y - (SKID.y - side * SKID.d / 2)) < SKID.ro + 0.5) continue;   // keep the crossing open
+      fc(x, y, 'y');
+    }
+  }
+  for (const side of [-1, 1]) fc(SKID.x + SKID.ro + 2, SKID.y + side * 1.6, 'o', true);   // entry gate
+  for (let k = 0; k <= ACC.len / 5; k++) for (const side of [-1, 1]) fc(ACC.x + k * 5, ACC.y + side * ACC.w / 2, side < 0 ? 'b' : 'y', k === 0 || k === ACC.len / 5);
   for (const c of cones) { c.x = c.x0; c.y = c.y0; }
 }
 const CELL = 8, grid = new Map();
@@ -440,11 +571,11 @@ cones.forEach((c, i) => { const k = cellKey(c.x0, c.y0); if (!grid.has(k)) grid.
 const vPlan = new Float64Array(N), vPlanA = new Float64Array(N);
 function buildPlan() { planSpeeds(vPlan, 0.86, 0.7); planSpeeds(vPlanA, 0.9, 0.72); }
 function planSpeeds(vPlan, muf, abf) {
-  const kq = 0.5 * CAR.rho * aero.ClA / CAR.m, mu = 1.3 * muf;
+  const kq = 0.5 * CAR.rho * CAR.ClA / CAR.m, mu = 1.3 * muf * CAR.mu0 / 1.40;
   for (let i = 0; i < N; i++) {
     let ak = 0; for (let j = -3; j <= 3; j++) ak = Math.max(ak, Math.abs(K[(i + j + N) % N]));
     const den = ak - mu * kq;
-    vPlan[i] = den <= 1e-4 ? 40 : Math.min(40, Math.sqrt(mu * G0 / den));
+    vPlan[i] = den <= 1e-4 ? 60 : Math.min(60, Math.sqrt(mu * G0 / den));
   }
   for (let pass = 0; pass < 3; pass++) for (let i = N - 1; i >= 0; i--) {
     const nx = vPlan[(i + 1) % N], ab = abf * mu * (G0 + kq * nx * nx), v = Math.sqrt(nx * nx + 2 * ab * SEG[i]);
@@ -460,6 +591,15 @@ const trees = [];
     const x = lerp(WORLD.x0, WORLD.x1, rng()), y = lerp(WORLD.y0, WORLD.y1, rng());
     if (x > APRON.x0 - 5 && x < APRON.x1 + 5 && y > APRON.y0 - 5 && y < APRON.y1 + 5) continue;
     trees.push({ x, y, r: 2.2 + rng() * 2.6, s: rng() });
+  }
+}
+const treesF = [];   // around the free-roam paddock
+{
+  const rng = mulberry32(11);
+  for (let k = 0; k < 6000 && treesF.length < 520; k++) {
+    const x = lerp(WORLD_F.x0 - 30, WORLD_F.x1 + 30, rng()), y = lerp(WORLD_F.y0 - 30, WORLD_F.y1 + 30, rng());
+    if (x > FREE.x0 - 4 && x < FREE.x1 + 4 && y > FREE.y0 - 4 && y < FREE.y1 + 4) continue;
+    treesF.push({ x, y, r: 2.2 + rng() * 2.6, s: rng() });
   }
 }
 function makePattern(size, base, dots, cfg) {
@@ -494,8 +634,14 @@ const r2 = v => Math.round(v * 100) / 100;
 function saveData() {
   const b = {};
   for (const id in bests) { const x = bests[id]; b[id] = { t: x.t, raw: x.raw, sectors: x.sectors, splits: x.splits, ghost: x.ghost.map(s => [+s[0].toFixed(3), r2(s[1]), r2(s[2]), +s[3].toFixed(3), r2(s[4])]) }; }
-  return { bests: b, bestSecs, muted, ghostOn, assist, camMode, preset: aero.id };
+  return { bests: b, bestSecs, muted, ghostOn, assist, camMode, preset: aero.id, mode, setups: setups.map(s => ({ id: s.id, name: s.name, base: s.base, vals: s.vals })) };
 }
+function makeCustom(id, name, base, vals) {
+  const b = PRESETS.find(p => p.id === base);
+  return { id, name: String(name || 'My setup').replace(/\s+/g, ' ').trim().slice(0, 32) || 'My setup', base: b ? b.id : '', vals: cleanVals(vals), custom: true, car: 'Custom',
+    get src() { return (b ? 'Based on ' + b.car + ' ' + b.name : 'Own setup') + ' · ' + Math.round(this.vals.mCar + this.vals.mDrv) + ' kg · ' + Math.round(this.vals.Pmax) + ' kW · μ ' + this.vals.mu0.toFixed(2); } };
+}
+const allSetups = () => PRESETS.concat(setups);
 function applyData(d) {
   if (!d || typeof d !== 'object') return;
   if (d.bests && typeof d.bests === 'object') for (const id in d.bests) { const x = d.bests[id]; if (x && Array.isArray(x.ghost) && x.ghost.length > 10) bests[id] = x; }
@@ -504,11 +650,15 @@ function applyData(d) {
   if (typeof d.ghostOn === 'boolean') ghostOn = d.ghostOn;
   if (typeof d.assist === 'boolean') assist = d.assist;
   if (Number.isInteger(d.camMode) && d.camMode >= 0 && d.camMode < 4) camMode = d.camMode;
-  const p = PRESETS.find(p => p.id === d.preset); if (p) aero = p;
+  if (Array.isArray(d.setups)) setups = d.setups.filter(s => s && typeof s.id === 'string' && /^c-[a-z0-9]{1,16}$/.test(s.id)).slice(0, 24).map(s => makeCustom(s.id, s.name, s.base, s.vals));
+  if (MODES.some(m => m.id === d.mode)) mode = d.mode;
+  const p = allSetups().find(p => p.id === d.preset); if (p) aero = p;
 }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(saveData())); } catch (e) {} }
 function load() { try { const s = localStorage.getItem(KEY); return s ? JSON.parse(s) : null; } catch (e) { return null; } }
-const bestKey = (id = aero.id) => id + (assist ? '' : '|raw');
+// best laps per mode, setup and assist mode; hot-lap keys for the stock packages are unchanged ('tau-lts', 'tau-lts|raw')
+const bestKey = (e = aero) => (mode === 'arcade' ? 'arc|' : mode === 'free' ? 'free|' : '') + e.id + (e.custom ? '#' + setupSig(e.vals) : '') + (mode === 'sim' && !assist ? '|raw' : '');
+const lbEligible = () => mode === 'sim' && !aero.custom;   // the shared board compares the team's stock packages in hot-lap mode
 const bestNow = () => bests[bestKey()] || null;
 const bestSecNow = () => bestSecs[bestKey()] || (bestSecs[bestKey()] = [0, 0, 0]);
 
@@ -527,39 +677,54 @@ function placeAt(s, c) {
   c.x = p.x; c.y = p.y; c.h = p.h; c.vx = c.vy = c.r = c.st = c.thr = c.brk = c.delta = c.axp = c.ayp = 0;
   c.near = nearest(c.x, c.y); c.s = c.near.s; c.lat = c.near.lat; c.sk = [null, null, null, null]; c.oc = false;
 }
-function surfaceAt(x, y) { return (x > APRON.x0 && x < APRON.x1 && y > APRON.y0 && y < APRON.y1) ? 'asphalt' : 'grass'; }
+function surfaceAt(x, y) {
+  if (x > APRON.x0 && x < APRON.x1 && y > APRON.y0 && y < APRON.y1) return 'asphalt';
+  return mode === 'free' && x > FREE.x0 && x < FREE.x1 && y > FREE.y0 && y < FREE.y1 ? 'asphalt' : 'grass';
+}
 
 function physics(c, inp, dt) {
-  const f = c.f;
+  const f = c.f, arc = !!inp.arcade;   // arc: arcade handling (arcade and free-roam modes)
   let thrT = clamp(inp.thr, 0, 1), brkT = clamp(inp.brk, 0, 1);
   // brake assist: never enter a bend faster than the planned corner speed
   c.assistBrake = false;
-  if (inp.assist && c.vx > 3) {
+  if (inp.assist && !arc && c.vx > 3) {
     const vt = vPlanA[Math.floor(c.s + 2 + c.vx * 0.25) % N];
     if (c.vx > vt + 0.2) { brkT = Math.max(brkT, clamp((c.vx - vt) / 0.8, 0, 1)); thrT = 0; c.assistBrake = true; }
   }
-  c.thr += clamp(thrT - c.thr, -9 * dt, 6 * dt);
-  c.brk += clamp(brkT - c.brk, -12 * dt, 12 * dt);
-  const st = clamp(inp.steer, -1, 1), rate = (Math.abs(st) < Math.abs(c.st) || st * c.st < 0) ? 7 : 4.2;
+  c.thr += clamp(thrT - c.thr, -9 * dt, (arc ? 10 : 6) * dt);
+  c.brk += clamp(brkT - c.brk, -12 * dt, (arc ? 16 : 12) * dt);
+  const st = clamp(inp.steer, -1, 1), rate = (Math.abs(st) < Math.abs(c.st) || st * c.st < 0) ? (arc ? 9 : 7) : (arc ? 6 : 4.2);
   c.st += clamp(st - c.st, -rate * dt, rate * dt);
 
   const v = Math.hypot(c.vx, c.vy), vxs = Math.max(Math.abs(c.vx), 1.5);
-  const grass = c.surface === 'grass', sf = grass ? 0.62 : 1;
+  const grass = c.surface === 'grass', sf = (grass ? (arc ? ARC.grass : 0.62) : 1) * (arc ? ARC.grip : 1);
   const beta = Math.atan2(c.vy, vxs);
-  const ClAe = aero.ClA * (1 - YAW_LOSS * Math.min(Math.abs(beta) / DEG, 8));
+  const ClAe = CAR.ClA * (1 - YAW_LOSS * Math.min(Math.abs(beta) / DEG, 8));
   const q = 0.5 * CAR.rho * c.vx * c.vx;
-  const Fdown = q * ClAe, Fdrag = q * aero.CdA, W = CAR.m * G0;
-  let Fzf = W * CAR.b / CAR.L + Fdown * aero.bal - CAR.m * c.axp * CAR.h / CAR.L;
-  let Fzr = W * CAR.a / CAR.L + Fdown * (1 - aero.bal) + CAR.m * c.axp * CAR.h / CAR.L;
+  const Fdown = q * ClAe, Fdrag = q * CAR.CdA, W = CAR.m * G0;
+  let Fzf = W * CAR.b / CAR.L + Fdown * CAR.bal - CAR.m * c.axp * CAR.h / CAR.L;
+  let Fzr = W * CAR.a / CAR.L + Fdown * (1 - CAR.bal) + CAR.m * c.axp * CAR.h / CAR.L;
   Fzf = Math.max(Fzf, 60); Fzr = Math.max(Fzr, 60);
   const dF = CAR.m * c.ayp * CAR.h;
   const capF = axleCap(Fzf, CAR.rollFront * dF / CAR.tf) * sf, capR = axleCap(Fzr, (1 - CAR.rollFront) * dF / CAR.tr) * sf;
 
+  // arcade drift state: the handbrake, or power with the rear already sliding, starts a slide the car holds for a moment
+  if (arc) {
+    c.driftT = Math.max(0, (c.driftT || 0) - dt);
+    if (inp.hb && c.vx > 7) c.driftT = 0.9;
+    else if (c.driftT > 0 && c.thr > 0.5 && Math.abs(beta) > 6 * DEG) c.driftT = Math.max(c.driftT, 0.35);
+  } else c.driftT = 0;
+  const drift = c.driftT > 0;
+
   // steering: the key maps to a share of the lock the car can use at this speed
   const aLim = (capF + capR) / CAR.m;
-  const dLim = Math.min(CAR.delMax, CAR.L * aLim / Math.max(v * v, 4) + 0.9 * CAR.ap);
+  const dLim = arc ? Math.min(CAR.delMax, Math.atan(CAR.L * aLim / Math.max(v * v, 4)) + 1.15 * CAR.ap)
+                   : Math.min(CAR.delMax, CAR.L * aLim / Math.max(v * v, 4) + 0.9 * CAR.ap);
   let dCmd = c.st * dLim;
-  if (inp.assist && inp.human && Math.abs(c.vx) > 2.5) {
+  if (arc) {
+    // arcade: automatic counter-steer into a slide (less while drifting, so the slide lasts)
+    if (Math.abs(c.vx) > 3) { const bx = Math.sign(beta) * Math.max(0, Math.abs(beta) - 3 * DEG); dCmd = clamp(dCmd + clamp((drift ? 0.45 : 0.8) * bx, -0.35, 0.35), -CAR.delMax, CAR.delMax); }
+  } else if (inp.assist && inp.human && Math.abs(c.vx) > 2.5) {
     // steering assist for keys and touch: into the bend gives the lock the bend needs plus a margin, otherwise a gentler lock
     const iA = Math.floor(c.s + 1 + 0.12 * v) % N;
     let kA = 0; for (let j = -2; j <= 2; j++) kA += K[(iA + j + N) % N] / 5;
@@ -573,13 +738,15 @@ function physics(c, inp, dt) {
 
   // longitudinal: 4 motors, torque split by axle load with traction control, brakes 70/30 with ABS
   let Fxf = 0, Fxr = 0, Pw = 0;
+  const Pmax = CAR.Pmax * (arc ? ARC.power : 1), FdMax = CAR.FdMax * (arc ? ARC.force : 1), vTop = CAR.vMotor * (arc ? ARC.vtop : 1);
   if (c.thr > 0.001 && !(c.brk > 0.05 && c.vx > 0.3)) {
-    let Fd = Math.min(CAR.FdMax, CAR.Pmax * CAR.eta / Math.max(c.vx, 1));
-    if (c.vx > CAR.vMotor - 0.6) Fd *= clamp((CAR.vMotor - c.vx) / 0.6, 0, 1);
+    let Fd = Math.min(FdMax, Pmax * CAR.eta / Math.max(c.vx, 1));
+    if (c.vx > vTop - 0.6) Fd *= clamp((vTop - c.vx) / 0.6, 0, 1);
     Fd *= c.thr;
     const sh = Fzf / (Fzf + Fzr);
     let tcF = 0.9, tcR = 0.9;
-    if (inp.assist) {   // traction assist: keep enough grip for the corner the tyres are already in
+    if (arc) { tcF = 0.95; tcR = drift ? 1.0 : 0.95; }
+    else if (inp.assist) {   // traction assist: keep enough grip for the corner the tyres are already in
       const uF = Math.min(1, Math.abs(f.Fyf) / Math.max(capF, 1)), uR = Math.min(1, Math.abs(f.Fyr) / Math.max(capR, 1));
       tcF = 0.9 * Math.sqrt(Math.max(0.04, 1 - 1.05 * uF * uF)); tcR = 0.9 * Math.sqrt(Math.max(0.04, 1 - 1.05 * uR * uR));
     }
@@ -587,18 +754,22 @@ function physics(c, inp, dt) {
     Pw = (Fxf + Fxr) * Math.max(c.vx, 0) / CAR.eta;
   } else if (c.brk > 0.001) {
     if (c.vx > 0.3) {
-      // brake split 70/30 (LTS), wheel-slip control keeps 90 % front / 60 % rear of the axle grip
-      const Fb = c.brk * 9000;
-      Fxf = -Math.min(CAR.brakeFront * Fb, 0.9 * capF); Fxr = -Math.min((1 - CAR.brakeFront) * Fb, 0.6 * capR);
+      // brake split 70/30 (LTS), wheel-slip control keeps 90 % front / 60 % rear of the axle grip (arcade: 95 / 80 %)
+      const Fb = c.brk * CAR.Fb * (arc ? ARC.brake : 1);
+      Fxf = -Math.min(CAR.brakeFront * Fb, (arc ? 0.95 : 0.9) * capF); Fxr = -Math.min((1 - CAR.brakeFront) * Fb, (arc ? 0.8 : 0.6) * capR);
     } else if (c.vx > -3.5) { Fxf = -c.brk * 450; Fxr = -c.brk * 450; }
   }
   const af = c.delta - Math.atan2(c.vy + CAR.a * c.r, vxs);
   const ar = -Math.atan2(c.vy - CAR.b * c.r, vxs);
-  // rear slip guard: when the rear slides, the motors back off the rear longitudinal force
-  if (Math.abs(ar) > (inp.assist ? 0.85 : 1.15) * CAR.ap && !inp.hb) Fxr *= inp.assist ? 0.3 : 0.5;
+  // rear slip guard: when the rear slides, the motors back off the rear longitudinal force (arcade: not while drifting)
+  if (arc) { if (!drift && Math.abs(ar) > CAR.ap && !inp.hb) Fxr *= 0.4; }
+  else if (Math.abs(ar) > (inp.assist ? 0.85 : 1.15) * CAR.ap && !inp.hb) Fxr *= inp.assist ? 0.3 : 0.5;
   if (inp.assist && c.assistBrake) Fxr *= 0.6;   // assisted braking leans on the front axle
-  if (inp.hb && Math.abs(c.vx) > 0.3) Fxr = -Math.sign(c.vx) * 0.85 * capR;
-  const Dyf = Math.sqrt(Math.max(capF * capF - Fxf * Fxf, 0)), Dyr = Math.sqrt(Math.max(capR * capR - Fxr * Fxr, 0));
+  if (inp.hb && Math.abs(c.vx) > 0.3) Fxr = -Math.sign(c.vx) * (arc ? 0.35 : 0.85) * capR;
+  const Dyf = Math.sqrt(Math.max(capF * capF - Fxf * Fxf, 0));
+  let Dyr = Math.sqrt(Math.max(capR * capR - Fxr * Fxr, 0));
+  if (arc && inp.hb) Dyr *= 0.5;                          // arcade handbrake: the rear lets go
+  else if (arc && drift && c.thr > 0.3) Dyr *= 0.85;      // power holds the slide
   const Fyf = Dyf * Math.sin(CAR.C * Math.atan(CAR.B * af)), Fyr = Dyr * Math.sin(CAR.C * Math.atan(CAR.B * ar));
 
   const cd = Math.cos(c.delta), sd = Math.sin(c.delta);
@@ -609,8 +780,15 @@ function physics(c, inp, dt) {
   if (Math.abs(c.vx) > 4 && !inp.hb) {
     const rMax = 0.95 * aLim / Math.abs(c.vx);
     const rDes = clamp(c.vx * Math.tan(c.delta) / CAR.L, -rMax, rMax);
-    const kTv = inp.assist ? 10 : 6, mTv = inp.assist ? 1400 : 900;
+    const kTv = arc ? 12 : inp.assist ? 10 : 6, mTv = (arc ? (drift ? 500 : 2200) : inp.assist ? 1400 : 900) * CAR.tv;
     MZ += clamp(CAR.Iz * kTv * (rDes - c.r), -mTv, mTv);
+  }
+  if (arc && Math.abs(c.vx) > 3) {
+    // arcade stability: the body slip stays below 14° (38° while drifting) and the yaw rate below what the grip can hold
+    const bMax = (drift ? 38 : 14) * DEG, bx = beta - clamp(beta, -bMax, bMax);
+    MZ += clamp(CAR.Iz * 70 * bx, -7000, 7000);
+    const rCap = (drift ? 1.6 : 1.2) * aLim / Math.abs(c.vx), rx = c.r - clamp(c.r, -rCap, rCap);
+    MZ -= clamp(CAR.Iz * 14 * rx, -6000, 6000);
   }
   // resistance never reverses the car
   const stopF = Math.abs(c.vx) * CAR.m / dt;
@@ -682,9 +860,10 @@ function touchSync() {
 function playerInput() {
   const T = touchState;   // TOUCH CONTROLS (temporary): remove this line and the "|| T." parts below
   const Lk = keys.has('ArrowLeft') || keys.has('KeyA') || T.left, Rk = keys.has('ArrowRight') || keys.has('KeyD') || T.right;
-  return { steer: (Rk ? 1 : 0) - (Lk ? 1 : 0), thr: keys.has('ArrowUp') || keys.has('KeyW') || T.thr ? 1 : 0, brk: keys.has('ArrowDown') || keys.has('KeyS') || T.brk ? 1 : 0, hb: keys.has('Space') || T.hb, assist, human: true };
+  return { steer: (Rk ? 1 : 0) - (Lk ? 1 : 0), thr: keys.has('ArrowUp') || keys.has('KeyW') || T.thr ? 1 : 0, brk: keys.has('ArrowDown') || keys.has('KeyS') || T.brk ? 1 : 0, hb: keys.has('Space') || T.hb, assist, human: true, arcade: mode !== 'sim' };
 }
 addEventListener('keydown', e => {
+  if (e.target && /^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName) && e.code !== 'Escape') return;
   if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code) && !(e.target && e.target.tagName === 'INPUT')) e.preventDefault();
   if (e.repeat) { keys.add(e.code); return; }
   keys.add(e.code);
@@ -725,7 +904,7 @@ function initAudio() {
     if (AC.state === 'suspended') AC.resume().catch(() => {});
   } catch (e) { AC = null; }
 }
-const motorRpm = vx => Math.abs(vx) / CAR.R * CAR.G * 60 / (2 * Math.PI);
+const motorRpm = vx => Math.abs(vx) / CAR.R * CAR.G * 60 / (2 * Math.PI) / (mode !== 'sim' ? ARC.vtop : 1);   // arcade: as if geared for its top speed
 function audioUpdate() {
   if (!AC) return;
   const t = AC.currentTime, live = state === 'race' || state === 'countdown';
@@ -792,7 +971,7 @@ function finishLap(tc) {
       showMsg(prev == null ? 'Lap set' : 'New best lap', 'best', 2.6, fmt(t) + penTxt + '   ' + fmtD(t - LTS.lapTime, 2) + ' to LTS');
     } else showMsg(fmt(t), 'warn', 2.4, fmtD(t - prev, 3) + ' to your best' + penTxt);
     save();
-    if (!autodrive) lbSubmit(bestKey(), { t: +t.toFixed(3), raw: +raw.toFixed(3), pen: lap.pen, cones: lap.doo, oc: lap.oc, at: Date.now() });
+    if (!autodrive && lbEligible()) lbSubmit(bestKey(), { t: +t.toFixed(3), raw: +raw.toFixed(3), pen: lap.pen, cones: lap.doo, oc: lap.oc, at: Date.now() });
   } else showMsg('Lap invalid', 'bad', 2.4, fmt(t) + ' · cut the track, not counted');
   last = { t, valid, pen: lap.pen };
   session.unshift({ n: lap.n, t, valid, pb, pen: lap.pen });
@@ -855,7 +1034,7 @@ function conesUpdate(dt) {
     const list = grid.get(ix + ',' + iy); if (!list) continue;
     for (const ci of list) {
       const c = cones[ci], dx = c.x - cx, dy = c.y - cy;
-      if (dx * dx + dy * dy > 9) continue;
+      if (dx * dx + dy * dy > 9 || (c.free && mode !== 'free')) continue;
       const lx = dx * ch + dy * sh, ly = -dx * sh + dy * ch, rad = c.big ? 0.17 : 0.12;
       if (lx > -1.45 - rad && lx < 1.42 + rad && Math.abs(ly) < 0.72 + rad) {
         if (!c.down && sp > 0.4) {
@@ -864,7 +1043,7 @@ function conesUpdate(dt) {
           c.vx = wx * 1.15 + (ly > 0 ? -sh : sh) * 1.5; c.vy = wy * 1.15 + (ly > 0 ? ch : -ch) * 1.5;
           c.w = (Math.random() - 0.5) * 18; c.a = Math.atan2(c.vy, c.vx);
           click();
-          if (state === 'race' && lap.active) { addPenalty(2, 'Cone down', '+2 s · down or out, D 10.1.4'); }
+          if (state === 'race' && lap.active && mode === 'sim') { addPenalty(2, 'Cone down', '+2 s · down or out, D 10.1.4'); }
         } else if (c.down && sp > 0.5) {
           const wx = car.vx * ch - car.vy * sh, wy = car.vx * sh + car.vy * ch; c.vx = wx * 1.05; c.vy = wy * 1.05;
         }
@@ -883,7 +1062,6 @@ const SK_MAX = 4000, skid = new Float32Array(SK_MAX * 4); let skN = 0, skHead = 
 function addSkid(a, b) { if (V3.ok) apronSkid(a, b); const o = skHead * 4; skid[o] = a[0]; skid[o + 1] = a[1]; skid[o + 2] = b[0]; skid[o + 3] = b[1]; skHead = (skHead + 1) % SK_MAX; if (skN < SK_MAX) skN++; }
 const parts = [];
 function puff(x, y, vx, vy, col, size) { if (parts.length > 220) parts.shift(); parts.push({ x, y, vx, vy, col, r: size, life: 1 }); }
-const WHEELS = [[CAR.a, -CAR.tf / 2], [CAR.a, CAR.tf / 2], [-CAR.b, -CAR.tr / 2], [-CAR.b, CAR.tr / 2]];
 function effects(dt) {
   const c = car, f = c.f, ch = Math.cos(c.h), sh = Math.sin(c.h);
   const fast = Math.abs(c.vx) > 3;
@@ -914,21 +1092,67 @@ function showMsg(t, c, dur, s, small) { $('msgT').textContent = t; $('msgS').tex
 /* ---------------- Game flow ---------------- */
 const GRID_S = LEN - 30;
 function resetLapState() { lap.active = false; lap.valid = true; lap.next = 1; lap.splits = [0, 0]; lap.rec = []; lap.prog = 0; lap.pen = 0; resetSectorsUi(); }
-function toGrid() { placeAt(GRID_S, car); skN = 0; skHead = 0; if (V3.ok) apronReset(); parts.length = 0; resetLapState(); resetCones(false); wrongT = 0; ggTrail.length = 0; camUpdate(0, true); }
+function placeFreeStart(c) {   // free roam starts on the acceleration strip, pointing down it
+  placeAt(0, c); c.x = ACC.x - 1.6; c.y = ACC.y; c.h = 0; c.near = nearest(c.x, c.y); c.s = c.near.s; c.lat = c.near.lat;
+}
+function toGrid() {
+  if (mode === 'free') placeFreeStart(car); else placeAt(GRID_S, car);
+  skN = 0; skHead = 0; if (V3.ok) apronReset(); parts.length = 0; resetLapState(); resetCones(false); wrongT = 0; ggTrail.length = 0; frReset(); camUpdate(0, true);
+}
 function startGame() {
   initAudio();
-  $('menu').classList.add('hidden'); $('pause').classList.add('hidden'); $('hud').classList.remove('off');
+  $('menu').classList.add('hidden'); $('pause').classList.add('hidden'); $('setup').classList.add('hidden'); $('hud').classList.remove('off');
   $('aeroName').textContent = aero.car + ' · ' + aero.name;
   try { cvs.focus({ preventScroll: true }); window.focus(); } catch (e) {}
   session = []; renderLaps(); last = null; lap.n = 0;
-  buildPlan(); toGrid(); startCountdown();
+  applySetup(aero); buildPlan(); toGrid();
+  if (mode === 'free') { state = 'race'; $('lights').classList.remove('show'); showMsg('Free roam', 'go', 2, 'Drive anywhere · R takes you back to the start'); }
+  else startCountdown();
+}
+/* free roam: 0–100 km/h and 75 m are timed from every standing start */
+const fr = { top: 0, dist: 0, armed: true, run: false, t: 0, d: 0, got100: false, got75: false, t100: null, t75: null, b100: null, b75: null };
+function frReset() { Object.assign(fr, { top: 0, dist: 0, armed: true, run: false, t: 0, d: 0, got100: false, got75: false, t100: null, t75: null }); }
+function freeUpdate(dt) {
+  const v = Math.hypot(car.vx, car.vy);
+  fr.top = Math.max(fr.top, v); fr.dist += v * dt;
+  if (v < 0.3 && car.thr < 0.05) { fr.armed = true; fr.run = false; return; }
+  if (fr.armed && v >= 0.3) { fr.armed = false; fr.run = true; fr.t = 0; fr.d = 0; fr.got100 = fr.got75 = false; }
+  if (!fr.run) return;
+  fr.t += dt; fr.d += Math.max(car.vx, 0) * dt;
+  if (!fr.got100 && v >= 100 / 3.6) { fr.got100 = true; fr.t100 = fr.t; if (fr.b100 == null || fr.t < fr.b100) fr.b100 = fr.t; showMsg('0–100 km/h', 'go', 1.6, fr.t.toFixed(2) + ' s', true); }
+  if (!fr.got75 && fr.d >= 75) { fr.got75 = true; fr.t75 = fr.t; if (fr.b75 == null || fr.t < fr.b75) fr.b75 = fr.t; showMsg('75 m', 'go', 1.6, fr.t.toFixed(3) + ' s · ' + Math.round(v * 3.6) + ' km/h', true); }
+  if ((fr.got100 && fr.got75) || fr.t > 30) fr.run = false;
+}
+function setMode(m) {
+  if (!MODES.some(x => x.id === m)) return;
+  mode = m; WORLD = m === 'free' ? WORLD_F : WORLD_T;
+  document.body.classList.toggle('mode-free', m === 'free');
+  for (const c of cones) if (c.free) { c.down = false; c.x = c.x0; c.y = c.y0; c.vx = c.vy = c.w = 0; c.a = 0; c.dirty = true; }
+  if (V3.ok) setFree3D(m === 'free');
+  const chip = $('mdChip'); chip.classList.toggle('on', m !== 'sim'); chip.textContent = m === 'free' ? 'Free roam' : 'Arcade';
+  $('menuAssist').disabled = m !== 'sim'; $('menuAssist').title = m !== 'sim' ? 'Arcade handling has its own help; the assists apply to Hot lap' : '';
+  save();
+}
+function renderModes() {
+  const fs = $('modes');
+  fs.querySelectorAll('.preset').forEach(n => n.remove());
+  for (const m of MODES) {
+    const lab = document.createElement('label'); lab.className = 'preset';
+    const inp = document.createElement('input'); inp.type = 'radio'; inp.name = 'mode'; inp.value = m.id; inp.id = 'mode-' + m.id; inp.checked = m.id === mode;
+    inp.addEventListener('change', () => { setMode(m.id); renderModes(); renderPresets(); });
+    const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = m.name;
+    const num = document.createElement('span'); num.className = 'num'; num.textContent = m.id === 'sim' ? 'Leaderboard' : m.id === 'arcade' ? 'Timed laps' : 'No timing';
+    const src = document.createElement('span'); src.className = 'src'; src.textContent = m.src;
+    lab.append(inp, nm, num, src); fs.append(lab);
+  }
 }
 function startCountdown() { state = 'countdown'; cd.t = 0; cd.hold = 0.5 + Math.random() * 0.8; $('lights').classList.add('show'); setLights(0); }
 function setLights(n) { const ls = $('lights').children; for (let i = 0; i < 5; i++) ls[i].classList.toggle('on', i < n); }
 function pause() { if (state !== 'race' && state !== 'countdown') return; resumeTo = state; state = 'paused'; keys.clear(); $('pause').classList.remove('hidden'); $('resumeBtn').focus(); }
 function resume() { if (state !== 'paused') return; initAudio(); $('pause').classList.add('hidden'); state = resumeTo; last_t = performance.now(); try { cvs.focus({ preventScroll: true }); } catch (e) {} }
-function toMenu() { state = 'menu'; $('pause').classList.add('hidden'); $('menu').classList.remove('hidden'); $('hud').classList.add('off'); $('lights').classList.remove('show'); buildPlan(); toGrid(); placeAt(LEN * 0.35, car); renderPresets(); $('startBtn').focus(); }
+function toMenu() { state = 'menu'; $('pause').classList.add('hidden'); $('menu').classList.remove('hidden'); $('hud').classList.add('off'); $('lights').classList.remove('show'); applySetup(aero); buildPlan(); toGrid(); placeAt(LEN * 0.35, car); renderModes(); renderPresets(); $('startBtn').focus(); }
 function backOnTrack() {
+  if (mode === 'free') { placeFreeStart(car); frReset(); showMsg('Back to the start', 'go', 1.2, 'Acceleration strip', true); return; }
   invalidate('Reset', 'Lap ' + lap.n + ' will not count');
   placeAt(car.near.s, car);
 }
@@ -938,15 +1162,15 @@ function setGhost(g) { ghostOn = g; $('ghostBtn').firstElementChild.textContent 
 function renderPresets() {
   const fs = $('presets');
   fs.querySelectorAll('.preset').forEach(n => n.remove());
-  for (const p of PRESETS) {
+  for (const p of allSetups()) {
     const lab = document.createElement('label'); lab.className = 'preset';
     const inp = document.createElement('input'); inp.type = 'radio'; inp.name = 'preset'; inp.value = p.id; inp.id = 'preset-' + p.id; inp.checked = p.id === aero.id;
-    inp.addEventListener('change', () => { aero = p; save(); buildPlan(); renderPresets(); });
+    inp.addEventListener('change', () => { aero = p; applySetup(p); save(); buildPlan(); renderPresets(); });
     const nm = document.createElement('span'); nm.className = 'nm'; nm.innerHTML = '<em></em>'; nm.firstChild.textContent = p.car; nm.append(p.name);
     const num = document.createElement('span'); num.className = 'num';
-    num.textContent = 'ClA ' + p.ClA.toFixed(2) + ' · CdA ' + p.CdA.toFixed(2) + ' · ' + Math.round(p.bal * 100) + ' % front';
+    num.textContent = 'ClA ' + p.vals.ClA.toFixed(2) + ' · CdA ' + p.vals.CdA.toFixed(2) + ' · ' + Math.round(p.vals.bal * 100) + ' % front';
     const src = document.createElement('span'); src.className = 'src'; src.textContent = p.src;
-    const b = bests[bestKey(p.id)];
+    const b = bests[bestKey(p)];
     if (b) { const pb = document.createElement('span'); pb.className = 'pbv'; pb.textContent = '  Your best ' + fmt(b.t); src.append(pb); }
     lab.append(inp, nm, num, src); fs.append(lab);
   }
@@ -966,7 +1190,127 @@ $('startBtn').addEventListener('click', startGame);
 $('menuSound').addEventListener('click', () => setMuted(!muted));
 $('pauseBtn').addEventListener('click', () => pause());
 $('resumeBtn').addEventListener('click', resume);
-$('restartBtn').addEventListener('click', () => { $('pause').classList.add('hidden'); session = []; renderLaps(); last = null; lap.n = 0; initAudio(); toGrid(); startCountdown(); try { cvs.focus({ preventScroll: true }); } catch (e) {} });
+$('restartBtn').addEventListener('click', () => { $('pause').classList.add('hidden'); session = []; renderLaps(); last = null; lap.n = 0; initAudio(); toGrid(); if (mode === 'free') state = 'race'; else startCountdown(); try { cvs.focus({ preventScroll: true }); } catch (e) {} });
+$('setupBtn').addEventListener('click', () => openSetup());
+
+/* ---------------- Setup editor: edit any parameter the physics uses; stock packages are copied, never changed ---------------- */
+const SU = { draft: null, src: null, loaded: null, delArm: 0 };
+function deriveSetup(v) {
+  const m = v.mCar + v.mDrv, W = m * G0, kq = 0.5 * CAR.rho, R = CAR.R, eta = CAR.eta;
+  const vMot = (v.nmax || 20000) * 2 * Math.PI / 60 / v.G * R, Fd = 4 * v.Tm * v.G * eta / R;
+  let lo = 1, hi = 120;   // drag-limited top speed: P eta = (CdA q + rr (W + ClA q)) v
+  for (let k = 0; k < 60; k++) { const s = (lo + hi) / 2, q = kq * s * s; if ((v.CdA * q + CAR.rr * (W + v.ClA * q)) * s < v.Pmax * 1000 * eta) lo = s; else hi = s; }
+  const q100 = kq * (100 / 3.6) ** 2;
+  const mu = Fz => v.mu0 * Math.pow(Math.max(Fz, 40) / CAR.Fz0, v.muExp);
+  const latG = kmh => { const q = kq * (kmh / 3.6) ** 2, Fz = W + v.ClA * q; return mu(Fz / 4) * Fz / W; };
+  return { m, wf: v.wf, vTop: Math.min(vMot, lo), vMot, vDrag: lo, Fd, pw: v.Pmax / (m / 1000), down100: v.ClA * q100, drag100: v.CdA * q100, ld: v.CdA > 0 ? v.ClA / v.CdA : 0,
+    g60: latG(60), g100: latG(100), est: estLap(v) };
+}
+function estLap(v) {   // point-mass, quasi-steady lap time on the track's curvature (relative comparisons only)
+  const m = v.mCar + v.mDrv, kq = 0.5 * CAR.rho / m, Pw = v.Pmax * 1000 * CAR.eta, R = CAR.R;
+  const vMot = (v.nmax || 20000) * 2 * Math.PI / 60 / v.G * R, Fd = 4 * v.Tm * v.G * CAR.eta / R;
+  const mu = Fz => v.mu0 * Math.pow(Math.max(Fz, 40) / CAR.Fz0, v.muExp);
+  const gripA = s => { const Fz = m * G0 + v.ClA * kq * m * s * s; return mu(Fz / 4) * Fz / m; };
+  const vc = new Float64Array(N);
+  for (let i = 0; i < N; i++) {
+    let ak = 0; for (let j = -2; j <= 2; j++) ak = Math.max(ak, Math.abs(K[(i + j + N) % N]));
+    let lo = 1, hi = vMot; for (let k = 0; k < 30; k++) { const s = (lo + hi) / 2; if (s * s * ak <= gripA(s)) lo = s; else hi = s; }
+    vc[i] = lo;
+  }
+  const vf = Float64Array.from(vc);
+  for (let pass = 0; pass < 2; pass++) {
+    for (let i = 0; i < N; i++) {   // accelerate: power, drive force and the grip left over by cornering
+      const j = (i + 1) % N, s = vf[i], g = gripA(s), lat = s * s * Math.abs(K[i]), lon = Math.sqrt(Math.max(g * g - lat * lat, 0));
+      const a = Math.min(Math.min(Fd, Pw / Math.max(s, 1)) / m, lon) - (v.CdA * kq * s * s + CAR.rr * G0);
+      vf[j] = Math.min(vc[j], Math.sqrt(Math.max(s * s + 2 * a * SEG[i], 0.25)));
+    }
+    for (let i = N - 1; i >= 0; i--) {   // brake
+      const j = (i + 1) % N, s = vf[j], g = gripA(s), lat = s * s * Math.abs(K[j]), lon = Math.sqrt(Math.max(g * g - lat * lat, 0));
+      const a = lon + v.CdA * kq * s * s;
+      vf[i] = Math.min(vf[i], Math.sqrt(s * s + 2 * a * SEG[i]));
+    }
+  }
+  let t = 0; for (let i = 0; i < N; i++) t += SEG[i] / Math.max(0.5 * (vf[i] + vf[(i + 1) % N]), 0.5);
+  return t;
+}
+const EST_REF = (() => { let r = null; return () => r == null ? (r = estLap(PRESETS[0].vals)) : r; })();
+function openSetup() {
+  SU.src = aero; SU.loaded = Object.assign({}, aero.vals); SU.draft = Object.assign({}, aero.vals); SU.delArm = 0;
+  $('suName').value = aero.custom ? aero.name : aero.name + ' (custom)';
+  const sel = $('suBase'); sel.textContent = '';
+  const o0 = document.createElement('option'); o0.value = ''; o0.textContent = '—'; sel.append(o0);
+  for (const p of allSetups()) { const o = document.createElement('option'); o.value = p.id; o.textContent = p.car + ' · ' + p.name; sel.append(o); }
+  sel.value = '';
+  buildSetupGrid(); renderSetup();
+  $('suSave').hidden = !aero.custom; $('suDelete').hidden = !aero.custom;
+  $('suSaveNew').firstElementChild.textContent = aero.custom ? 'Save as new setup' : 'Save as my setup';
+  $('suSaveNew').className = aero.custom ? 'btn alt' : 'btn';
+  $('setup').classList.remove('hidden');
+  $('suName').focus();
+}
+function closeSetup() { $('setup').classList.add('hidden'); SU.draft = null; $('setupBtn').focus(); }
+const fieldFmt = (f, x) => (x * f[7]).toFixed(f[8]);
+function buildSetupGrid() {
+  const grid = $('suGrid'); grid.textContent = '';
+  const groups = {};
+  for (const f of SETUP_FIELDS) {
+    if (!groups[f[1]]) { const g = document.createElement('div'); g.className = 'sg'; const h = document.createElement('h3'); h.textContent = f[1]; g.append(h); grid.append(g); groups[f[1]] = g; }
+    const row = document.createElement('div'); row.className = 'sf'; row.dataset.k = f[0];
+    const id = 'su-' + f[0];
+    const lab = document.createElement('label'); lab.htmlFor = id; lab.textContent = f[2];
+    const rng = document.createElement('input'); rng.type = 'range'; rng.id = id; rng.min = f[4] * f[7]; rng.max = f[5] * f[7]; rng.step = f[6] * f[7];
+    const num = document.createElement('input'); num.type = 'number'; num.min = rng.min; num.max = rng.max; num.step = rng.step; num.setAttribute('aria-label', f[2] + (f[3] ? ' in ' + f[3] : ''));
+    const u = document.createElement('span'); u.className = 'u'; u.textContent = f[3];
+    const set = (val, from) => { const x = clamp(+val / f[7], f[4], f[5]); if (!Number.isFinite(x)) return; SU.draft[f[0]] = x; if (from !== rng) rng.value = x * f[7]; if (from !== num) num.value = fieldFmt(f, x); renderSetup(); };
+    rng.addEventListener('input', () => set(rng.value, rng));
+    num.addEventListener('change', () => set(num.value, num));
+    row.append(lab, rng, num, u); groups[f[1]].append(row);
+  }
+  syncSetupGrid();
+}
+function syncSetupGrid() {
+  for (const f of SETUP_FIELDS) { const r = $('su-' + f[0]); r.value = SU.draft[f[0]] * f[7]; r.nextElementSibling.value = fieldFmt(f, SU.draft[f[0]]); }
+}
+function renderSetup() {
+  const v = SU.draft, d = deriveSetup(v), ref = EST_REF(), dt = d.est - ref;
+  for (const f of SETUP_FIELDS) $('su-' + f[0]).parentElement.classList.toggle('chg', Math.abs(v[f[0]] - BASE_SETUP[f[0]]) > 1e-9);
+  const rows = [
+    ['Total mass', Math.round(d.m) + ' kg'], ['Front axle, static', (d.wf * 100).toFixed(1) + ' %'], ['Power to weight', d.pw.toFixed(0) + ' kW/t'],
+    ['Drive force, max', Math.round(d.Fd) + ' N'], ['Top speed, ' + (d.vMot < d.vDrag ? 'motor rpm' : 'drag'), (d.vTop * 3.6).toFixed(1) + ' km/h'],
+    ['Downforce at 100 km/h', Math.round(d.down100) + ' N'], ['Drag at 100 km/h', Math.round(d.drag100) + ' N'], ['L/D', d.ld.toFixed(2)],
+    ['Grip at 60 km/h', d.g60.toFixed(2) + ' g'], ['Grip at 100 km/h', d.g100.toFixed(2) + ' g'],
+    ['Lap estimate vs stock', (dt < 0 ? '−' : '+') + Math.abs(dt).toFixed(2) + ' s']
+  ];
+  const box = $('suDerived'); box.textContent = '';
+  for (const [k, x] of rows) { const div = document.createElement('div'); const a = document.createElement('span'); a.textContent = k; const b = document.createElement('b'); b.textContent = x; div.append(a, b); box.append(div); }
+  $('suNote').textContent = 'Gold labels differ from the stock car (vehicle-params τ with the LTS tyre envelope). The lap estimate is a point-mass calculation on the FSG curvature, for comparing setups only. '
+    + 'Custom setups keep their own best laps and are not posted to the leaderboard, which compares the team’s stock packages. Wheelbase, track width and the car model stay as built.';
+}
+function saveSetup(asNew) {
+  const name = $('suName').value.replace(/\s+/g, ' ').trim().slice(0, 32) || 'My setup';
+  let e;
+  if (!asNew && SU.src && SU.src.custom) { e = SU.src; e.name = name; e.vals = cleanVals(SU.draft); }
+  else {
+    if (setups.length >= 24) { $('suNote').textContent = 'You have 24 setups, the maximum. Delete one first.'; return; }
+    const base = SU.src ? (SU.src.custom ? SU.src.base : SU.src.id) : '';
+    e = makeCustom('c-' + Date.now().toString(36), name, base, SU.draft); setups.push(e);
+  }
+  aero = e; applySetup(e); buildPlan(); save(); closeSetup(); renderPresets();
+}
+$('suBase').addEventListener('change', () => { const p = allSetups().find(x => x.id === $('suBase').value); if (!p) return; SU.draft = Object.assign({}, p.vals); SU.loaded = Object.assign({}, p.vals); syncSetupGrid(); renderSetup(); });
+$('suReset').addEventListener('click', () => { SU.draft = Object.assign({}, SU.loaded); syncSetupGrid(); renderSetup(); });
+$('suSave').addEventListener('click', () => saveSetup(false));
+$('suSaveNew').addEventListener('click', () => saveSetup(true));
+$('suClose').addEventListener('click', closeSetup);
+$('suDelete').addEventListener('click', () => {
+  const sp = $('suDelete').firstElementChild;
+  if (performance.now() - SU.delArm > 3000) { SU.delArm = performance.now(); sp.textContent = 'Click again to delete'; setTimeout(() => { sp.textContent = 'Delete setup'; }, 3000); return; }
+  const e = SU.src; setups = setups.filter(s => s !== e);
+  for (const k of Object.keys(bests)) if (k.includes(e.id + '#')) delete bests[k];
+  aero = PRESETS.find(p => p.id === e.base) || PRESETS[0]; applySetup(aero); buildPlan(); save(); closeSetup(); renderPresets();
+});
+$('setup').addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Escape') { e.preventDefault(); closeSetup(); } });
+$('setup').addEventListener('keyup', e => e.stopPropagation());
 $('ghostBtn').addEventListener('click', () => setGhost(!ghostOn));
 $('soundBtn').addEventListener('click', () => setMuted(!muted));
 $('menuBtn').addEventListener('click', toMenu);
@@ -989,7 +1333,7 @@ function cycleCam() {
 let clearArm = 0;
 $('clearBtn').addEventListener('click', () => {
   const sp = $('clearBtn').firstElementChild;
-  if (performance.now() - clearArm > 3000) { clearArm = performance.now(); sp.textContent = 'Click again to clear'; setTimeout(() => { sp.textContent = 'Clear best lap for this package'; }, 3000); return; }
+  if (performance.now() - clearArm > 3000) { clearArm = performance.now(); sp.textContent = 'Click again to clear'; setTimeout(() => { sp.textContent = 'Clear best lap for this setup'; }, 3000); return; }
   delete bests[bestKey()]; bestSecs[bestKey()] = [0, 0, 0]; save(); sp.textContent = 'Best lap cleared'; clearArm = 0;
 });
 cvs.tabIndex = -1;
@@ -1019,17 +1363,18 @@ function update(dt) {
       setLights(Math.min(5, Math.floor(cd.t / 0.6)));
       if (cd.t >= 3.0 + cd.hold) { state = 'race'; setLights(0); showMsg('Go', 'go', 0.9, ''); setTimeout(() => $('lights').classList.remove('show'), 900); }
     } else if (state === 'race') {
-      if (k % 4 === 0) { car.inp = autodrive ? aiInput(car) : playerInput(); if (noBrake) { car.inp.thr = 1; car.inp.brk = 0; car.inp.assist = assist; } }
+      if (k % 4 === 0) { car.inp = autodrive ? aiInput(car) : playerInput(); car.inp.arcade = mode !== 'sim'; if (noBrake) { car.inp.thr = 1; car.inp.brk = 0; car.inp.assist = assist; } }
       const prev = step(car.inp);
-      if (prev !== null) {
+      if (mode === 'free') freeUpdate(DT);
+      if (prev !== null && mode !== 'free') {
         lapUpdate(prev, car.s, DT * 4);
         const out = Math.abs(car.lat) > HALF + 0.72;
-        if (out && !car.oc) { car.oc = true; addPenalty(10, 'Off course', '+10 s · all four wheels outside the cones, D 10.1.5'); }
+        if (out && !car.oc) { car.oc = true; if (mode === 'sim') addPenalty(10, 'Off course', '+10 s · all four wheels outside the cones, D 10.1.5'); }
         else if (!out && Math.abs(car.lat) < HALF) car.oc = false;
         if (car.outT > 1.5) { car.outT = 0; backOnTrack(); showMsg('Back on track', 'warn', 1.4, 'You left the event area'); }
         const along = car.vx * Math.cos(car.h - Math.atan2(TTY[car.near.i], TTX[car.near.i]));
         wrongT = along < -1.5 ? wrongT + DT * 4 : 0;
-      }
+      } else if (prev !== null && car.outT > 1.5) { car.outT = 0; showMsg('Edge of the paddock', 'warn', 1.2, 'Turn around or press R'); }
     }
   }
 }
@@ -1125,7 +1470,12 @@ function render2D(gh) {
   ctx.setTransform(DPR * z, 0, 0, DPR * z, DPR * (W / 2 + sx) - DPR * z * cam.x, DPR * (H / 2 + sy) - DPR * z * cam.y);
   const hw = W / z / 2 + 6, hh = H / z / 2 + 6, x0 = cam.x - hw, x1 = cam.x + hw, y0 = cam.y - hh, y1 = cam.y + hh;
   ctx.fillStyle = grassPat; ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
-  for (const t of trees) {
+  if (mode === 'free') {
+    ctx.fillStyle = '#4a4d52'; ctx.fillRect(FREE.x0, FREE.y0, FREE.x1 - FREE.x0, FREE.y1 - FREE.y0);
+    ctx.fillStyle = '#f3f1ea'; for (const dx of [0, ACC.len]) ctx.fillRect(ACC.x + dx - 0.15, ACC.y - ACC.w / 2 - 0.3, 0.3, ACC.w + 0.6);
+    ctx.fillRect(SKID.x - 0.15, SKID.y - SKID.d / 2 + SKID.ri - 0.3, 0.3, SKID.d - 2 * SKID.ri + 0.6);
+  }
+  for (const t of (mode === 'free' ? treesF : trees)) {
     if (t.x < x0 - 6 || t.x > x1 + 6 || t.y < y0 - 6 || t.y > y1 + 6) continue;
     ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.arc(t.x + 0.9, t.y + 1.1, t.r, 0, 6.283); ctx.fill();
     ctx.fillStyle = t.s < 0.5 ? '#22492a' : '#2a5530'; ctx.beginPath(); ctx.arc(t.x, t.y, t.r, 0, 6.283); ctx.fill();
@@ -1155,7 +1505,7 @@ function render2D(gh) {
     ctx.stroke();
   }
   // cones
-  for (const c of cones) { if (c.x < x0 - 1 || c.x > x1 + 1 || c.y < y0 - 1 || c.y > y1 + 1) continue; drawCone(c, z); }
+  for (const c of cones) { if ((c.free && mode !== 'free') || c.x < x0 - 1 || c.x > x1 + 1 || c.y < y0 - 1 || c.y > y1 + 1) continue; drawCone(c, z); }
   // ghosts
   if (gh.g) drawCar(gh.g.x, gh.g.y, gh.g.h, 0, LIV_PB, 0.4, 'BEST');
   if (gh.l) drawCar(gh.l.x, gh.l.y, gh.l.h, 0, LIV_LTS, 0.45, 'LTS');
@@ -1164,7 +1514,7 @@ function render2D(gh) {
 }
 function ghostPoses() {
   let g = null, l = null;
-  if (state !== 'menu' && ghostOn && lap.active) {
+  if (state !== 'menu' && ghostOn && lap.active && mode !== 'free') {
     const tl = clock - lap.t0;
     if (bestNow()) g = ghostPose(tl);
     if (tl <= LTS.lapTime) l = poseAt(ltsDistAt(tl));
@@ -1210,7 +1560,7 @@ function init3D() {
   const gCan = texCanvas(256, 256, (g, w, h) => { g.fillStyle = '#3f7339'; g.fillRect(0, 0, w, h); const r = mulberry32(3); for (let i = 0; i < 5000; i++) { g.fillStyle = r() < 0.5 ? 'rgba(0,0,0,.08)' : 'rgba(255,255,255,.06)'; g.fillRect(r() * w, r() * h, 2, 2); } });
   const gTex = new T.CanvasTexture(gCan); gTex.wrapS = gTex.wrapT = T.RepeatWrapping; gTex.repeat.set(150, 150); gTex.anisotropy = aniso;
   const grass = new T.Mesh(new T.PlaneGeometry(1400, 1400), new T.MeshLambertMaterial({ map: gTex }));
-  grass.rotation.x = -Math.PI / 2; grass.position.set(acx, -0.03, acz); grass.receiveShadow = true; scene.add(grass);
+  grass.rotation.x = -Math.PI / 2; grass.position.set(acx, -0.05, acz); grass.receiveShadow = true; scene.add(grass);
 
   // paved event area with the driven line, timing line and sector marks painted on; skid marks are painted here too
   const apCan = document.createElement('canvas'); apCan.width = 2048; apCan.height = 1024;
@@ -1252,6 +1602,20 @@ function init3D() {
   const tkM = new T.InstancedMesh(tkG, new T.MeshLambertMaterial({ color: 0x5a4330 }), trees.length);
   trees.forEach((t, i) => { pv.set(t.x, 0, t.y); sv.set(t.r, t.r * (1.1 + t.s * 0.6), t.r); q4.identity(); m4.compose(pv, q4, sv); trM.setMatrixAt(i, m4); tkM.setMatrixAt(i, m4); trM.setColorAt(i, new T.Color().setHSL(0.29 + t.s * 0.05, 0.42, 0.2 + t.s * 0.08)); });
   scene.add(trM, tkM);
+  // free roam: paved paddock, its own tree line, start and finish lines of the acceleration strip
+  const fw = FREE.x1 - FREE.x0, fh = FREE.y1 - FREE.y0;
+  const fTex = new T.CanvasTexture(noise); fTex.wrapS = fTex.wrapT = T.RepeatWrapping; fTex.repeat.set(fw / 14, fh / 14); fTex.anisotropy = aniso;
+  const freePlane = new T.Mesh(new T.PlaneGeometry(fw, fh), new T.MeshLambertMaterial({ map: fTex, color: 0xd6d6d6 }));
+  freePlane.rotation.x = -Math.PI / 2; freePlane.position.set((FREE.x0 + FREE.x1) / 2, -0.02, (FREE.y0 + FREE.y1) / 2); freePlane.receiveShadow = true; scene.add(freePlane);
+  const lineM = new T.MeshBasicMaterial({ color: 0xf3f1ea }), freeLines = new T.Group();
+  for (const dx of [0, ACC.len]) { const ln = new T.Mesh(new T.PlaneGeometry(0.3, ACC.w + 0.6), lineM); ln.rotation.x = -Math.PI / 2; ln.position.set(ACC.x + dx, -0.012, ACC.y); freeLines.add(ln); }
+  { const ln = new T.Mesh(new T.PlaneGeometry(0.3, SKID.d - 2 * SKID.ri + 0.6), lineM); ln.rotation.x = -Math.PI / 2; ln.position.set(SKID.x, -0.012, SKID.y); freeLines.add(ln); }
+  scene.add(freeLines);
+  const trFM = new T.InstancedMesh(trG, new T.MeshLambertMaterial({ color: 0xffffff }), treesF.length);
+  const tkFM = new T.InstancedMesh(tkG, new T.MeshLambertMaterial({ color: 0x5a4330 }), treesF.length);
+  treesF.forEach((t, i) => { pv.set(t.x, 0, t.y); sv.set(t.r, t.r * (1.1 + t.s * 0.6), t.r); q4.identity(); m4.compose(pv, q4, sv); trFM.setMatrixAt(i, m4); tkFM.setMatrixAt(i, m4); trFM.setColorAt(i, new T.Color().setHSL(0.29 + t.s * 0.05, 0.42, 0.2 + t.s * 0.08)); });
+  scene.add(trFM, tkFM);
+  const freeObjs = { on: [freePlane, freeLines, trFM, tkFM], off: [trM, tkM] };
   const tentN = 14, twG = new T.BoxGeometry(4, 2.2, 4); twG.translate(0, 1.1, 0);
   const trfG = new T.ConeGeometry(3.05, 1.3, 4); trfG.rotateY(Math.PI / 4); trfG.translate(0, 2.85, 0);
   const tW = new T.InstancedMesh(twG, new T.MeshLambertMaterial({ color: 0xe9e7e1 }), tentN), tR = new T.InstancedMesh(trfG, new T.MeshLambertMaterial({ color: 0xffffff }), tentN);
@@ -1278,7 +1642,8 @@ function init3D() {
   scene.add(car3.group, gPB.group, gLT.group);
 
   Object.assign(V3, { ok: true, T, renderer, scene, camera, sun, apG, apSX, apSY, apBase, aTex, texDirty: false, coneMesh, baseMesh, ringMesh,
-    car: car3, gPB, gLT, m4: new T.Matrix4(), q: new T.Quaternion(), pos: new T.Vector3(), dir: new T.Vector3(), scl: new T.Vector3(), tv: new T.Vector3(), up: new T.Vector3(0, 1, 0), offset: false });
+    car: car3, gPB, gLT, freeObjs, m4: new T.Matrix4(), q: new T.Quaternion(), pos: new T.Vector3(), dir: new T.Vector3(), scl: new T.Vector3(), tv: new T.Vector3(), up: new T.Vector3(0, 1, 0), offset: false });
+  setFree3D(mode === 'free');
   updateCones3(true);
   try { scene.environment = makeEnvMap(T, renderer); } catch (e) {}
   try { loadRealCar(T); } catch (e) { console.warn('car model', e); }
@@ -1334,6 +1699,7 @@ function makeCar3(T, M) {
   }
   return { group: g, body, pivots, spins, brake };
 }
+function setFree3D(on) { for (const o of V3.freeObjs.on) o.visible = on; for (const o of V3.freeObjs.off) o.visible = !on; }
 function apronSkid(a, b) {
   const g = V3.apG; g.setTransform(V3.apSX, 0, 0, V3.apSY, -APRON.x0 * V3.apSX, -APRON.y0 * V3.apSY);
   g.strokeStyle = 'rgba(14,14,16,.42)'; g.lineWidth = 0.17; g.lineCap = 'round'; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke();
@@ -1346,7 +1712,7 @@ function updateCones3(all) {
     const c = cones[i]; if (!all && !c.dirty) continue; c.dirty = false; any = true;
     if (!c.down) { V.q.identity(); V.pos.set(c.x, 0, c.y); }
     else { V.dir.set(Math.cos(c.a), 0, Math.sin(c.a)); V.q.setFromUnitVectors(V.up, V.dir); V.pos.set(c.x, c.big ? 0.14 : 0.11, c.y); }
-    if (c.big) V.scl.set(1.25, 1.55, 1.25); else V.scl.set(1, 1, 1);
+    if (c.free && mode !== 'free') V.scl.set(0, 0, 0); else if (c.big) V.scl.set(1.25, 1.55, 1.25); else V.scl.set(1, 1, 1);
     V.m4.compose(V.pos, V.q, V.scl);
     V.coneMesh.setMatrixAt(i, V.m4); V.baseMesh.setMatrixAt(i, V.m4); V.ringMesh.setMatrixAt(i, V.m4);
   }
@@ -1392,7 +1758,7 @@ function liveryUniforms(T) {
   return u;
 }
 function liveryMaterial(T, U, base) {
-  const m = new T.MeshStandardMaterial({ color: base.color, metalness: base.metal, roughness: base.rough, envMapIntensity: 1.5, side: T.DoubleSide });
+  const m = new T.MeshStandardMaterial({ color: base.color, metalness: base.metal, roughness: base.rough, envMapIntensity: base.env ?? 0.8, side: T.DoubleSide });
   m.onBeforeCompile = sh => {
     Object.assign(sh.uniforms, U);
     sh.vertexShader = 'varying vec3 vLivPos;\nvarying vec3 vLivNrm;\n' + sh.vertexShader.replace('#include <worldpos_vertex>',
@@ -1402,8 +1768,10 @@ uniform mat4 uCarInv;
 varying vec3 vLivPos;
 varying vec3 vLivNrm;
 vec4 livSample(sampler2D t, vec2 uv) {   // image extension CLIP
-  if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) return vec4(0.0);
-  return texture2D(t, uv);
+  // always sample (a texture read inside a branch has no reliable derivatives, which makes the pattern shimmer), then clip
+  vec4 c = texture2D(t, clamp(uv, 0.0, 1.0));
+  float inside = step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0);
+  return c * inside;
 }
 ` + sh.fragmentShader.replace('#include <metalnessmap_fragment>', `#include <metalnessmap_fragment>
   {
@@ -1435,9 +1803,9 @@ function buildRealCar(T, root) {
   const carbon = new T.MeshStandardMaterial({ color: 0x1e2125, metalness: 0.35, roughness: 0.38, envMapIntensity: 1.3, side: T.DoubleSide });
   const rubber = new T.MeshStandardMaterial({ color: 0x121212, metalness: 0, roughness: 0.9, side: T.DoubleSide });
   const livMats = {
-    carbon: liveryMaterial(T, U, { color: 0x1e2125, metal: 0.35, rough: 0.38 }),
-    alu: liveryMaterial(T, U, { color: 0xb8bcc2, metal: 0.85, rough: 0.35 }),
-    black: liveryMaterial(T, U, { color: 0x0b0b0c, metal: 0.1, rough: 0.5 })
+    carbon: liveryMaterial(T, U, { color: 0x111315, metal: 0.1, rough: 0.5, env: 0.6 }),
+    alu: liveryMaterial(T, U, { color: 0xb8bcc2, metal: 0.85, rough: 0.35, env: 1.2 }),
+    black: liveryMaterial(T, U, { color: 0x0b0b0c, metal: 0.1, rough: 0.5, env: 0.6 })
   };
   const group = new T.Group(), body = new T.Group(); group.add(body);
   root.position.set(-MODEL_X0, 0, 0);
@@ -1477,11 +1845,12 @@ function makeEnvMap(T, renderer) {
 }
 function updateRealCar(dt) {
   const R = V3.real; if (!R) return;
-  R.group.position.set(car.x, 0, car.y); R.group.rotation.y = -car.h;
+  const off = (CAR.a - CAR.b) / 2;   // the model is centred between the axles, the physics on the CoG
+  R.group.position.set(car.x + Math.cos(car.h) * off, 0, car.y + Math.sin(car.h) * off); R.group.rotation.y = -car.h;
   R.body.rotation.x = clamp(-car.f.ay * 0.0016, -0.06, 0.06);
   R.body.rotation.z = clamp(car.f.ax * 0.0012, -0.04, 0.04);
   for (const w of R.wheels) w.node.rotation.set(0, w.front ? -car.delta : 0, wheelSpin);
-  R.body.updateMatrixWorld(true);
+  R.group.updateMatrixWorld(true);   // the group first: the body's world matrix is built from it (otherwise the livery trails one frame)
   R.U.uCarInv.value.copy(R.body.matrixWorld).invert();
 }
 
@@ -1514,10 +1883,10 @@ function render3D(gh, dt) {
     orbitT += dt * 0.12; const r = 9.5;
     cam.position.set(car.x + Math.cos(orbitT) * r, 3.4, car.y + Math.sin(orbitT) * r); cam.lookAt(car.x, 0.5, car.y); fov = 50;
   } else if (camMode === 0) {
-    const d = 5.4 + sp * 0.045, hgt = 1.9 + sp * 0.012;
+    const arcCam = mode !== 'sim', d = arcCam ? 5.0 + sp * 0.05 : 5.4 + sp * 0.045, hgt = arcCam ? 1.75 + sp * 0.012 : 1.9 + sp * 0.012;
     V.tv.set(car.x - cy * d, hgt, car.y - sy * d);
     if (cam3Snap) cam.position.copy(V.tv); else cam.position.lerp(V.tv, 1 - Math.exp(-12 * dt));
-    cam.lookAt(car.x + cy * 4, 0.55, car.y + sy * 4); fov = 60 + 14 * clamp(sp / 34, 0, 1);
+    cam.lookAt(car.x + cy * 4, 0.55, car.y + sy * 4); fov = arcCam ? 62 + 24 * clamp(sp / 48, 0, 1) : 60 + 14 * clamp(sp / 34, 0, 1);
   } else if (camMode === 1) {
     cam.position.set(car.x - ch * 0.45, 1.08, car.y - sh * 0.45); cam.lookAt(car.x + ch * 12, 0.35, car.y + sh * 12); fov = 72 + 8 * clamp(sp / 34, 0, 1);
   } else {
@@ -1557,7 +1926,8 @@ function drawMini(gpose, lpose) {
   if (lpose) { mctx.strokeStyle = '#ffc83d'; mctx.beginPath(); mctx.arc(mox + lpose.x * ms, moy + lpose.y * ms, 4.5, 0, 6.283); mctx.stroke(); }
   if (gpose) { mctx.strokeStyle = '#cfe9ff'; mctx.beginPath(); mctx.arc(mox + gpose.x * ms, moy + gpose.y * ms, 4.5, 0, 6.283); mctx.stroke(); }
   mctx.fillStyle = '#e8202a'; mctx.strokeStyle = '#fff';
-  mctx.beginPath(); mctx.arc(mox + car.x * ms, moy + car.y * ms, 5, 0, 6.283); mctx.fill(); mctx.stroke();
+  const mw = mini.width / DPR, mh = mini.height / DPR;
+  mctx.beginPath(); mctx.arc(clamp(mox + car.x * ms, 5, mw - 5), clamp(moy + car.y * ms, 5, mh - 5), 5, 0, 6.283); mctx.fill(); mctx.stroke();
 }
 function buildGG() { const r = gg.getBoundingClientRect(); if (!r.width) return; gg.width = Math.round(r.width * DPR); gg.height = Math.round(r.height * DPR); }
 function drawGG() {
@@ -1584,8 +1954,13 @@ function setT(id, v) { if (tc[id] !== v) { tc[id] = v; $(id).textContent = v; } 
 function hud(dt) {
   if (state === 'menu') return;
   const tl = lap.active ? clock - lap.t0 : 0;
-  setT('lapNo', lap.active ? 'Lap ' + lap.n : 'Out lap');
-  setT('cur', fmt(tl));
+  if (mode === 'free') {
+    setT('lapNo', 'Free roam'); setT('cur', fmt(fr.run || fr.got100 || fr.got75 ? fr.t : 0));
+    setT('frTop', Math.round(fr.top * 3.6) + ' km/h');
+    setT('fr100', fr.t100 != null ? fr.t100.toFixed(2) + ' s' + (fr.b100 < fr.t100 ? ' · best ' + fr.b100.toFixed(2) : '') : '–');
+    setT('fr75', fr.t75 != null ? fr.t75.toFixed(3) + ' s' + (fr.b75 < fr.t75 ? ' · best ' + fr.b75.toFixed(3) : '') : '–');
+    setT('frDist', fr.dist < 1000 ? Math.round(fr.dist) + ' m' : (fr.dist / 1000).toFixed(2) + ' km');
+  } else { setT('lapNo', lap.active ? 'Lap ' + lap.n : 'Out lap'); setT('cur', fmt(tl)); }
   const pen = $('pen'); pen.classList.toggle('on', lap.active && lap.pen > 0); setT('pen', '+' + lap.pen + ' s');
   $('inv').classList.toggle('on', lap.active && !lap.valid);
   $('ast').classList.toggle('on', !!car.assistBrake);
@@ -1608,7 +1983,7 @@ function hud(dt) {
   setT('spd', String(Math.round(v * 3.6)));
   const kw = car.f.P / 1000; setT('kw', Math.round(kw) + ' kW');
   setT('rpmT', Math.round(motorRpm(car.vx) / 100) * 100 + ' rpm');
-  $('pbar').style.width = clamp(kw / 80 * 100, 0, 100).toFixed(1) + '%';
+  $('pbar').style.width = clamp(kw / (CAR.Pmax * (mode !== 'sim' ? ARC.power : 1) / 1000) * 100, 0, 100).toFixed(1) + '%';
   const f = car.f;
   setT('fdown', Math.round(f.Fdown) + ' N');
   setT('fdrag', Math.round(f.Fdrag) + ' N');
@@ -1702,14 +2077,14 @@ function lbList(key) {
 }
 async function renderBoard() {
   if (!LB.db) return;
-  const tok = ++LB.tok, key = bestKey(), list = lbList(key);
+  const tok = ++LB.tok, key = bestKey(), list = lbEligible() ? lbList(key) : [];
   const top = list.slice(0, 15), meI = list.findIndex(x => x.id === LB.uid);
   const shown = meI >= 15 ? top.concat([null, list[meI]]) : top;
   const ids = shown.filter(Boolean).map(x => x.id);
   let ps = {};
   if (LB.user && ids.length) { try { ps = await LB.user.profiles(ids); } catch (e) {} }
   if (tok !== LB.tok) return;   // a newer render started meanwhile
-  $('boardSub').textContent = aero.car + ' · ' + aero.name + ' · assists ' + (assist ? 'on' : 'off');
+  $('boardSub').textContent = lbEligible() ? aero.car + ' · ' + aero.name + ' · assists ' + (assist ? 'on' : 'off') : (mode === 'sim' ? 'Custom setup' : MODES.find(m => m.id === mode).name);
   const tb = $('lbBody'); tb.textContent = '';
   const tmin = list.length ? list[0].e.t : 0;
   for (const x of shown) {
@@ -1722,11 +2097,13 @@ async function renderBoard() {
     tb.append(tr);
   }
   let note;
-  if (LB.err) note = LB.err;
+  if (!lbEligible()) note = 'The leaderboard compares the team’s stock packages in Hot lap mode. ' + (mode !== 'sim' ? 'Arcade and free-roam runs' : 'Laps with a custom setup') + ' are kept on this device only.';
+  else if (LB.err) note = LB.err;
   else if (LB.loading && !list.length) note = 'Loading the leaderboard…';
   else if (!list.length) note = 'No laps yet for this package and assist setting. Set the first valid lap.';
   else note = 'Time includes penalties. Points follow the FS Rules 2027 endurance formula (D 9.2): the fastest time here scores 250, times at 1.5× or slower score 25. LTS reference ' + fmt(LTS.lapTime) + '.';
-  if (!LB.err && LB.canWrite === false) note += ' You can view the leaderboard, but your laps aren’t posted from this account.';
+  if (!lbEligible()) {}
+  else if (!LB.err && LB.canWrite === false) note += ' You can view the leaderboard, but your laps aren’t posted from this account.';
   else if (!LB.err && LB.uid) note += ' Your valid laps are posted automatically.';
   $('lbNote').textContent = note;
   const row = $('lbNameRow'), canName = !!LB.uid && LB.canWrite !== false;
@@ -1745,14 +2122,16 @@ $('lbNameSave').addEventListener('click', () => {
 
 function boot(data) {
   applyData(load() || (data && data.save) || null);
+  applySetup(aero);
   setMuted(muted); setGhost(ghostOn); setAssistUi();
   init3D();
+  setMode(mode);
   if (!V3.ok) camMode = 3;
   $('camBtn').firstElementChild.textContent = 'Camera: ' + CAMS[camMode];
   resize(); buildPlan();
   placeAt(LEN * 0.35, car);
   camUpdate(0, true);
-  renderPresets(); renderLaps();
+  renderModes(); renderPresets(); renderLaps();
   requestAnimationFrame(t => { last_t = t; frame(t); });
   lbInit();
 }
@@ -1765,7 +2144,16 @@ window.__hotlap = {
   peek() { return { s: +car.s.toFixed(1), lat: +car.lat.toFixed(2), vx: +car.vx.toFixed(1), vy: +car.vy.toFixed(1), del: +(car.delta / DEG).toFixed(1), st: +car.st.toFixed(2), ab: !!car.assistBrake, vt: +vPlanA[Math.floor(car.s) % N].toFixed(1), K: +K[Math.floor(car.s) % N].toFixed(3), oc: car.oc, af: +(car.f.af / DEG).toFixed(1), ar: +(car.f.ar / DEG).toFixed(1), lapActive: lap.active }; },
   cam(m) { camMode = m; },
   view(v) { debugView = v; },
-  race(id) { if (id) aero = PRESETS.find(p => p.id === id) || aero; startGame(); state = 'race'; $('lights').classList.remove('show'); },
+  race(id, m) { if (id) aero = allSetups().find(p => p.id === id) || aero; if (m) setMode(m); startGame(); state = 'race'; $('lights').classList.remove('show'); },
+  mode(m) { if (m) setMode(m); return mode; },
+  setup(vals, name) { const e = makeCustom('c-test' + setups.length, name || 'Test', 'tau-lts', vals); setups.push(e); aero = e; applySetup(e); buildPlan(); renderPresets(); return { id: e.id, key: bestKey(), car: { m: CAR.m, a: CAR.a, Pmax: CAR.Pmax, vMotor: CAR.vMotor } }; },
+  derive(vals) { return deriveSetup(cleanVals(vals)); },
+  drive(sec, inp) {   // scripted keys: inp = { keys: ['ArrowUp', ...] } held for sec seconds
+    keys.clear(); for (const k of (inp && inp.keys) || []) keys.add(k);
+    const out = []; const n = Math.round(sec * 60);
+    for (let i = 0; i < n; i++) { update(10 * DT); post(1 / 60); if (i % 6 === 0) out.push([+(car.vx * 3.6).toFixed(1), +(car.f.beta / DEG).toFixed(1), +car.r.toFixed(2)]); }
+    keys.clear(); return { vKmh: +(Math.hypot(car.vx, car.vy) * 3.6).toFixed(1), beta: +(car.f.beta / DEG).toFixed(1), r: +car.r.toFixed(3), x: +car.x.toFixed(1), y: +car.y.toFixed(1), surface: car.surface, fr: Object.assign({}, fr), trace: out };
+  },
   sim(sec, auto = true) {
     autodrive = auto === true || auto === 'nobrake'; noBrake = auto === 'nobrake'; let maxAy = 0, maxV = 0;
     const n = Math.round(sec * 60);
@@ -1781,6 +2169,11 @@ window.__hotlap = {
     }
     keys.clear(); autodrive = false; noBrake = false;
     return { state, session: session.slice(), best: bestNow() && bestNow().t, maxAyG: maxAy / G0, maxKmh: maxV * 3.6, lap: { n: lap.n, active: lap.active, valid: lap.valid, pen: lap.pen } };
+  },
+  liveryLag() {   // test: how far the livery projection is from the car body (m and rad), right after a frame
+    const R = V3.real; if (!R) return null;
+    const m = R.U.uCarInv.value.clone(); V3.scene.updateMatrixWorld(true); m.multiply(R.body.matrixWorld);
+    const e = m.elements; return { pos: Math.hypot(e[12], e[13], e[14]), rot: Math.abs(Math.atan2(e[2], e[0])), vx: car.vx };
   },
   info() { return { LEN, N, cones: cones.length, lts: LTS.lapTime, view3d: V3.ok, realCar: !!V3.real }; },
   postLap(raw, pen = 0) { lbSubmit(bestKey(), { t: raw + pen, raw, pen, cones: 0, oc: 0, at: Date.now() }); return { board: !!LB.db, loading: LB.loading }; }   // leaderboard test
