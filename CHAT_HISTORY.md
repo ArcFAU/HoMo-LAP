@@ -1351,3 +1351,25 @@ Final response (verbatim):
 - Continued only the separate `high-end\` repository; HoMo-LAP web source and published game were unchanged.
 - Added the Unreal HUD and connected it to the shared simulation.
 - Checks were Unreal-specific: editor build succeeded and headless map smoke test passed; browser checks were not applicable. The project isn't created: the editor is open.
+ 
+## 2026-11-08 — continued FS Lap stage 1: visible launch
+
+### User messages (verbatim)
+
+> it did not start i guess
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced.
+
+Final response (verbatim):
+
+> It was starting in headless smoke-test mode rather than as a visible game. I relaunched it with the project path quoted correctly, and the standalone FS Lap window is now running.
+
+### Work record
+
+- Continued only the separate `high-end\` repository; HoMo-LAP web source and published game were unchanged.
+- Diagnosed and fixed the launch command quoting issue caused by the space in `E:\HOT LAP`.
+- Confirmed the visible `FS Lap (64-bit Development PCD3D_SM6)` window and on-screen HUD/car presentation.
+- Sent throttle input to the focused game window; speed rose to 108 km/h and the lap timer continued updating.
+- No HoMo-LAP web or MATLAB files changed.

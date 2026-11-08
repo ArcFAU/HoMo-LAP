@@ -48,3 +48,7 @@ User-visible changes, newest first. Detailed reasoning is in `CHAT_HISTORY.md`, 
 - The car could get stuck at the edge of the map. It now returns to the track after 1.5 s.
 - Ghost labels overlapped.
 - Greek package names showed in uppercase (Υ, Β).
+
+## 2026-11-08
+
+- FS Lap's visible Unreal driving slice now launches with the generated track, car, chase camera and HUD.
