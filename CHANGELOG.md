@@ -56,3 +56,4 @@ User-visible changes, newest first. Detailed reasoning is in `CHAT_HISTORY.md`, 
 - FS Lap's completed-lap HUD now shows penalty time, cones and off-course counts.
 - Stage 1 acceptance passed: native AI laps measured 77.405 s and 77.400 s with zero penalties, and the Unreal driving slice builds and launches.
 - Stage 2 started: the HUD now shows active-lap validity and live penalty counters.
+- The active-lap HUD now shows the current sector.

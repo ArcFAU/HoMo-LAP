@@ -1374,6 +1374,26 @@ Final response (verbatim):
 - Sent throttle input to the focused game window; speed rose to 108 km/h and the lap timer continued updating.
 - No HoMo-LAP web or MATLAB files changed.
 
+## 2026-11-08 — continued FS Lap Stage 2: sector indicator
+
+### User messages (verbatim)
+
+> next
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced.
+
+Final response (verbatim):
+
+> Added the current sector indicator to the active-lap HUD. It follows the shared three-sector track logic already used by the physics.
+
+### Work record
+
+- Continued only the separate `high-end` repository; HoMo-LAP web source and published game were unchanged.
+- Added the sector indicator from the shared simulation's track-progress state.
+- Checks: Unreal editor build and the `DrivingSlice_v1` headless smoke test passed; the visible updated build launched with the sector-capable HUD.
+
 ## 2026-11-08 — continued FS Lap Stage 2: live lap state
 
 ### User messages (verbatim)
