@@ -1374,6 +1374,26 @@ Final response (verbatim):
 - Sent throttle input to the focused game window; speed rose to 108 km/h and the lap timer continued updating.
 - No HoMo-LAP web or MATLAB files changed.
 
+## 2026-11-08 — continued FS Lap Stage 2: live lap state
+
+### User messages (verbatim)
+
+> next
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced.
+
+Final response (verbatim):
+
+> Continued into Stage 2 with live lap-state feedback: the HUD now reports whether the active lap is valid and updates penalty, cone and off-course counters while driving.
+
+### Work record
+
+- Continued only the separate `high-end\` repository; HoMo-LAP web source and published game were unchanged.
+- Added live active-lap validity and penalty counters to the Unreal HUD from shared simulation state.
+- Checks: Unreal editor build and the `DrivingSlice_v1` headless smoke test passed; the updated visible build launched.
+
 ## 2026-11-08 — continued FS Lap stage 1: camera presentation
 
 ### User messages (verbatim)
