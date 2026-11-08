@@ -35,7 +35,7 @@ Last updated: 2026-11-08
 ## Open items
 
 - **Old GitHub address:** `ArcFAU/HOT-LAP` now redirects to `ArcFAU/FS_LAP` (the game), not to `HoMo-LAP`. Any other clone of the simulator must use `https://github.com/ArcFAU/HoMo-LAP.git`.
-- **High-end game "FS Lap" (placeholder name):** its own git repo in `high-end\`, `ArcFAU/FS_LAP`, pushed. State and stage 0 checklist in `high-end\README.md`: Unreal 5.8.4 at `D:\UE\UE_5.8`, MSVC 14.50 installed, cache set to `D:\UE\DDC` (confirmed at runtime). Project `FSLapUE` compiles and opens (not committed yet). GPU test done: Lumen Medium with virtual shadow maps reaches 56 fps in a simple scene.
+- **High-end game "FS Lap" (placeholder name):** its own git repo in `high-end\`, `ArcFAU/FS_LAP`, pushed. Stage 0 is committed; Unreal 5.8.4 at `D:\UE\UE_5.8`, MSVC 14.50 installed, cache set to `D:\UE\DDC` (confirmed at runtime). Stage 1 exports are generated locally: full car, body and wheel GLBs, four baked livery tiles, track and cone meshes. The native AI test is 77.400 s with no penalties and the Unreal editor target rebuilds successfully. Next: import the generated assets into Unreal and wire the driving pawn, controls and chase camera.
 
 - **Not played by hand yet:**
   - Arcade, free roam and the setup editor were checked in headless Chrome (scripted driving, AI laps, screenshots).
