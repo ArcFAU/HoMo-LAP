@@ -1393,3 +1393,41 @@ Final response (verbatim):
 - Continued only the separate `high-end\` repository; HoMo-LAP web source and published game were unchanged.
 - Added the camera-cycle input, HUD hint and stage-1 documentation.
 - Checks: Unreal editor build and headless smoke test passed; the visible game launched and camera cycling was exercised.
+
+## 2026-11-08 — continued FS Lap stage 1: lap penalty feedback
+
+### User messages (verbatim)
+
+> next
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced.
+
+Final response (verbatim):
+
+> Added completed-lap penalty feedback to the HUD: penalty seconds, cone count and off-course count now appear under the last-lap result.
+
+### Work record
+
+- Continued only the separate `high-end\` repository; HoMo-LAP web source and published game were unchanged.
+- Used the shared simulation's `LapResult` values for penalty time, cone count and off-course count.
+- Checks: Unreal editor build and headless smoke test passed.
+
+## 2026-11-08 — continued FS Lap stage 1: acceptance pass
+
+### User messages (verbatim)
+
+> keep working till step 1 is majorly done
+
+### Contributor messages
+
+Final response (verbatim):
+
+> Stage 1 acceptance is now green: native AI laps are 77.405 s and 77.400 s with zero penalties, the Unreal target builds, the map smoke test exits cleanly, and the visible updated game launches with the car, HUD and camera controls. I’m recording the acceptance evidence and committing this milestone before handing it back.
+
+### Work record
+
+- Continued only the separate `high-end\` repository; HoMo-LAP web source and published game were unchanged.
+- Completed the Stage 1 acceptance pass: physics target, Unreal build, headless map smoke test and visible launch all passed.
+- No HoMo-LAP web or MATLAB files changed.

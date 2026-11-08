@@ -53,3 +53,5 @@ User-visible changes, newest first. Detailed reasoning is in `CHAT_HISTORY.md`, 
 
 - FS Lap's visible Unreal driving slice now launches with the generated track, car, chase camera and HUD.
 - FS Lap's driving slice now supports chase, onboard, high and top-down camera views via `C`.
+- FS Lap's completed-lap HUD now shows penalty time, cones and off-course counts.
+- Stage 1 acceptance passed: native AI laps measured 77.405 s and 77.400 s with zero penalties, and the Unreal driving slice builds and launches.
