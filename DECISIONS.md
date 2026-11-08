@@ -153,3 +153,11 @@ The owner asked for a new repo for the high-end game. `high-end\` is a separate 
 
 **Why:** Unreal assets are large binaries and shouldn't bloat HoMo-LAP's repo. The name is `HotLap`, not `Hot-Lap`: GitHub ignores capitals, so `Hot-Lap` would be the old name `HOT-LAP`, and reusing an old name ends GitHub's redirect from it to `HoMo-LAP`.
 
+*Repository name superseded the same day: see the entry on `ArcFAU/FS_LAP`.*
+
+## 2026-11-08 — The game's repository is `ArcFAU/FS_LAP`
+
+The owner created the game's repository under the name `FS_LAP`. The game is still called Hot Lap, and the local folder is still `high-end\`. The old address `ArcFAU/HOT-LAP` now redirects to `FS_LAP`, not to `HoMo-LAP` (both return the same commit), so HoMo-LAP's `origin` must use the `HoMo-LAP` address.
+
+**Why:** the owner's choice of name.
+

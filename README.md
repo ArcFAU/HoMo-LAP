@@ -44,7 +44,7 @@ Phones get on-screen touch controls.
 HOT LAP\
 ├─ Play HoMo-LAP.bat      local launcher (source\serve.py, port 8765)
 ├─ MATALB\                 MATLAB/Simulink edition (own README): game, setup editor, Simulink model, studies
-├─ high-end\               Hot Lap, the planned Unreal Engine 5 game (its own git repo, ArcFAU/HotLap; ignored here)
+├─ high-end\               Hot Lap, the planned Unreal Engine 5 game (its own git repo, ArcFAU/FS_LAP; ignored here)
 ├─ game\                   exactly what is published online
 │  ├─ index.html           the whole game (built from source\template.html)
 │  ├─ car.json             car model, meshopt-compressed GLB as base64

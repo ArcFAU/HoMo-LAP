@@ -30,12 +30,12 @@ Last updated: 2026-11-08
   - tools: track build from the LTS data, car import from the Blender GLB with the livery baked into vertex colours, standalone build
   - Same physics as the web game: the AI lap is 77.40 s in MATLAB, 77.42 s in the web game and 77.47 s in Simulink.
 - **Project folder:** `E:\HOT LAP` since 2026-11-07, with README, launcher, sources, model tools and the Blender export.
-- **Git:** local repo on branch `main` since 2026-11-07, remote `origin` = https://github.com/ArcFAU/HOT-LAP.git (private), pushed 2026-11-07. Commit only your own files (`git add <paths>`, not `git add -A`), because more than one session can be working in this folder.
+- **Git:** local repo on branch `main` since 2026-11-07, remote `origin` = https://github.com/ArcFAU/HoMo-LAP.git (private), pushed 2026-11-07. Commit only your own files (`git add <paths>`, not `git add -A`), because more than one session can be working in this folder.
 
 ## Open items
 
-- **GitHub:** the owner renames `ArcFAU/HOT-LAP` to `HoMo-LAP` (Settings → General → Repository name) and creates the empty private repo `ArcFAU/HotLap`. Then: `git remote set-url origin https://github.com/ArcFAU/HoMo-LAP.git` here, and push both repos. HoMo-LAP has unpushed commits since `b40ed04`.
-- **High-end game "Hot Lap":** its own git repo in `high-end\` (local since 2026-11-08, commit `0eb3c69`, remote `ArcFAU/HotLap` not created yet). State and stage 0 checklist in `high-end\README.md`: Unreal 5.8.4 installing at `D:\UE\UE_5.8`; MSVC 14.50 toolset still missing; `UE-LocalDataCachePath` not set (the default cache is on C, 17 GB free).
+- **Old GitHub address:** `ArcFAU/HOT-LAP` now redirects to `ArcFAU/FS_LAP` (the game), not to `HoMo-LAP`. Any other clone of the simulator must use `https://github.com/ArcFAU/HoMo-LAP.git`.
+- **High-end game "Hot Lap":** its own git repo in `high-end\`, `ArcFAU/FS_LAP`, pushed. State and stage 0 checklist in `high-end\README.md`: Unreal 5.8.4 at `D:\UE\UE_5.8`, MSVC 14.50 installed, cache set to `D:\UE\DDC` (applies from the next editor start, not yet checked at runtime). Next: create the C++ project and test Nanite, Lumen and plain lighting on the GTX 1650.
 
 - **Not played by hand yet:**
   - Arcade, free roam and the setup editor were checked in headless Chrome (scripted driving, AI laps, screenshots).

@@ -1161,3 +1161,48 @@ Intermediate progress messages are not reproduced. Final response (verbatim):
   - No push: both repos wait for those two steps.
   - No environment variable set, nothing installed.
   - The Unreal project isn't created: the engine is still installing.
+
+## 2026-11-08 — owner: repos renamed, cache off C, plan decisions
+
+### User messages (verbatim)
+
+> okay, i have renamed it and now the new one is called FS_LAP.
+> take care of Move Unreal's cache off C:. the MSVC 14.50 is there. 
+> about the readme: physics=recommended by you, venue=padock and the lap from homo-lap is fine for now. sound, let's keep it for later
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced. Final response (verbatim):
+
+> Both repos are on GitHub, and Unreal's cache is moved.
+>
+> - **HoMo-LAP:** https://github.com/ArcFAU/HoMo-LAP, all commits pushed.
+> - **FS_LAP (the Unreal game):** https://github.com/ArcFAU/FS_LAP, pushed, with Git LFS set up.
+> - **Cache:** set to `D:\UE\DDC`. Unreal Editor is open right now and is still using C:, because the change applies from its next start. Please close it before you create a project.
+> - **Compiler:** confirmed. 14.50 is installed, and its build (14.50.35739) is newer than the ones Unreal bans.
+> - **Plan (`high-end\README.md`):** physics is our model in C++, the venue is a generic paddock with HoMo-LAP's track and reference lap, and sound moved to the later stage. Only one question is left: who does the art.
+>
+> **One thing to watch:** the old address `ArcFAU/HOT-LAP` now leads to FS_LAP, not to the simulator. Any other copy of the simulator that still uses the old address, on another PC or a cloud workspace, would push into the game repo. Point those at `HoMo-LAP`.
+>
+> **Name check:** I kept "Hot Lap" as the game's name and used FS_LAP only for the repo. Should the game be called FS_LAP too?
+>
+> **Next:** close the editor and tell me. I'll create the C++ project, confirm the cache really went to D:, and test Nanite, Lumen and plain lighting on your GPU.
+
+### Work record
+
+- **GitHub state checked with `git ls-remote`:** `HoMo-LAP` had `b40ed04`, `FS_LAP` was empty, and `HOT-LAP` answered as empty (a redirect to `FS_LAP`, confirmed after the push: both return `0eb3c69`). HoMo-LAP's `origin` was still on the old address, so it was changed before pushing.
+- **Remotes and pushes:**
+  - `E:\HOT LAP`: `origin` = `https://github.com/ArcFAU/HoMo-LAP.git`, pushed.
+  - `E:\HOT LAP\high-end`: `origin` = `https://github.com/ArcFAU/FS_LAP.git`, pushed, tracking `origin/main`.
+- **Cache:**
+  - Created `D:\UE\DDC`.
+  - Set user environment variable `UE-LocalDataCachePath=D:\UE\DDC`.
+  - Set registry value `HKCU\Software\Epic Games\GlobalDataCachePath`, name `UE-LocalDataCachePath`. Unreal reads it directly, so it also works for an editor started from a launcher that was already running.
+  - Basis: `Engine\Source\Developer\Zen\Private\ZenServerInterface.cpp` (`DetermineDataPath`, `DetermineLocalDataCachePath`): with this set and no `Zen\DataPath` value, Zen uses `<path>\Zen`. No `DataPath` value exists; the folder is outside the engine root as required.
+  - Not yet proven at runtime: the running editor (pid 8308) and its `zenserver` (`--data-dir` on C, 0.31 GB) were left alone. Check `--data-dir` after the next editor start.
+- **Compiler:** `VC\Tools\MSVC\14.50.35717\bin\Hostx64\x64\cl.exe` is product version 14.50.35739.
+- **Plan and notes:**
+  - `high-end\README.md`: decisions (physics route A, generic paddock with HoMo-LAP's track and lap, sound later), sound moved to the later stage, stage 0 checklist updated, repo name FS_LAP.
+  - `high-end\AGENTS.md`, `high-end\CHAT_HISTORY.md`.
+  - HoMo-LAP: `.gitignore` comment, README, STATUS, DECISIONS.
+- **Commits:** both repos, explicit paths, pushed.
