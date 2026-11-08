@@ -1314,3 +1314,23 @@ Final response (verbatim):
 - Continued only the separate `high-end\` repository; HoMo-LAP web source and published game were unchanged.
 - Added wheel placement and animation/presentation updates to the Unreal pawn.
 - Checks were Unreal-specific: editor build succeeded and headless map smoke test passed; browser checks were not applicable. The project isn't created: the editor is open.
+
+## 2026-11-08 — continued FS Lap stage 1: HUD
+
+### User messages (verbatim)
+
+> next
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced.
+
+Final response (verbatim):
+
+> Added the first gameplay HUD: live speed, lap timer, completed-lap result and controls. The Unreal build and headless driving-slice smoke test pass; visual on-screen validation remains for the next editor session.
+
+### Work record
+
+- Continued only the separate `high-end\` repository; HoMo-LAP web source and published game were unchanged.
+- Added the Unreal HUD and connected it to the shared simulation.
+- Checks were Unreal-specific: editor build succeeded and headless map smoke test passed; browser checks were not applicable. The project isn't created: the editor is open.
