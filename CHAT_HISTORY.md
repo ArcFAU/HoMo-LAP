@@ -1373,3 +1373,23 @@ Final response (verbatim):
 - Confirmed the visible `FS Lap (64-bit Development PCD3D_SM6)` window and on-screen HUD/car presentation.
 - Sent throttle input to the focused game window; speed rose to 108 km/h and the lap timer continued updating.
 - No HoMo-LAP web or MATLAB files changed.
+
+## 2026-11-08 — continued FS Lap stage 1: camera presentation
+
+### User messages (verbatim)
+
+> next
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced.
+
+Final response (verbatim):
+
+> Added four camera views to the driving slice: chase, onboard, high and top-down. Press `C` to cycle them; the HUD now includes the camera control.
+
+### Work record
+
+- Continued only the separate `high-end\` repository; HoMo-LAP web source and published game were unchanged.
+- Added the camera-cycle input, HUD hint and stage-1 documentation.
+- Checks: Unreal editor build and headless smoke test passed; the visible game launched and camera cycling was exercised.

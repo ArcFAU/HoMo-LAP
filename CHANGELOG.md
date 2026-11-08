@@ -52,3 +52,4 @@ User-visible changes, newest first. Detailed reasoning is in `CHAT_HISTORY.md`, 
 ## 2026-11-08
 
 - FS Lap's visible Unreal driving slice now launches with the generated track, car, chase camera and HUD.
+- FS Lap's driving slice now supports chase, onboard, high and top-down camera views via `C`.
