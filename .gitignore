@@ -24,3 +24,6 @@ MATALB/slprj/
 *.asv
 MATALB/dist/
 MATALB/saves/
+
+# Hot Lap (the Unreal game) is its own git repository, ArcFAU/HotLap
+high-end/

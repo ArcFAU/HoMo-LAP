@@ -34,8 +34,8 @@ Last updated: 2026-11-08
 
 ## Open items
 
-- **GitHub repo name:** still `ArcFAU/HOT-LAP`. The owner renames it to `HoMo-LAP` on GitHub (Settings → General → Repository name); GitHub redirects the old URL, then `git remote set-url origin https://github.com/ArcFAU/HoMo-LAP.git`.
-- **High-end version (the game "Hot Lap"):** plan in `high-end\README.md` (Unreal Engine 5: requirements, pipeline, stages, risks). Waiting for the owner's decisions listed there: engine version, disk, version control, physics route, venue, people. Unreal 5.7 is registered at `D:\UE_5.7`, but that folder no longer exists.
+- **GitHub:** the owner renames `ArcFAU/HOT-LAP` to `HoMo-LAP` (Settings → General → Repository name) and creates the empty private repo `ArcFAU/HotLap`. Then: `git remote set-url origin https://github.com/ArcFAU/HoMo-LAP.git` here, and push both repos. HoMo-LAP has unpushed commits since `b40ed04`.
+- **High-end game "Hot Lap":** its own git repo in `high-end\` (local since 2026-11-08, commit `0eb3c69`, remote `ArcFAU/HotLap` not created yet). State and stage 0 checklist in `high-end\README.md`: Unreal 5.8.4 installing at `D:\UE\UE_5.8`; MSVC 14.50 toolset still missing; `UE-LocalDataCachePath` not set (the default cache is on C, 17 GB free).
 
 - **Not played by hand yet:**
   - Arcade, free roam and the setup editor were checked in headless Chrome (scripted driving, AI laps, screenshots).

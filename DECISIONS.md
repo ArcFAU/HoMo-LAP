@@ -147,3 +147,9 @@ The GitHub repo is renamed by the owner on GitHub. The mode called "Hot lap" kee
 
 **Why:** the owner's split: a simulator in the HoMo family (HoMo-LTS, HoMo-CFD) for fidelity, and a separate high-end game for looks and fun.
 
+## 2026-11-08 — Hot Lap is its own repository, `ArcFAU/HotLap`, in `high-end\`
+
+The owner asked for a new repo for the high-end game. `high-end\` is a separate git repository with Git LFS. HoMo-LAP's `.gitignore` excludes the folder, and its earlier history keeps the first version of the plan.
+
+**Why:** Unreal assets are large binaries and shouldn't bloat HoMo-LAP's repo. The name is `HotLap`, not `Hot-Lap`: GitHub ignores capitals, so `Hot-Lap` would be the old name `HOT-LAP`, and reusing an old name ends GitHub's redirect from it to `HoMo-LAP`.
+

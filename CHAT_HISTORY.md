@@ -1096,3 +1096,68 @@ Final response (verbatim):
   - `Play HoMo-LAP.bat` (rename), `blender/export_hotlap.py`, `game/index.html`, `source/serve.py`, `source/template.html`
   - the MATALB renames and edits, `high-end/README.md`
 - **Commit:** on `main`, not pushed (the owner said "commit" only).
+
+## 2026-11-08 — owner: rename on GitHub, new repo for the high-end game, what else we need
+
+### User messages (verbatim)
+
+> change the name on git as well. make new repo for high-end "hot lap". i have installed visual studio, unreal enginees in being istalled. check what else we need.
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced. Final response (verbatim):
+
+> The Hot Lap repo now exists on this laptop, but neither GitHub change has happened. I can't rename or create repos on GitHub from here because the GitHub CLI isn't installed, so those two steps are yours.
+>
+> **On GitHub:**
+> 1. **Rename:** open https://github.com/ArcFAU/HOT-LAP/settings, and under Repository name enter `HoMo-LAP`.
+> 2. **New repo:** open https://github.com/new, name it `HotLap`, set it to Private and tick nothing (no README, .gitignore or licence).
+>
+> Please use exactly `HotLap`. GitHub doesn't allow spaces and ignores capitals, so `Hot-Lap` would be the same name as the old `HOT-LAP` and would break the redirect from old links.
+>
+> Tell me when both are done and I'll push both repos. HoMo-LAP has 2 commits waiting and Hot Lap has 1.
+>
+> **Done here:** `high-end` is now its own git repository with Git LFS and Unreal's ignore rules. HoMo-LAP no longer tracks that folder; the files stayed where they were.
+>
+> **Needed before you first open Unreal:**
+> 1. **MSVC 14.50 compiler (missing).** You only have 14.51, and Unreal 5.8 is tested with 14.50 or 14.44. In Visual Studio Installer: Modify → Individual components → search "14.50" → tick the x64/x86 build tools.
+> 2. **Move Unreal's cache off C:.** By default it goes to C:, which has 17 GB free, and the first shader compile would fill it. Run `setx UE-LocalDataCachePath D:\UE\DDC`, or tell me and I'll set it.
+>
+> **Needed later:**
+> - **Gamepad:** none is connected. The keyboard works to start, but analog steering needs a controller by the first driving test.
+> - **LFS quota:** GitHub Free includes 10 GB of storage and 10 GB of downloads a month, enough to start. A detailed venue may outgrow it.
+>
+> **Already fine:**
+> - Visual Studio 2026 with the game workload and Unreal components
+> - Windows SDK, .NET (Unreal brings its own) and Git LFS
+> - CPU and RAM
+> - Unreal 5.8.4 is going to `D:\UE\UE_5.8`: 29.5 GB so far, still installing
+>
+> **A correction to my plan:** I said the GTX 1650 could run Lumen at about 1080p and 60 fps. That was an estimate I never measured. Epic's 5.8 page lists RTX 2000 or newer for Lumen and recommends 8 GB of graphics memory; you have 4 GB. So the first job after the install is to test Nanite, Lumen, Lumen Lite and plain lighting on this laptop. If Lumen doesn't run, we use simpler lighting here and show the full look on an RTX PC.
+>
+> Three decisions are still open in `high-end\README.md`: physics (our model in C++ is my recommendation), the venue (generic paddock first), and who does the art and sound.
+>
+> Sources:
+> - [UE 5.8 with Visual Studio 2026 (forum thread with Epic's reply)](https://forums.unrealengine.com/t/ue-5-8-fails-to-compile-with-visual-studio-2026-hash-map-missing-source-fix/2732357)
+> - [Unreal Engine hardware and software specifications](https://dev.epicgames.com/documentation/en-us/unreal-engine/hardware-and-software-specifications-for-unreal-engine)
+> - [Unreal Engine 5.8 and Lumen Lite (PC Gamer)](https://pcgamer.com/software/unreal-engine-5-8-launches-with-improved-terrain-and-vegetation-tools-a-lumen-lite-option-for-faster-global-illumination-and-for-the-times-we-now-live-in-an-open-standard-plugin-for-llm-systems/)
+> - [Git LFS billing (GitHub Docs)](https://docs.github.com/billing/managing-billing-for-git-large-file-storage/about-billing-for-git-large-file-storage)
+
+### Work record
+
+- **Checked (read-only):**
+  - GitHub: `gh` not installed; Git LFS 3.7.1 present; `ArcFAU/HOT-LAP` still under its old name; `ArcFAU/HoMo-LAP` doesn't exist yet.
+  - Visual Studio Community 2026 18.11: NativeDesktop and NativeGame workloads, Unreal IDE and debugger components, .NET 4.6.2 targeting pack; MSVC 14.51.36231 only; Windows SDK 10.0.26100.
+  - Epic launcher log: Unreal 5.8.4 installing to `D:\UE\UE_5.8` (components: templates, engine source), 29.5 GB so far. A "failed" line at 16:21 directly followed a user pause, and the install resumed.
+  - `Engine\Config\Windows\Windows_SDK.json`: preferred MSVC 14.50.35717–14.50.99999 and 14.44.35207–14.44.99999; banned 14.50.0–14.50.35722, 14.44.0–14.44.35210, 14.39–14.43; SDK 10.0.19041 and later accepted. The VS catalog's 14.50 builds reach 14.50.35739.
+  - `BaseEngine.ini`: Zen data path `%ENGINEVERSIONAGNOSTICINSTALLEDUSERDIR%Zen/Data` (on C), overridable with `UE-LocalDataCachePath`; the variable isn't set.
+  - Free disk during the install: C 17 GB, D 112 GB, E 61 GB, F 24 GB. No gamepad detected.
+  - Web: Epic's 5.8 specifications page, the forum thread with Epic's reply, GitHub's LFS billing page.
+- **New repository in `high-end\`:** `git init -b main`, `git lfs install --local`, `.gitignore`, `.gitattributes`, `AGENTS.md`, `CHAT_HISTORY.md`, `README.md` updated (stage 0 checklist, GPU statement corrected, decisions), commit `0eb3c69`, remote `origin` = `https://github.com/ArcFAU/HotLap.git`. Not pushed: the GitHub repo doesn't exist yet.
+- **HoMo-LAP:** `high-end/` added to `.gitignore`, `high-end/README.md` untracked with `git rm --cached` (file kept on disk, history kept); README, STATUS and DECISIONS updated.
+- **Commit:** the split committed locally with explicit paths, because moving the folder out is part of creating the new repo.
+- **Not done:**
+  - No GitHub rename or repo creation: no `gh`, and no GitHub tool in this session.
+  - No push: both repos wait for those two steps.
+  - No environment variable set, nothing installed.
+  - The Unreal project isn't created: the engine is still installing.
