@@ -1294,3 +1294,23 @@ Final response (verbatim):
 - Continued only the separate `high-end\` repository; HoMo-LAP web source and published game were unchanged.
 - Added and validated the Unreal driving pawn/game mode and generated driving-slice map.
 - Checks were Unreal-specific: editor build succeeded and headless map smoke test passed; browser checks were not applicable. The project isn't created: the editor is open.
+
+## 2026-11-08 — continued FS Lap stage 1: vehicle presentation
+
+### User messages (verbatim)
+
+> next
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced.
+
+Final response (verbatim):
+
+> The driving slice now has the wheel assemblies positioned correctly, front-wheel steering, wheel rotation from speed, and small body pitch/roll. The Unreal editor build and headless map smoke test still pass.
+
+### Work record
+
+- Continued only the separate `high-end\` repository; HoMo-LAP web source and published game were unchanged.
+- Added wheel placement and animation/presentation updates to the Unreal pawn.
+- Checks were Unreal-specific: editor build succeeded and headless map smoke test passed; browser checks were not applicable. The project isn't created: the editor is open.
