@@ -35,7 +35,7 @@ Last updated: 2026-11-08
 ## Open items
 
 - **Old GitHub address:** `ArcFAU/HOT-LAP` now redirects to `ArcFAU/FS_LAP` (the game), not to `HoMo-LAP`. Any other clone of the simulator must use `https://github.com/ArcFAU/HoMo-LAP.git`.
-- **High-end game "FS Lap" (placeholder name):** its own git repo in `high-end\`, `ArcFAU/FS_LAP`, pushed. Stage 0 is committed; Unreal 5.8.4 at `D:\UE\UE_5.8`, MSVC 14.50 installed, cache set to `D:\UE\DDC` (confirmed at runtime). Stage 1 now has imported car/livery/track assets, a shared-physics driving pawn, controls, chase camera, wheel presentation and a live driving HUD in `DrivingSlice_v1`; the editor target builds and the map passes a headless smoke test. Next: visual editor validation.
+- **High-end game "FS Lap" (placeholder name):** its own git repo in `high-end\`, `ArcFAU/FS_LAP`, pushed. Stage 0 is committed; Unreal 5.8.4 at `D:\UE\UE_5.8`, MSVC 14.50 installed, cache set to `D:\UE\DDC` (confirmed at runtime). Stage 1 passed its tests in the real game on 2026-11-08: AI lap 77.405 s, livery checked from all sides, 75 fps at Medium in an empty venue. A real gamepad and hand driving are still to be checked.
 
 - **Not played by hand yet:**
   - Arcade, free roam and the setup editor were checked in headless Chrome (scripted driving, AI laps, screenshots).

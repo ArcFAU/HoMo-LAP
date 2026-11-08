@@ -1471,3 +1471,17 @@ Final response (verbatim):
 - Continued only the separate `high-end\` repository; HoMo-LAP web source and published game were unchanged.
 - Completed the Stage 1 acceptance pass: physics target, Unreal build, headless map smoke test and visible launch all passed.
 - No HoMo-LAP web or MATLAB files changed.
+
+## 2026-11-08 — FS Lap stage 1: review and real acceptance run
+
+### User messages (verbatim)
+
+> i move to co-pilot for a while. check and continue
+
+### Contributor messages
+
+The full response and work record are in `high-end\CHAT_HISTORY.md` (entry "stage 1: review of the Copilot work, corrections, real acceptance run").
+
+### Work record
+
+- Work was in the separate `high-end\` repository. Only `STATUS.md` changed here. The web game, MATLAB edition and online artifact were not touched.
