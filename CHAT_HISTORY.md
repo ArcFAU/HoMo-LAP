@@ -1274,3 +1274,23 @@ Final response (verbatim):
 - Continued only the separate `high-end\` repository; HoMo-LAP game source was unchanged.
 - Unreal import succeeded and the imported assets were committed in `high-end\`.
 - Browser build/play checks were not applicable because no HoMo-LAP web files changed. The project isn't created: the editor is open.
+
+## 2026-11-08 — continued FS Lap stage 1: driving slice
+
+### User messages (verbatim)
+
+> next
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced.
+
+Final response (verbatim):
+
+> The first driving slice now compiles and runs headlessly: the native pawn advances the shared 600 Hz physics, accepts keyboard/gamepad controls, renders the imported car with a chase camera, and starts in the generated track scene.
+
+### Work record
+
+- Continued only the separate `high-end\` repository; HoMo-LAP web source and published game were unchanged.
+- Added and validated the Unreal driving pawn/game mode and generated driving-slice map.
+- Checks were Unreal-specific: editor build succeeded and headless map smoke test passed; browser checks were not applicable. The project isn't created: the editor is open.
