@@ -1485,3 +1485,17 @@ The full response and work record are in `high-end\CHAT_HISTORY.md` (entry "stag
 ### Work record
 
 - Work was in the separate `high-end\` repository. Only `STATUS.md` changed here. The web game, MATLAB edition and online artifact were not touched.
+
+## 2026-11-09 — FS Lap overnight work
+
+### User messages (verbatim)
+
+> i'm going to sleep. you can work till 7 am, without my need. make as much progress as you can.
+
+### Contributor messages
+
+The full response and work record are in `high-end\CHAT_HISTORY.md` (entry "overnight: arcade braking, cameras, city, setup screen").
+
+### Work record
+
+- Work was in the separate `high-end\` repository. Only `STATUS.md` changed here. The web game, MATLAB edition and online artifact were not touched.
