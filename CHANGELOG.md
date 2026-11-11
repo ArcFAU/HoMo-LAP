@@ -2,6 +2,14 @@
 
 User-visible changes, newest first. Detailed reasoning is in `CHAT_HISTORY.md`, decisions in `DECISIONS.md`.
 
+## 2026-11-11
+
+### Fixed
+- **OSM environment import recovery:** Unreal city imports now disable unnecessary mesh distance-field generation and resume existing OSM tiles instead of re-importing them after a timeout. The Erlangen and Nürnberg visual-terrain imports completed with all 136 source GLB tiles represented.
+
+### Added
+- **Environment PBR pass:** added lightweight CC0 asphalt and concrete maps for road and sidewalk surfaces. Roof materials remain lightweight to preserve performance on the GTX 1650.
+
 ## 2026-11-08
 
 ### Changed

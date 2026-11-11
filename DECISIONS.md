@@ -2,6 +2,18 @@
 
 Why Hot Lap is built the way it is. Add a dated entry when a decision changes how the game works or how contributors work. Don't rewrite old entries; mark them superseded instead.
 
+## 2026-11-11 — OSM imports are resumable and visual-only
+
+OSM city tiles reuse an existing Unreal static mesh when its generated asset already exists; only missing GLBs are imported. OSM imports also disable mesh distance-field generation because these city meshes are visual environment geometry and do not need per-building distance fields.
+
+**Why:** the first full reimport exceeded the headless wrapper timeout while rebuilding and saving many building tiles. Resuming avoids losing completed work and keeps the GTX 1650 import and runtime costs bounded; validated road and collision geometry remains separate and flat.
+
+## 2026-11-11 — Scope PBR materials to roads and sidewalks
+
+The environment PBR material is assigned to city asphalt and sidewalks only. OSM roof materials keep their existing lightweight flat shading.
+
+**Why:** applying PBR maps to roofs reduced warmed performance to 41.3 fps in Nürnberg. Scoping the higher-cost material recovered Nürnberg to 56.6 fps and Erlangen to 57.2 fps while preserving the valid laps and zero-penalty behavior.
+
 ## 2026-11-07 — One self-contained HTML page, published as a Claude artifact
 
 The whole game is one page with the track data and logo built in, plus the car model and livery images next to it. It is published as a private Claude artifact that the owner shares himself.
@@ -168,4 +180,3 @@ The high-end game's working title is FS Lap, a placeholder chosen by the owner. 
 Art (materials, paddock, lighting) waits until the game needs it. The owner and Claude then do it together.
 
 **Why:** the owner's decision. Nothing about art blocks the first driving slice.
-

@@ -1547,3 +1547,80 @@ The full response and work record are in `high-end/CHAT_HISTORY.md` (entry "comm
 ### Work record
 
 - Work was in the separate `high-end/` repository. Here `STATUS.md` and `CHAT_HISTORY.md` were committed and pushed. The web game, MATLAB edition and online artifact were not touched.
+
+## 2026-11-11 — owner: check project status
+
+### User message (verbatim)
+
+> can you first see where we in the project
+
+### Contributor message (verbatim)
+
+> The project is in a good milestone state:
+>
+> - **HoMo-LAP browser game:** complete core build with Hot lap, Arcade, Free roam, setup editor, 3D car, ghosts, penalties and online leaderboard. Source is in `source\`; the published page is built into `game\`.
+> - **MATLAB/Simulink edition:** present in `MATALB\`, including the game, setup editor, Simulink model and studies.
+> - **FS Lap high-end game:** separate Unreal repository in `high-end\`. Stage 1 passed; Stage 2 is mostly complete, including HUD, paddock, replay, motor sound, assists, driver, full-screen start and city. A real gamepad/hand-driving check remains.
+> - **Current git state:** branch `main` is at `b1e363f`, matching `origin/main`. The only local untracked item is `graphify-out\`; no tracked project files are modified.
+> - **Main remaining work:** manually drive the browser arcade/free-roam/setup editor and FS Lap, test the live leaderboard with a real lap, decide what to do with tracked `faumax_tau.prev.glb`, and optionally improve offline play/Node.js setup.
+>
+> The project’s own status and history are in [STATUS.md](./STATUS.md), [README.md](./README.md), and the latest entries of this file.
+
+### Work record
+
+- Read `README.md`, `STATUS.md`, `DECISIONS.md`, `CHANGELOG.md`, `AGENTS.md`, the latest `CHAT_HISTORY.md` entries, and `high-end\README.md`.
+- Checked git status and recent commits.
+- No source files or project behavior were changed. The status check found only the pre-existing untracked `graphify-out\` directory.
+
+## 2026-11-11 — owner: FS Lap project check
+
+### User message (verbatim)
+
+> can you check the FSlap project. the one with unreal engine.
+
+### Contributor messages
+
+Intermediate progress messages are not reproduced.
+
+Final response (verbatim):
+
+> FS Lap is in a strong Stage 2 / early Stage 3 state: the Unreal driving game, three modes, replay, sound, city maps, and OpenStreetMap imports are all present and recently validated. The active priority is environment and scenario quality.
+>
+> The separate repository is `high-end\` on `main` at `9b77356` (matching `origin/main`). Do not treat it as clean: it has 22 modified tracked files and 14 untracked items, chiefly the in-progress city/traffic and OSM environment work. I did not change or discard any of it.
+>
+> Recent recorded validation is green: Unreal editor build, all six physics modes, the 41-step controls test, sound validation, packaging, and standalone generated-city run. The latest OSM smoke tests also passed: Erlangen 75.717 s at 61.1 fps and Nürnberg 156.379 s at 56.9 fps, both valid with zero penalties and replay checks passing.
+>
+> Remaining work is primarily presentation and demonstration: improve environments/scenarios, then do a manual hand-driving/gamepad session and a second-PC packaged-build run. Suspension and force feedback are deliberately deferred.
+
+### Work record
+
+- Read the root project notes and FS Lap's `AGENTS.md`, `README.md`, and latest `CHAT_HISTORY.md` entries.
+- Inspected the FS Lap repository without building, launching Unreal, or changing gameplay/assets. Confirmed `main...origin/main`, last commit `9b77356`, the packaged executable exists, and the documented latest acceptance results.
+- Preserved all pre-existing modifications and untracked assets; this root history entry is the only HoMo-LAP change made for the check.
+
+## 2026-11-11 — owner: no paid assets, commit FS Lap
+
+### User message (verbatim)
+
+> no paid items will be used. commit
+
+### Contributor messages
+
+One progress note is not reproduced. Final response (verbatim):
+
+> Committed in both repositories. Nothing is pushed.
+>
+> - **FS Lap** (`high-end`): one commit with Erlangen and Nürnberg, the traffic, the textures, the tools and the docs.
+> - **HoMo-LAP** (the outer folder): one commit with Copilot's notes and mine.
+> - **No paid assets** is now a recorded decision in the README.
+>
+> Left out on purpose: the `.uproject` engine line, `.vsconfig`, the stray `hotlap` and `sim` trace files, and `graphify-out`.
+>
+> One thing before you push: the saved ChatGPT spec names your share link in its first lines, and the repo is public. Say if I should take the link out.
+>
+> Not checked: nothing was rebuilt or re-tested for this commit; the last test run is the one I reported. Still open: time of day and weather, and the dark shaded walls.
+
+### Work record
+
+- The work and its full log are in the FS Lap repository (`high-end/CHAT_HISTORY.md`, entries of 2026-11-11).
+- Here: `STATUS.md` FS Lap line updated; this entry; the earlier 2026-11-11 `CHANGELOG.md`, `DECISIONS.md` and `CHAT_HISTORY.md` entries committed. `graphify-out/` left untracked.
