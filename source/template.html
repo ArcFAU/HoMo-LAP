@@ -327,6 +327,7 @@ body.touch-ui .lights{top:60px}
     <div class="actions">
       <button class="btn" id="startBtn" type="button"><span>Start <kbd>Enter</kbd></span></button>
       <button class="btn alt" id="menuAssist" type="button"><span>Assists: on</span></button>
+      <button class="btn alt" id="menuWheel" type="button"><span>Wheel setup</span></button>
       <button class="btn alt" id="menuSound" type="button"><span>Sound: on</span></button>
     </div>
     <p class="note touch-note"><!-- TOUCH CONTROLS (temporary) -->On a phone: ◀ ▶ steer, Gas and Brake on the right, HB is the handbrake, R puts you back on track, II pauses. Hold the phone sideways.</p>
@@ -367,6 +368,17 @@ body.touch-ui .lights{top:60px}
       <button class="btn alt" id="suDelete" type="button"><span>Delete setup</span></button>
       <button class="btn alt" id="suClose" type="button"><span>Close <kbd>Esc</kbd></span></button>
     </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="wheel" role="dialog" aria-modal="true" aria-labelledby="wheelTitle">
+  <div class="pause-card">
+    <h2 id="wheelTitle">Wheel setup</h2>
+    <p class="note" id="whStep"></p>
+    <pre class="note" id="whLive"></pre>
+    <button class="btn" id="whNext" type="button"><span>Next</span></button>
+    <button class="btn alt" id="whClear" type="button"><span>Forget this wheel</span></button>
+    <button class="btn alt" id="whClose" type="button"><span>Close <kbd>Esc</kbd></span></button>
   </div>
 </div>
 
@@ -624,6 +636,7 @@ const cd = { t: 0, hold: 1 };
 const lap = { active: false, t0: 0, next: 1, valid: true, splits: [0, 0], prog: 0, rec: [], recT: 0, n: 0, pen: 0, doo: 0, oc: 0 };
 let bests = {}, bestSecs = {}, last = null, session = [];
 let muted = false, ghostOn = true, assist = true, camMode = 0;
+let wheel = null;   // a calibrated wheel: { id, steer, thr, brk }, each [axis, value at rest, value at full]
 const CAMS = ['Chase', 'Onboard', 'High', 'Top-down'];
 let wrongT = 0, liveT = 0, gp = 0, shake = 0, hitT = 0;
 const cam = { x: 0, y: 0, z: 10 };
@@ -634,7 +647,7 @@ const r2 = v => Math.round(v * 100) / 100;
 function saveData() {
   const b = {};
   for (const id in bests) { const x = bests[id]; b[id] = { t: x.t, raw: x.raw, sectors: x.sectors, splits: x.splits, ghost: x.ghost.map(s => [+s[0].toFixed(3), r2(s[1]), r2(s[2]), +s[3].toFixed(3), r2(s[4])]) }; }
-  return { bests: b, bestSecs, muted, ghostOn, assist, camMode, preset: aero.id, mode, setups: setups.map(s => ({ id: s.id, name: s.name, base: s.base, vals: s.vals })) };
+  return { bests: b, bestSecs, muted, ghostOn, assist, camMode, wheel, preset: aero.id, mode, setups: setups.map(s => ({ id: s.id, name: s.name, base: s.base, vals: s.vals })) };
 }
 function makeCustom(id, name, base, vals) {
   const b = PRESETS.find(p => p.id === base);
@@ -649,6 +662,7 @@ function applyData(d) {
   if (typeof d.muted === 'boolean') muted = d.muted;
   if (typeof d.ghostOn === 'boolean') ghostOn = d.ghostOn;
   if (typeof d.assist === 'boolean') assist = d.assist;
+  if (d.wheel && typeof d.wheel.id === 'string' && ['steer', 'thr', 'brk'].every(k => Array.isArray(d.wheel[k]) && d.wheel[k].length === 3 && d.wheel[k].every(Number.isFinite) && d.wheel[k][1] !== d.wheel[k][2])) wheel = d.wheel;
   if (Number.isInteger(d.camMode) && d.camMode >= 0 && d.camMode < 4) camMode = d.camMode;
   if (Array.isArray(d.setups)) setups = d.setups.filter(s => s && typeof s.id === 'string' && /^c-[a-z0-9]{1,16}$/.test(s.id)).slice(0, 24).map(s => makeCustom(s.id, s.name, s.base, s.vals));
   if (MODES.some(m => m.id === d.mode)) mode = d.mode;
@@ -857,10 +871,26 @@ function touchSync() {
 }
 /* ==== END TOUCH CONTROLS ==== */
 
+// Steering wheels (DirectInput, e.g. Moza R3) have no standard layout: the wheel setup records which axis does what.
+// Xbox-style pads with the browser's standard layout work without it.
+const pads = () => { try { return Array.from(navigator.getGamepads ? navigator.getGamepads() : []).filter(Boolean); } catch (e) { return []; } };
+const axisOf = (p, c) => clamp((p.axes[c[0]] - c[1]) / (c[2] - c[1]), -1, 1);
+const pedal = v => v > 0.03 ? v : 0;
+if (!(axisOf({ axes: [0, 1] }, [1, -1, 1]) === 1 && axisOf({ axes: [0.5] }, [0, 0, -1]) === -0.5)) console.error('wheel scaling self-check failed');
+function padInput() {
+  const ps = pads(), w = wheel && ps.find(q => q.id === wheel.id);
+  if (w) return { steer: axisOf(w, wheel.steer), thr: pedal(axisOf(w, wheel.thr)), brk: pedal(axisOf(w, wheel.brk)), hb: false };
+  const s = ps.find(q => q.mapping === 'standard');
+  if (s) return { steer: Math.abs(s.axes[0]) > 0.1 ? s.axes[0] : 0, thr: pedal(s.buttons[7].value), brk: pedal(s.buttons[6].value), hb: s.buttons[0].pressed };
+  return null;
+}
 function playerInput() {
   const T = touchState;   // TOUCH CONTROLS (temporary): remove this line and the "|| T." parts below
   const Lk = keys.has('ArrowLeft') || keys.has('KeyA') || T.left, Rk = keys.has('ArrowRight') || keys.has('KeyD') || T.right;
-  return { steer: (Rk ? 1 : 0) - (Lk ? 1 : 0), thr: keys.has('ArrowUp') || keys.has('KeyW') || T.thr ? 1 : 0, brk: keys.has('ArrowDown') || keys.has('KeyS') || T.brk ? 1 : 0, hb: keys.has('Space') || T.hb, assist, human: true, arcade: mode !== 'sim' };
+  const k = { steer: (Rk ? 1 : 0) - (Lk ? 1 : 0), thr: keys.has('ArrowUp') || keys.has('KeyW') || T.thr ? 1 : 0, brk: keys.has('ArrowDown') || keys.has('KeyS') || T.brk ? 1 : 0, hb: keys.has('Space') || T.hb, assist, human: true, arcade: mode !== 'sim' };
+  const g = padInput();
+  if (g) { k.steer = k.steer || g.steer; k.thr = Math.max(k.thr, g.thr); k.brk = Math.max(k.brk, g.brk); k.hb = k.hb || g.hb; }
+  return k;
 }
 addEventListener('keydown', e => {
   if (e.target && /^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName) && e.code !== 'Escape') return;
@@ -1315,6 +1345,35 @@ $('ghostBtn').addEventListener('click', () => setGhost(!ghostOn));
 $('soundBtn').addEventListener('click', () => setMuted(!muted));
 $('menuBtn').addEventListener('click', toMenu);
 $('menuAssist').addEventListener('click', () => setAssist(!assist));
+const WH = { step: 0, id: '', rest: null, cal: {}, timer: 0 };
+const WH_STEPS = ['Hands off the wheel and feet off the pedals, then press Next.',
+  'Turn the wheel to the right as far as you want full steering lock, hold it there and press Next.',
+  'Press the throttle pedal fully, hold it and press Next.', 'Press the brake pedal fully, hold it and press Next.'];
+const whPad = () => { const ps = pads(); return WH.id ? ps.find(q => q.id === WH.id) : (ps.find(q => q.mapping !== 'standard') || ps[0]); };
+function whShow(msg) {
+  const p = whPad();
+  $('whStep').textContent = msg || (p ? WH_STEPS[WH.step] : 'No wheel found. Turn the wheel or press a pedal so the browser sees it.');
+  $('whLive').textContent = p ? p.id + '\n' + p.axes.map((v, i) => 'axis ' + i + '  ' + (v >= 0 ? ' ' : '') + v.toFixed(2)).join('\n')
+    + (wheel && wheel.id === p.id ? '\n\nNow: steer ' + axisOf(p, wheel.steer).toFixed(2) + '  throttle ' + pedal(axisOf(p, wheel.thr)).toFixed(2) + '  brake ' + pedal(axisOf(p, wheel.brk)).toFixed(2) : '') : '';
+}
+function openWheel() { WH.step = 0; WH.id = ''; WH.rest = null; WH.cal = {}; $('wheel').classList.remove('hidden'); whShow(); WH.timer = setInterval(() => whShow(WH.msg), 100); WH.msg = ''; $('whNext').focus(); }
+function closeWheel() { clearInterval(WH.timer); $('wheel').classList.add('hidden'); $('menuWheel').focus(); }
+$('menuWheel').addEventListener('click', openWheel);
+$('whClose').addEventListener('click', closeWheel);
+$('whClear').addEventListener('click', () => { wheel = null; save(); WH.msg = 'Forgotten. Xbox-style pads still work without a setup.'; });
+$('wheel').addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Escape') { e.preventDefault(); closeWheel(); } });
+$('wheel').addEventListener('keyup', e => e.stopPropagation());
+$('whNext').addEventListener('click', () => {
+  const p = whPad(); WH.msg = '';
+  if (!p) return;
+  if (WH.step === 0) { WH.id = p.id; WH.rest = p.axes.slice(); WH.step = 1; return; }
+  let a = 0; for (let i = 1; i < p.axes.length; i++) if (Math.abs(p.axes[i] - WH.rest[i]) > Math.abs(p.axes[a] - WH.rest[a])) a = i;
+  if (Math.abs(p.axes[a] - WH.rest[a]) < 0.2) { WH.msg = 'Nothing moved enough. ' + WH_STEPS[WH.step]; return; }
+  WH.cal[['', 'steer', 'thr', 'brk'][WH.step]] = [a, WH.rest[a], p.axes[a]];
+  if (++WH.step < 4) return;
+  wheel = { id: WH.id, steer: WH.cal.steer, thr: WH.cal.thr, brk: WH.cal.brk }; save();
+  WH.step = 0; WH.id = wheel.id; WH.msg = 'Saved. Check the "Now" line below, then close. Run the setup again to change it.';
+});
 $('assistBtn').addEventListener('click', () => setAssist(!assist));
 $('camBtn').addEventListener('click', () => cycleCam());
 function setAssist(a) {

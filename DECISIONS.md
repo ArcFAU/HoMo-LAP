@@ -2,6 +2,18 @@
 
 Why Hot Lap is built the way it is. Add a dated entry when a decision changes how the game works or how contributors work. Don't rewrite old entries; mark them superseded instead.
 
+## 2026-11-12 — Steering wheels are calibrated, not mapped by model
+
+Wheels have no standard axis layout (the Moza R3 shows up as a DirectInput controller, and Pit House can put the pedals on different axes). Both games therefore ask once: hands off, turn right, throttle, brake, and record whichever axis moved most with its rest and full value. HoMo-LAP uses the browser's Gamepad API; FS Lap reads DirectInput itself, because Unreal's input only sees XInput pads. The physics and its steering rate limit are unchanged, so lap times stay comparable.
+
+**Why:** the owner's wheel is on another laptop and can't be tested here; a calibration works for any wheel and pedal layout without knowing it in advance.
+
+## 2026-11-12 — FS Lap: generic maps, functionality first
+
+The owner: "remove erlangen and nuremberg completely. we go with generic ones. i don't care about gaming style. we go for functionality." FS Lap's maps are the FSG track, free roam and the generated city. The real-city maps, their tools and assets are removed (still in git history, commit 4d07a18). This supersedes the two OSM entries below and FS Lap's environment-first and NFS/Forza-look direction of 2026-11-11.
+
+**Why:** the owner's decision.
+
 ## 2026-11-11 — OSM imports are resumable and visual-only
 
 OSM city tiles reuse an existing Unreal static mesh when its generated asset already exists; only missing GLBs are imported. OSM imports also disable mesh distance-field generation because these city meshes are visual environment geometry and do not need per-building distance fields.

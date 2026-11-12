@@ -1624,3 +1624,37 @@ One progress note is not reproduced. Final response (verbatim):
 
 - The work and its full log are in the FS Lap repository (`high-end/CHAT_HISTORY.md`, entries of 2026-11-11).
 - Here: `STATUS.md` FS Lap line updated; this entry; the earlier 2026-11-11 `CHANGELOG.md`, `DECISIONS.md` and `CHAT_HISTORY.md` entries committed. `graphify-out/` left untracked.
+
+## 2026-11-12 — owner: remove Erlangen and Nürnberg from FS Lap
+
+### User message (verbatim)
+
+> okay, change of planes. remove erlangen and nuremberg completely. we go with generic ones. i don't care about gaming style. we go for functionality.
+
+### Contributor messages
+
+Final response (summary): done in FS Lap; see `high-end/CHAT_HISTORY.md`, entry of 2026-11-12.
+
+### Work record
+
+- The work and its full log are in the FS Lap repository (`high-end/CHAT_HISTORY.md`).
+- Here: `STATUS.md` FS Lap line, `CHANGELOG.md`, `DECISIONS.md`, this entry. Not committed.
+
+
+## 2026-11-12 — owner: steering wheel (Moza R3), then commit
+
+### User messages (verbatim)
+
+> also, it seems that both homo-lap and fs-lap is not working with streeing wheel. we are using moza r3 on other laptop.
+
+> also commit on git\
+
+### Contributor messages
+
+Final response (summary): see `high-end/CHAT_HISTORY.md`, entry of 2026-11-12. HoMo-LAP had no gamepad or wheel input at all; it now reads Xbox-style pads and, after *Wheel setup* in the menu, wheels such as the Moza R3.
+
+### Work record
+
+- `source\template.html`: Gamepad API input merged with the keys (keys win for steering while pressed), *Wheel setup* dialog (hands off, turn right, throttle, brake; whichever axis moved most), `wheel` in the saved data with validation; `game\index.html` rebuilt with `python source\build_game.py`.
+- Check: headless Chrome with a simulated wheel, see the FS Lap log. Not checked: a real R3; whether the online artifact's frame lets the page read the gamepad. Not republished.
+- `README.md` controls, `CHANGELOG.md`, `DECISIONS.md`, `STATUS.md`. Committed with explicit paths; `graphify-out/` left out.

@@ -2,6 +2,14 @@
 
 User-visible changes, newest first. Detailed reasoning is in `CHAT_HISTORY.md`, decisions in `DECISIONS.md`.
 
+## 2026-11-12
+
+### Added
+- **Steering wheels (HoMo-LAP and FS Lap):** both games now read steering wheels such as the Moza R3 and Xbox-style pads. A one-time wheel setup (HoMo-LAP: *Wheel setup* in the menu; FS Lap: setup screen, "Steering wheel") records which axis is steering, throttle and brake. Not yet tried with a real wheel.
+
+### Removed
+- **FS Lap: Erlangen and Nürnberg maps:** the two OpenStreetMap cities, their traffic, the Erlangen LoD2 slice and the OSM tools and assets are gone. The menu now has hot lap, arcade, city (the generated one), free roam and setup.
+
 ## 2026-11-11
 
 ### Fixed

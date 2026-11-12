@@ -25,6 +25,8 @@ Controls:
 
 Phones get on-screen touch controls.
 
+**Steering wheel or gamepad:** an Xbox-style pad works as it is (left stick, triggers, A for the handbrake). A steering wheel such as the Moza R3 needs *Wheel setup* in the menu once: hands off, turn right to the lock you want, press the throttle, press the brake. The browser only sees the wheel after you turn it or press a pedal on the page. The setup is saved in this browser; force feedback is not supported.
+
 **Modes:**
 - **Hot lap:** the car as the team's data describes it. Assists, FS Rules penalties and the leaderboard apply.
 - **Arcade:** the selected setup with 18 % more grip, 1.75× power and 1.45× top speed. The car counter-steers by itself, the handbrake starts a slide, and the body slip is held below 38°. No penalties; a cut still invalidates the lap. Laps are kept separately and not posted.
