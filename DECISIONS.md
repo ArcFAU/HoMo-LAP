@@ -2,6 +2,12 @@
 
 Why Hot Lap is built the way it is. Add a dated entry when a decision changes how the game works or how contributors work. Don't rewrite old entries; mark them superseded instead.
 
+## 2026-11-13 — FS Lap becomes a driver-in-the-loop simulator for the vehicle dynamics team
+
+The owner: "the game that we planned earlier is out of plan now. i showed this project to team and they liked in now we to DIL with this. specially for vehicle dynamics team." FS Lap is no longer planned as a game. It is a DIL tool for the vehicle dynamics team; accuracy, the driver's feel and recorded data come before looks. This supersedes the game-oriented directions (environment-first, NFS/Forza look) and keeps the 2026-11-12 "functionality first" entry.
+
+**Why:** the team liked the project and wants to use it for vehicle dynamics work.
+
 ## 2026-11-12 — Steering wheels are calibrated, not mapped by model
 
 Wheels have no standard axis layout (the Moza R3 shows up as a DirectInput controller, and Pit House can put the pedals on different axes). Both games therefore ask once: hands off, turn right, throttle, brake, and record whichever axis moved most with its rest and full value. HoMo-LAP uses the browser's Gamepad API; FS Lap reads DirectInput itself, because Unreal's input only sees XInput pads. The physics and its steering rate limit are unchanged, so lap times stay comparable.
