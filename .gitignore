@@ -27,5 +27,5 @@ MATALB/saves/
 
 # FS Lap (the Unreal game) is its own git repository, ArcFAU/FS_LAP
 high-end/
-# the team's shared copy of FS Lap, ArcFAU/FS_LAP_SHARED (filled by high-end	ools\sync_shared.py)
+# the team's shared copy of FS Lap, ArcFAU/FS_LAP_SHARED (filled by high-end/tools/sync_shared.py)
 shared/
