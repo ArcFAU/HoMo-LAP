@@ -1658,3 +1658,9 @@ Final response (summary): see `high-end/CHAT_HISTORY.md`, entry of 2026-11-12. H
 - `source\template.html`: Gamepad API input merged with the keys (keys win for steering while pressed), *Wheel setup* dialog (hands off, turn right, throttle, brake; whichever axis moved most), `wheel` in the saved data with validation; `game\index.html` rebuilt with `python source\build_game.py`.
 - Check: headless Chrome with a simulated wheel, see the FS Lap log. Not checked: a real R3; whether the online artifact's frame lets the page read the gamepad. Not republished.
 - `README.md` controls, `CHANGELOG.md`, `DECISIONS.md`, `STATUS.md`. Committed with explicit paths; `graphify-out/` left out.
+
+## 2026-11-14 — STATUS.md brought up to date (during the owner's "keep working till 7 am continuosly")
+
+- Owner (verbatim, in the FS Lap session): "keep working till 7 am continuosly". The earlier gap review had listed `STATUS.md` as stale since 2026-11-08.
+- Response: no separate message; reported in the session's final summary.
+- Work record: `STATUS.md` only. New date line; a new first open item with FS Lap's state on 2026-11-14 (DIL simulator, ADTM, wheels, force feedback open, the logs compared but not used); a note on the steering wheel entry. No HoMo-LAP code or game file changed, so no build or play check. Not committed.

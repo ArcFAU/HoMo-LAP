@@ -1,4 +1,4 @@
-Last updated: 2026-11-08
+Last updated: 2026-11-14 (the FS Lap entry and the steering wheel entry; the HoMo-LAP entries are as of 2026-11-08)
 
 ## Done
 
@@ -34,6 +34,13 @@ Last updated: 2026-11-08
 
 ## Open items
 
+- **FS Lap, state on 2026-11-14** (details in `high-end\README.md` and `high-end\Docs\SHARED_README.md`; the older FS Lap entry below is history):
+  - It is a driver-in-the-loop simulator for the vehicle dynamics team since 2026-11-13, no longer a game. The team's shared copy is `ArcFAU/FS_LAP_SHARED`.
+  - The team's ADTM is compiled into it as a second vehicle model (AI lap 77.620 s; FS Lap's own model 77.40 s). The setup's mass, weight split, CoG height, motor torque and peak mu reach the ADTM.
+  - Steering wheels: DirectInput wheels with a wheel setup, 1:1 steering (setup row Wheel rotation), wheel buttons, mouse menus. A team driver has driven it with a wheel (2026-11-14).
+  - Force feedback from the ADTM's steering torque exists but is not usable on the owner's Fanatec GT3 RS (the wheel runs to the lock) and gave nothing for the team driver; open.
+  - The car's test-day logs were compared with the simulator once (`high-end\tools\logs\README.md`). Owner, 2026-11-14: "do not use anything from the log yet", so no value of the simulator was changed from them.
+
 - **Old GitHub address:** `ArcFAU/HOT-LAP` now redirects to `ArcFAU/FS_LAP` (the game), not to `HoMo-LAP`. Any other clone of the simulator must use `https://github.com/ArcFAU/HoMo-LAP.git`.
 - **High-end game "FS Lap" (placeholder name):** its own git repo in `high-end\`, `ArcFAU/FS_LAP`, pushed. Stage 0 is committed; Unreal 5.8.4 at `D:\UE\UE_5.8`, MSVC 14.50 installed, cache set to `D:\UE\DDC` (confirmed at runtime). Stage 1 passed its tests in the real game on 2026-11-08: AI lap 77.405 s, livery checked from all sides, 75 fps at Medium in an empty venue. A real gamepad and hand driving are still to be checked. Stage 2 is mostly done, and an arcade city was added on 2026-11-09. Erlangen and Nürnberg from OpenStreetMap, with traffic, were added on 2026-11-11; the owner decided that no paid assets will be used. On 2026-11-12 the owner removed Erlangen and Nürnberg again ("we go with generic ones ... we go for functionality"): the maps are the FSG track, free roam and the generated city. FS Lap's arcade braking is now its own, so it no longer matches this project's arcade; hot lap still does. On 2026-11-09 stage 2 was finished (web-style HUD, paddock), with a best-lap replay, motor sound from the team's test-day videos and a packaged build in `high-end\dist\`. Since then: driver assist on/off, more sounds, paddock detail, a simple driver, full-screen start and a big open city. See `high-end\README.md`.
 
@@ -48,7 +55,7 @@ Last updated: 2026-11-08
 - **Leaderboard:** checked in headless Chrome against an in-memory stand-in for `db`/`user`, not yet with a real lap on the live board. Only the owner and members of his claude.ai organization can post; outside visitors only see it. The game's AI test driver doesn't post (`autodrive`); `__hotlap.postLap(raw, pen)` is a test hook that posts like a finished lap. The "naive" test driver (`sim(sec, 'naive')`) leaves the track and circles off it, so it can't produce test laps.
 - **Node.js:** not installed on the laptop. The 2026-11-07 model rebuild used the node and pnpm bundled with Codex (`C:\Users\Archit\.cache\codex-runtimes\codex-primary-runtime\dependencies\node`); pnpm's cache is `E:\.pnpm-store` (36 MB, can be deleted). Installing Node.js would make `npm install` in the README work.
 - **`faumax_tau.prev.glb`:** the export keeps the previous export (35 MB) and it is tracked in git, so every export adds about 35 MB to the repo. Owner to decide whether to ignore `*.prev.*`.
-- **Steering wheel (2026-11-12):** HoMo-LAP and FS Lap read wheels such as the Moza R3 after a one-time wheel setup. Tested here only with a simulated wheel (HoMo-LAP, headless Chrome) and with no wheel attached (FS Lap); the owner still has to try it with the R3 on the other laptop. The online artifact may block the browser gamepad inside its frame; `Play HoMo-LAP.bat` does not. No force feedback.
+- **Steering wheel (2026-11-12):** HoMo-LAP and FS Lap read wheels such as the Moza R3 after a one-time wheel setup. Tested here only with a simulated wheel (HoMo-LAP, headless Chrome) and with no wheel attached (FS Lap); the owner still has to try it with the R3 on the other laptop. (FS Lap has since been driven with real wheels, 2026-11-13 and 11-14; HoMo-LAP's web wheel support is still untried on a real wheel.) The online artifact may block the browser gamepad inside its frame; `Play HoMo-LAP.bat` does not. No force feedback.
 - **Touch controls:** temporary. Remove them later when the owner asks: `TOUCH_CONTROLS = false` or delete the marked blocks.
 - **Old export folder:** `E:\UE\livery\hotlap_export` still exists. Everything from it is in `blender\`. The owner deletes it; the bridge cannot.
 - **Hidden parts:** only `SOLID003` from the hidden collection `07_Hardware` is exported. If other small parts look missing, add them to the list in `blender\export_hotlap.py`.
