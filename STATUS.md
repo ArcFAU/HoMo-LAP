@@ -57,7 +57,7 @@ Last updated: 2026-11-14 (the FS Lap entry and the steering wheel entry; the HoM
 - **`faumax_tau.prev.glb`:** the export keeps the previous export (35 MB) and it is tracked in git, so every export adds about 35 MB to the repo. Owner to decide whether to ignore `*.prev.*`.
 - **Steering wheel (2026-11-12):** HoMo-LAP and FS Lap read wheels such as the Moza R3 after a one-time wheel setup. Tested here only with a simulated wheel (HoMo-LAP, headless Chrome) and with no wheel attached (FS Lap); the owner still has to try it with the R3 on the other laptop. (FS Lap has since been driven with real wheels, 2026-11-13 and 11-14; HoMo-LAP's web wheel support is still untried on a real wheel.) The online artifact may block the browser gamepad inside its frame; `Play HoMo-LAP.bat` does not. No force feedback.
 - **Touch controls:** temporary. Remove them later when the owner asks: `TOUCH_CONTROLS = false` or delete the marked blocks.
-- **Old export folder:** `E:\UE\livery\hotlap_export` still exists. Everything from it is in `blender\`. The owner deletes it; the bridge cannot.
+- **Old export folder:** `E:\UE\livery\hotlap_export` was deleted on 2026-11-14 with the owner's approval, after checking that every file in it is also in this folder.
 - **Hidden parts:** only `SOLID003` from the hidden collection `07_Hardware` is exported. If other small parts look missing, add them to the list in `blender\export_hotlap.py`.
 - **Offline play:** `Play HoMo-LAP.bat` needs Python, and three.js loads from a CDN, so local play also needs internet. Vendoring the three.js files would make it fully offline.
 - **Tests:** no automated test suite in this folder yet. The 2026-11-07 checks ran in headless Chrome in Claude's cloud workspace; those scripts were not copied here.

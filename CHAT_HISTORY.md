@@ -1664,3 +1664,8 @@ Final response (summary): see `high-end/CHAT_HISTORY.md`, entry of 2026-11-12. H
 - Owner (verbatim, in the FS Lap session): "keep working till 7 am continuosly". The earlier gap review had listed `STATUS.md` as stale since 2026-11-08.
 - Response: no separate message; reported in the session's final summary.
 - Work record: `STATUS.md` only. New date line; a new first open item with FS Lap's state on 2026-11-14 (DIL simulator, ADTM, wheels, force feedback open, the logs compared but not used); a note on the steering wheel entry. No HoMo-LAP code or game file changed, so no build or play check. Not committed.
+
+## 2026-11-14 — clean-up of the folders
+
+- Owner (verbatim): "okay, now clean up the entire folder. remove things that we do not need and reorganise everything. these also includes the folders that we created now and then like fs lap-cad, fab, fs lap vd and etc..."
+- Full record in `high-end\CHAT_HISTORY.md` (same date). In this folder: `E:\UE\livery\hotlap_export` was deleted with the owner's approval after checking every file is also here; `STATUS.md` and `AGENTS.md` say so. No game file changed. Not committed.

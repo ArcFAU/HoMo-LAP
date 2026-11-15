@@ -4,7 +4,7 @@ HoMo-LAP (called Hot Lap until 2026-11-08) is a lap simulator in the browser, wi
 
 **E:\HOT LAP is the project folder (owner, 2026-11-07: "we work in that folder now on").** It is the source of truth. Copies elsewhere are derived from it and may be out of date:
 - the online artifact
-- the old export folder `E:\UE\livery\hotlap_export`
+- the old export folder `E:\UE\livery\hotlap_export` (deleted 2026-11-14)
 - any cloud workspace
 
 Before changing anything, read:
