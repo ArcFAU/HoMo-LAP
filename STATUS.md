@@ -1,10 +1,10 @@
-Last updated: 2026-11-14 (the FS Lap entry and the steering wheel entry; the HoMo-LAP entries are as of 2026-11-08)
+Last updated: 2026-11-15 (offline play, the previous export, the FS Lap entry; the other HoMo-LAP entries are as of 2026-11-08)
 
 ## Done
 
 - **Game:** one HTML page (`game\index.html`, built from `source\template.html`) with:
   - keyboard controls, plus temporary touch controls for phones
-  - a 3D view (three.js r128 from a CDN) with four cameras, and a 2D fallback
+  - a 3D view (three.js r128 from a CDN, or from `game\lib` when offline) with four cameras, and a 2D fallback
   - the FSG endurance track from the LTS, with cones
   - FS Rules penalties (2 s per cone, 10 s per off-course, cut = invalid lap)
   - the LTS reference lap as a gold ghost, a personal-best ghost and sector splits
@@ -40,7 +40,9 @@ Last updated: 2026-11-14 (the FS Lap entry and the steering wheel entry; the HoM
   - Steering wheels: DirectInput wheels with a wheel setup, 1:1 steering (setup row Wheel rotation), wheel buttons, mouse menus. A team driver has driven it with a wheel (2026-11-14).
   - Force feedback from the ADTM's steering torque exists but is not usable on the owner's Fanatec GT3 RS (the wheel runs to the lock) and gave nothing for the team driver; open.
   - The car's test-day logs were compared with the simulator once (`high-end\tools\logs\README.md`). Owner, 2026-11-14: "do not use anything from the log yet", so no value of the simulator was changed from them.
+  - **2026-11-15/16:** event tracks chosen in the menu (FSG, FS Czech, FS France), a **SIL (VCU)** mode (tested with a stand-in VCU; the car's firmware waits for `vcu_full.dll`, which needs the team's `software` repository), wheel buttons for every action, `.mat` lap files.
 
+- **HoMo-LAP's FSG track is mirrored (found 2026-11-16):** the LTS track that `source\fsg_track.json` comes from had a wrong sign (the owner). FS Lap mirrors it back in its own conversion; the web game and the MATLAB edition still drive it mirrored. Lap times are not affected. Owner: HoMo-LAP is picked up once FS Lap is finished.
 - **Old GitHub address:** `ArcFAU/HOT-LAP` now redirects to `ArcFAU/FS_LAP` (the game), not to `HoMo-LAP`. Any other clone of the simulator must use `https://github.com/ArcFAU/HoMo-LAP.git`.
 - **High-end game "FS Lap" (placeholder name):** its own git repo in `high-end\`, `ArcFAU/FS_LAP`, pushed. Stage 0 is committed; Unreal 5.8.4 at `D:\UE\UE_5.8`, MSVC 14.50 installed, cache set to `D:\UE\DDC` (confirmed at runtime). Stage 1 passed its tests in the real game on 2026-11-08: AI lap 77.405 s, livery checked from all sides, 75 fps at Medium in an empty venue. A real gamepad and hand driving are still to be checked. Stage 2 is mostly done, and an arcade city was added on 2026-11-09. Erlangen and Nürnberg from OpenStreetMap, with traffic, were added on 2026-11-11; the owner decided that no paid assets will be used. On 2026-11-12 the owner removed Erlangen and Nürnberg again ("we go with generic ones ... we go for functionality"): the maps are the FSG track, free roam and the generated city. FS Lap's arcade braking is now its own, so it no longer matches this project's arcade; hot lap still does. On 2026-11-09 stage 2 was finished (web-style HUD, paddock), with a best-lap replay, motor sound from the team's test-day videos and a packaged build in `high-end\dist\`. Since then: driver assist on/off, more sounds, paddock detail, a simple driver, full-screen start and a big open city. See `high-end\README.md`.
 
@@ -54,11 +56,11 @@ Last updated: 2026-11-14 (the FS Lap entry and the steering wheel entry; the HoM
 
 - **Leaderboard:** checked in headless Chrome against an in-memory stand-in for `db`/`user`, not yet with a real lap on the live board. Only the owner and members of his claude.ai organization can post; outside visitors only see it. The game's AI test driver doesn't post (`autodrive`); `__hotlap.postLap(raw, pen)` is a test hook that posts like a finished lap. The "naive" test driver (`sim(sec, 'naive')`) leaves the track and circles off it, so it can't produce test laps.
 - **Node.js:** not installed on the laptop. The 2026-11-07 model rebuild used the node and pnpm bundled with Codex (`C:\Users\Archit\.cache\codex-runtimes\codex-primary-runtime\dependencies\node`); pnpm's cache is `E:\.pnpm-store` (36 MB, can be deleted). Installing Node.js would make `npm install` in the README work.
-- **`faumax_tau.prev.glb`:** the export keeps the previous export (35 MB) and it is tracked in git, so every export adds about 35 MB to the repo. Owner to decide whether to ignore `*.prev.*`.
+- **`faumax_tau.prev.glb`:** no longer tracked (2026-11-15, `*.prev.*` in `.gitignore`); the file stays on disk as the export's fallback.
 - **Steering wheel (2026-11-12):** HoMo-LAP and FS Lap read wheels such as the Moza R3 after a one-time wheel setup. Tested here only with a simulated wheel (HoMo-LAP, headless Chrome) and with no wheel attached (FS Lap); the owner still has to try it with the R3 on the other laptop. (FS Lap has since been driven with real wheels, 2026-11-13 and 11-14; HoMo-LAP's web wheel support is still untried on a real wheel.) The online artifact may block the browser gamepad inside its frame; `Play HoMo-LAP.bat` does not. No force feedback.
 - **Touch controls:** temporary. Remove them later when the owner asks: `TOUCH_CONTROLS = false` or delete the marked blocks.
 - **Old export folder:** `E:\UE\livery\hotlap_export` was deleted on 2026-11-14 with the owner's approval, after checking that every file in it is also in this folder.
 - **Hidden parts:** only `SOLID003` from the hidden collection `07_Hardware` is exported. If other small parts look missing, add them to the list in `blender\export_hotlap.py`.
-- **Offline play:** `Play HoMo-LAP.bat` needs Python, and three.js loads from a CDN, so local play also needs internet. Vendoring the three.js files would make it fully offline.
+- **Offline play (2026-11-15):** `Play HoMo-LAP.bat` works without internet: the page falls back to the same three.js r128 files in `game\lib` (MIT, with its LICENSE) when the CDN can't be reached. Checked in headless Chrome with the CDN hosts blocked: three.js, the GLTF loader and the meshopt decoder load, revision 128, the 3D view starts. The Google fonts are not copied, so offline the system fonts show. The online artifact still loads from the CDN (not republished).
 - **Tests:** no automated test suite in this folder yet. The 2026-11-07 checks ran in headless Chrome in Claude's cloud workspace; those scripts were not copied here.
 - **Livery updates:** when the livery in the .blend changes, copy the new images into `game\livery\` (at most 2048 px wide) and republish.

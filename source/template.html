@@ -383,8 +383,11 @@ body.touch-ui .lights{top:60px}
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>window.THREE || document.write('<script src="lib/three.min.js"><\/script>')   // offline: the same r128 files in game\lib</script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script>(window.THREE && THREE.GLTFLoader) || document.write('<script src="lib/GLTFLoader.js"><\/script>')</script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/meshopt_decoder.js"></script>
+<script>window.MeshoptDecoder || document.write('<script src="lib/meshopt_decoder.js"><\/script>')</script>
 <script>
 const TRACK = /*__TRACK__*/null;
 (() => {

@@ -1669,3 +1669,17 @@ Final response (summary): see `high-end/CHAT_HISTORY.md`, entry of 2026-11-12. H
 
 - Owner (verbatim): "okay, now clean up the entire folder. remove things that we do not need and reorganise everything. these also includes the folders that we created now and then like fs lap-cad, fab, fs lap vd and etc..."
 - Full record in `high-end\CHAT_HISTORY.md` (same date). In this folder: `E:\UE\livery\hotlap_export` was deleted with the owner's approval after checking every file is also here; `STATUS.md` and `AGENTS.md` say so. No game file changed. Not committed.
+
+## 2026-11-15 — offline play, the previous export (from the FS Lap session's open list)
+
+- Owner (verbatim, in the FS Lap session, about the open list): "C. Go ahead" (items: play HoMo-LAP offline; whether git keeps tracking the previous car export). Also: "Homo-lap we can pick up once the FS-lap is finished." Full entry in `high-end\CHAT_HISTORY.md`.
+- Work record:
+  - `source\template.html`: after each three.js CDN tag, a fallback to the same r128 file in `game\lib` (`three.min.js`, `GLTFLoader.js`, `meshopt_decoder.js`, LICENSE, downloaded from the same CDN URLs). `game\index.html` rebuilt with `python source\build_game.py`.
+  - `.gitignore`: `*.prev.*`; `blender\faumax_tau.prev.glb` and `blender\export_info.prev.json` removed from the index only (still on disk).
+  - Docs: `README.md`, `Play HoMo-LAP.bat` comment, `STATUS.md`, `CHANGELOG.md`, `DECISIONS.md`.
+  - Check: headless Chrome against a local copy of `game\`, once with the CDN hosts mapped to 0.0.0.0 and once normally: both `THREE=object GLTFLoader=function Meshopt=object rev=128 canvases=4`. Not played by hand; the online artifact was not republished. Not committed.
+
+## 2026-11-16 — HoMo-LAP's FSG track is mirrored (found in the FS Lap session)
+
+- Owner (verbatim, in the FS Lap session): "turns out the map from LTS was mistaken as mirroed due to wrong sign. FSG map can be used as it is." Full entry in `high-end\CHAT_HISTORY.md`.
+- Work record: no HoMo-LAP code changed (the owner: HoMo-LAP is picked up once FS Lap is finished). FS Lap mirrors the track back in its own conversion. `STATUS.md` notes that the web game and the MATLAB edition still drive it mirrored (lap times unaffected); `CHANGELOG.md`'s FS Lap lines updated. Not committed.

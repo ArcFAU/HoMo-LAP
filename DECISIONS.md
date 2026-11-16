@@ -198,3 +198,15 @@ The high-end game's working title is FS Lap, a placeholder chosen by the owner. 
 Art (materials, paddock, lighting) waits until the game needs it. The owner and Claude then do it together.
 
 **Why:** the owner's decision. Nothing about art blocks the first driving slice.
+
+## 2026-11-15 — Offline play by a fallback, not by replacing the CDN
+
+The owner said "go ahead" on making local play work offline. The page still loads three.js r128 from the CDN, and only if that fails it loads the same three files from `game\lib` (`document.write` right after each CDN tag). The online artifact keeps working as published, the files in `game\lib` are byte copies of the CDN's (MIT, with its LICENSE), and nothing changes for players online. The Google fonts are not copied: offline, the system fonts show.
+
+**Why:** the smallest change that works offline without touching the online version or re-publishing it.
+
+## 2026-11-15 — The previous car export is not tracked
+
+`blender\export_hotlap.py` keeps the previous export next to the new one (`faumax_tau.prev.glb`, about 35 MB). It was tracked, so every export added 35 MB to the repository. `*.prev.*` is now ignored and the two files were removed from the index only; they stay on disk, and git history has every committed export.
+
+**Why:** the owner said "go ahead" on the open item; the history already holds each export, so the second copy in git was only weight.

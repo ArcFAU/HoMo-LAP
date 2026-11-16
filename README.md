@@ -9,7 +9,7 @@ Browser racing game built on the team's data: the τ vehicle parameters, the LTS
 - **MATLAB edition:** the same game, physics and setups in MATLAB and Simulink, in `MATALB\` (see `MATALB\README.md`).
 
 - **Play online:** https://claude.ai/artifact/38hveqdzZbP5zHJUSUfVmb (private until you share it with the Share button on that page)
-- **Play from this folder:** double-click `Play HoMo-LAP.bat`. It needs Python and an internet connection, because three.js loads from a CDN. Opening `index.html` directly does not work: the browser blocks loading the car model from `file://`.
+- **Play from this folder:** double-click `Play HoMo-LAP.bat`. It needs Python. It works without internet: if the CDN can't be reached, the page loads the same three.js r128 files from `game\lib` (only the fonts then fall back to the system's). Opening `index.html` directly does not work: the browser blocks loading the car model from `file://`.
 
 Controls:
 

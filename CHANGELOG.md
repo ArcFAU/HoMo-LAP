@@ -2,6 +2,17 @@
 
 User-visible changes, newest first. Detailed reasoning is in `CHAT_HISTORY.md`, decisions in `DECISIONS.md`.
 
+## 2026-11-15
+
+### Changed
+- **Plays offline:** when the CDN can't be reached, the page loads the same three.js r128 files from `game\lib` (MIT). Online play is unchanged; only the fonts fall back to the system's offline.
+- **Git no longer tracks the previous car export** (`blender\*.prev.*`): every export added about 35 MB to the repository. The file stays on disk, and git history keeps every committed export.
+
+### FS Lap (details in `high-end\`)
+- The FSG track mirrored back (the LTS track had a wrong sign; HoMo-LAP's own copy is still mirrored), and two more tracks, FS Czech and FS France, chosen in the menu.
+- A **SIL (VCU)** mode: a VCU drives the four motors through the team's SIL (tested with a stand-in; the car's firmware needs `vcu_full.dll`).
+- Wheel buttons for every driving action, and `.mat` lap files.
+
 ## 2026-11-12
 
 ### Added

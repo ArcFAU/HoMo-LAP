@@ -1,6 +1,6 @@
 @echo off
 rem HoMo-LAP - plays the simulator from this folder.
-rem Needs Python (any 3.x) and an internet connection (the 3D library loads from a CDN).
+rem Needs Python (any 3.x). Works offline: without the CDN the 3D library loads from game\lib.
 rem source\serve.py is a plain local web server that makes the browser load the newest files every time.
 cd /d "%~dp0game"
 echo HoMo-LAP running at http://localhost:8765  -  close this window to stop.

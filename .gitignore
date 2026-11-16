@@ -18,6 +18,10 @@ backup/
 # Kept originals of replaced files
 *.bak
 
+# The previous car export, which blender\export_hotlap.py keeps next to the new one (about 35 MB each time).
+# Git history has every committed export, so the copy on disk is enough (decided 2026-11-15).
+*.prev.*
+
 # MATLAB edition (MATALB): Simulink build caches, compiled app, personal best laps
 MATALB/slprj/
 *.slxc
